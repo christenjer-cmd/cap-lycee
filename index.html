@@ -20,6 +20,7 @@
   --r-carte:16px; --r-bouton:12px; --r-petit:8px;
   /* schémas du système cardiovasculaire : rouge = sang riche en O2, bleu = sang riche en CO2, comme dans les fiches de classe */
   --o2:#cf2f2a; --o2-fond:#f9d3cf; --co2:#2c5fd0; --co2-fond:#d3e0fb; --muscle:#e7a99f; --muscle-trait:#b9645a; --urine:#d6a300; --urine-fond:#fbeab0;
+  --muscle-clair:#f7d2ca; --o2-bord:#8f1e1a; --co2-bord:#1b3f8e; --urine-bord:#8a6900; --poumon:#f8dfe4;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -28,7 +29,7 @@
     --juste:#83d9ab; --juste-fond:#1b382b; --faux:#ff9f90; --faux-fond:#42241f; --vu:#f1d674; --vu-fond:#3a3316;
     --flamme:#ffa565; --flamme-fond:#43291a; --or:#f1d674; --or-fond:#3a3316;
     --s-maths:#5d5320; --s-francais:#5e2e3f; --s-allemand:#2b5331; --s-anglais:#244b67; --s-sciences:#1e5049; --s-geographie:#5f4120; --s-histoire:#42356d;
-    --o2:#ff7a70; --o2-fond:#5a2622; --co2:#7fa6ff; --co2-fond:#21305a; --muscle:#7a3f39; --muscle-trait:#c98479; --urine:#f1cf5a; --urine-fond:#4a3d12;
+    --o2:#ff7a70; --o2-fond:#5a2622; --co2:#7fa6ff; --co2-fond:#21305a; --muscle:#7a3f39; --muscle-trait:#c98479; --urine:#f1cf5a; --urine-fond:#4a3d12; --muscle-clair:#9a554c; --o2-bord:#a8362f; --co2-bord:#3b5fae; --urine-bord:#a8891f; --poumon:#5a3f45;
     color-scheme:dark;
   }
 }
@@ -38,7 +39,7 @@
   --juste:#83d9ab; --juste-fond:#1b382b; --faux:#ff9f90; --faux-fond:#42241f; --vu:#f1d674; --vu-fond:#3a3316;
   --flamme:#ffa565; --flamme-fond:#43291a; --or:#f1d674; --or-fond:#3a3316;
   --s-maths:#5d5320; --s-francais:#5e2e3f; --s-allemand:#2b5331; --s-anglais:#244b67; --s-sciences:#1e5049; --s-geographie:#5f4120; --s-histoire:#42356d;
-  --o2:#ff7a70; --o2-fond:#5a2622; --co2:#7fa6ff; --co2-fond:#21305a; --muscle:#7a3f39; --muscle-trait:#c98479; --urine:#f1cf5a; --urine-fond:#4a3d12;
+  --o2:#ff7a70; --o2-fond:#5a2622; --co2:#7fa6ff; --co2-fond:#21305a; --muscle:#7a3f39; --muscle-trait:#c98479; --urine:#f1cf5a; --urine-fond:#4a3d12; --muscle-clair:#9a554c; --o2-bord:#a8362f; --co2-bord:#3b5fae; --urine-bord:#a8891f; --poumon:#5a3f45;
   color-scheme:dark;
 }
 :root[data-theme="light"]{color-scheme:light}
@@ -656,7 +657,20 @@ html.pres .balise::after{display:none}
 .cv-fl.co2{fill:var(--co2)}
 .cv-fl.o2{fill:var(--o2)}
 .cv-fl.urine{fill:var(--urine)}
-.cv-valve{fill:none;stroke:var(--feuille);stroke-width:3;stroke-linecap:round}
+.cv-valve{fill:none;stroke:var(--muscle-trait);stroke-width:3;stroke-linecap:round}
+.cv-bord{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.cv-bord.o2{stroke:var(--o2-bord)}
+.cv-bord.co2{stroke:var(--co2-bord)}
+.cv-bord.urine{stroke:var(--urine-bord)}
+.cv-reflet{fill:none;stroke:#fff;opacity:.22;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.cv-g-a{stop-color:var(--muscle-clair)}
+.cv-g-b{stop-color:var(--muscle)}
+.cv-pap{fill:var(--muscle);stroke:var(--muscle-trait);stroke-width:1}
+.cv-cord{fill:none;stroke:var(--muscle-trait);stroke-width:1.2}
+.cv-poumon{fill:var(--poumon);stroke:var(--muscle-trait);stroke-width:1.5}
+.cv-trachee{fill:none;stroke:var(--encre-2);stroke-width:5;stroke-linecap:round;opacity:.55}
+.cv-icone{fill:none;stroke:var(--muscle-trait);stroke-width:3;stroke-linecap:round}
+.cv-icone-r{fill:var(--muscle);stroke:var(--muscle-trait);stroke-width:1.2}
 .cv-org{fill:var(--papier);stroke:var(--encre-2);stroke-width:1.5}
 .cv-rein{fill:var(--muscle);stroke:var(--muscle-trait);stroke-width:2}
 .cv-cap{fill:none;stroke-width:2.2;stroke-linecap:round}
@@ -670,11 +684,11 @@ html.pres .balise::after{display:none}
 .cv-p[data-p]{cursor:pointer;outline:none}
 .cv-p[data-p]:focus-visible .cv-cible,.cv-p[data-p]:hover .cv-cible{filter:brightness(1.08)}
 .cv-p[data-p]:focus-visible{outline:2px dashed var(--accent)}
-.cv-p.on :is(.cv-cav,.cv-org,.cv-rein,.cv-paroi){stroke:var(--accent);stroke-width:3.5}
+.cv-p.on :is(.cv-cav,.cv-org,.cv-rein,.cv-paroi,.cv-poumon){stroke:var(--accent);stroke-width:3.5}
 .cv-p.on :is(.cv-vx,.cv-valve){filter:drop-shadow(0 0 4px var(--accent))}
-.cv-p.bon :is(.cv-cav,.cv-org,.cv-rein,.cv-paroi){stroke:var(--juste);stroke-width:4}
+.cv-p.bon :is(.cv-cav,.cv-org,.cv-rein,.cv-paroi,.cv-poumon){stroke:var(--juste);stroke-width:4}
 .cv-p.bon :is(.cv-vx,.cv-valve){filter:drop-shadow(0 0 6px var(--juste)) drop-shadow(0 0 2px var(--juste))}
-.cv-p.faux :is(.cv-cav,.cv-org,.cv-rein,.cv-paroi){stroke:var(--faux);stroke-width:4}
+.cv-p.faux :is(.cv-cav,.cv-org,.cv-rein,.cv-paroi,.cv-poumon){stroke:var(--faux);stroke-width:4}
 .cv-p.faux :is(.cv-vx,.cv-valve){filter:drop-shadow(0 0 6px var(--faux)) drop-shadow(0 0 2px var(--faux))}
 .cv-svg.estompe .cv-p:not(.on){opacity:.28}
 .cv-goutte{stroke:var(--feuille);stroke-width:1.5}
@@ -6505,6 +6519,9 @@ html.pres .balise::after{display:none}
   /* ---------- petits outils de dessin ---------- */
   const vx = (d, s, w, extra) => `<path class="cv-vx ${s}" d="${d}" stroke-width="${w}"${extra || ''}/>`;
   const hit = (d, w) => `<path class="cv-hit" d="${d}" stroke-width="${w}"/>`;
+  /* un vaisseau en tube : bord foncé, sang, reflet clair au milieu */
+  const tube = (d, s, w) =>
+    `<path class="cv-bord ${s}" d="${d}" stroke-width="${w + 4}"/>` + vx(d, s + ' cv-cible', w) + `<path class="cv-reflet" d="${d}" stroke-width="${Math.max(2, Math.round(w / 4))}"/>`;
   /* flèche blanche posée sur un vaisseau : le sens du sang */
   const fl = (x, y, a) => `<polygon class="cv-valve" style="fill:var(--feuille);stroke:none" points="-4,-4 5,0 -4,4" transform="translate(${x} ${y}) rotate(${a})"/>`;
   const lab = (x, y, txt, anc, cls) => {
@@ -6519,88 +6536,97 @@ html.pres .balise::after{display:none}
   const VUES = {
     coeur: {
       titre: 'Le cœur',
-      vb: '0 0 380 420',
-      note: "Le cœur est vu de face, comme sur tes fiches : son côté droit est à ta gauche.",
-      avant: [
-        // vaisseaux qui entrent dans le cœur : dessinés sous le muscle
-        'vcs', 'vci', 'vp',
-      ],
-      fond: '<path class="cv-mur" d="M58,124 Q58,104 80,104 H280 Q302,104 302,124 V236 Q302,300 252,346 Q216,378 186,382 Q156,376 118,346 Q58,300 58,236 Z"/>',
+      vb: '0 0 400 460',
+      note: "Coupe du cœur vue de face, comme sur tes fiches : son côté droit est à ta gauche.",
+      // vaisseaux qui arrivent au cœur : dessinés sous le muscle, qui recouvre leur extrémité
+      avant: ['vci', 'vp', 'vcs'],
+      fond: '<path class="cv-mur" style="fill:url(#{G})" d="M100,158 C76,172 64,206 68,240 C72,272 88,298 110,314 C142,356 196,400 256,420 C278,426 298,416 306,398 C334,354 344,300 338,256 C334,220 322,192 302,174 C292,164 276,160 262,162 L232,160 L176,160 C150,156 120,150 100,158 Z"/>',
       parts: [
         {
-          id: 'vcs', nom: 'la veine cave supérieure', court: 'veine cave supérieure', sang: 'co2',
-          svg: hit('M122,10 V124', 26) + vx('M122,10 V124', 'co2 cv-cible', 18) + fl(122, 44, 90),
-          noms: lab(112, 18, 'Veine cave supérieure', 'end'), num: [122, 52],
-          role: "Elle ramène au cœur le sang du haut du corps (tête, bras), riche en " + CO2 + ".",
-        },
-        {
           id: 'vci', nom: 'la veine cave inférieure', court: 'veine cave inférieure', sang: 'co2',
-          svg: hit('M40,410 V196 Q40,160 74,160', 26) + vx('M40,410 V196 Q40,160 74,160', 'co2 cv-cible', 18) + fl(40, 300, -90),
-          noms: labV(26, 400, 'Veine cave inférieure'), num: [40, 250],
+          svg: hit('M98,456 C96,400 98,330 108,280', 30) + tube('M98,456 C96,400 98,330 108,280', 'co2', 24) + fl(97, 404, -90),
+          noms: lab(82, 418, ['Veine cave', 'inférieure'], 'end'), num: [97, 380],
           role: "Elle ramène au cœur le sang du bas du corps (jambes, organes du ventre), riche en " + CO2 + ".",
         },
         {
           id: 'vp', nom: 'les veines pulmonaires', court: 'veines pulmonaires', sang: 'o2',
-          svg: hit('M376,138 H290 M376,166 H290', 20) + vx('M376,138 H290 M376,166 H290', 'o2 cv-cible', 12) + fl(330, 138, 180) + fl(330, 166, 180),
-          noms: lab(376, 196, ['Veines', 'pulmonaires'], 'end'), num: [352, 152],
+          svg: hit('M398,196 C370,196 340,200 316,206 M398,234 C370,234 342,232 318,228', 22) + tube('M398,196 C370,196 340,200 316,206 M398,234 C370,234 342,232 318,228', 'o2', 14) + fl(366, 196, 180) + fl(366, 234, 180),
+          noms: lab(398, 262, ['Veines', 'pulmonaires'], 'end'), num: [384, 215],
           role: "Elles ramènent dans l'oreillette gauche le sang riche en " + O2 + " qui vient des poumons. Ce sont des veines : elles arrivent au cœur.",
         },
         {
-          id: 'od', nom: "l'oreillette droite", court: 'oreillette droite', sang: 'co2',
-          svg: '<rect class="cv-cav co2 cv-cible" x="72" y="118" width="78" height="66" rx="14"/>',
-          noms: lab(111, 146, ['Oreillette', 'droite']), num: [111, 140],
-          role: "Elle reçoit le sang riche en " + CO2 + " qui revient du corps par les veines caves.",
+          id: 'vcs', nom: 'la veine cave supérieure', court: 'veine cave supérieure', sang: 'co2',
+          svg: hit('M112,2 V176', 30) + tube('M112,2 V176', 'co2', 24) + fl(112, 90, 90),
+          noms: lab(96, 42, ['Veine cave', 'supérieure'], 'end'), num: [112, 64],
+          role: "Elle ramène au cœur le sang du haut du corps (tête, bras), riche en " + CO2 + ".",
         },
-        {
-          id: 'og', nom: "l'oreillette gauche", court: 'oreillette gauche', sang: 'o2',
-          svg: '<rect class="cv-cav o2 cv-cible" x="210" y="118" width="78" height="66" rx="14"/>',
-          noms: lab(249, 146, ['Oreillette', 'gauche']), num: [249, 140],
-          role: "Elle reçoit le sang riche en " + O2 + " qui revient des poumons par les veines pulmonaires.",
-        },
-        {
-          id: 'vd', nom: 'le ventricule droit', court: 'ventricule droit', sang: 'co2',
-          svg: '<path class="cv-cav co2 cv-cible" d="M72,198 H172 V334 Q122,322 94,288 Q72,262 72,236 Z"/>',
-          noms: lab(122, 258, ['Ventricule', 'droit']), num: [122, 272],
-          role: "En se contractant, il envoie le sang riche en " + CO2 + " vers les poumons, par l'artère pulmonaire.",
-        },
-        {
-          id: 'vg', nom: 'le ventricule gauche', court: 'ventricule gauche', sang: 'o2',
-          svg: '<path class="cv-cav o2 cv-cible" d="M196,198 H276 V238 Q276,290 240,324 Q218,344 196,352 Z"/>',
-          noms: lab(236, 258, ['Ventricule', 'gauche']), num: [236, 272],
-          role: "Il envoie le sang riche en " + O2 + " dans tout le corps, par l'aorte. Sa paroi est la plus épaisse : c'est lui qui pousse le sang le plus loin.",
-        },
-        {
-          id: 'paroi', nom: 'la paroi interventriculaire', court: 'paroi interventriculaire',
-          svg: '<rect class="cv-paroi cv-cible" x="173" y="200" width="22" height="146" rx="6"/>',
-          noms: '<path d="M184,346 V392" stroke="var(--encre-2)" stroke-width="1"/>' + lab(184, 406, 'Paroi interventriculaire'), num: [184, 300],
-          role: "Le mur de muscle qui sépare le côté droit du côté gauche du cœur : le sang riche en " + O2 + " et le sang riche en " + CO2 + " ne se mélangent jamais.",
-        },
-        {
-          id: 'valv', nom: 'les valvules cardiaques', court: 'valvules cardiaques', jeu: false,
-          svg: '<rect x="90" y="182" width="42" height="20" fill="transparent"/><rect x="228" y="182" width="42" height="20" fill="transparent"/><path class="cv-valve cv-cible" d="M96,186 L110,197 M126,186 L112,197 M234,186 L248,197 M264,186 L250,197"/>',
-          noms: '', num: [111, 191],
-          role: "Des clapets entre chaque oreillette et son ventricule : le sang ne passe que dans un sens, de l'oreillette vers le ventricule.",
-        },
+        // l'artère pulmonaire et l'aorte sortent des ventricules : dessinées sous les cavités, qui cachent leur départ
         {
           id: 'ap', nom: "l'artère pulmonaire", court: 'artère pulmonaire', sang: 'co2',
-          svg: hit('M162,200 V76 H24 M162,76 H306', 22) + vx('M162,200 V76 H24 M162,76 H306', 'co2 cv-cible', 14) + fl(162, 140, -90) + fl(60, 76, 180) + fl(286, 76, 0) + '<path class="cv-valve" d="M155,206 L162,198 L169,206"/>',
-          noms: lab(226, 98, 'Artère pulmonaire', 'start') + lab(20, 64, 'vers le poumon droit', 'start', 'petit') + lab(316, 62, 'vers le poumon gauche', 'end', 'petit'), num: [252, 76],
+          svg: hit('M196,304 C190,270 178,240 178,200 L178,136 M178,136 H28 M178,136 H372', 26) + tube('M196,304 C190,270 178,240 178,200 L178,136 M178,136 H28 M178,136 H372', 'co2', 18) + fl(178, 186, -90) + fl(60, 136, 180) + fl(352, 136, 0),
+          noms: lab(364, 162, 'Artère pulmonaire', 'end') + lab(26, 162, 'poumon droit', 'start', 'petit') + lab(372, 122, '→ poumon gauche', 'end', 'petit'), num: [178, 230],
           role: "Elle conduit le sang riche en " + CO2 + " du ventricule droit vers les deux poumons. C'est une artère, car elle part du cœur, même si son sang est pauvre en " + O2 + ".",
         },
         {
           id: 'aorte', nom: "l'aorte", court: 'aorte', sang: 'o2',
-          svg: hit('M200,200 V70 Q200,26 244,26 H294 Q334,26 334,100', 26) + vx('M200,200 V70 Q200,26 244,26 H294 Q334,26 334,100', 'o2 cv-cible', 18) + fl(200, 150, -90) + fl(334, 80, 90) + '<path class="cv-valve" d="M193,206 L200,198 L207,206"/>',
-          noms: lab(270, 12, 'Aorte') + lab(334, 124, 'vers tout le corps', 'middle', 'petit'), num: [270, 26],
-          role: "La plus grosse artère du corps. Elle part du ventricule gauche et distribue le sang riche en " + O2 + " dans tout le corps.",
+          svg:
+            hit('M236,304 C228,272 212,244 210,206 L210,96 C210,52 236,30 270,30 C302,30 326,48 330,80 L330,98', 32) +
+            tube('M240,36 L232,2 M264,30 V0 M288,34 L298,2', 'o2', 9) +
+            tube('M236,304 C228,272 212,244 210,206 L210,96 C210,52 236,30 270,30 C302,30 326,48 330,80 L330,98', 'o2', 26) +
+            fl(210, 150, -90) + fl(330, 82, 90),
+          noms: lab(348, 70, 'Aorte', 'start') + lab(224, 14, 'vers la tête', 'end', 'petit') + lab(348, 104, 'vers le corps', 'start', 'petit'), num: [300, 36],
+          role: "La plus grosse artère du corps. Elle part du ventricule gauche, fait une crosse au-dessus du cœur (avec des branches vers la tête et les bras), puis descend vers le reste du corps avec le sang riche en " + O2 + ".",
+        },
+        {
+          id: 'od', nom: "l'oreillette droite", court: 'oreillette droite', sang: 'co2',
+          svg: '<path class="cv-cav co2 cv-cible" d="M104,172 C86,186 80,214 84,238 C88,262 104,278 126,282 C144,284 156,272 160,254 C164,232 160,200 150,184 C138,168 118,164 104,172 Z"/>',
+          noms: lab(122, 222, ['Oreillette', 'droite']), num: [122, 226],
+          role: "Elle reçoit le sang riche en " + CO2 + " qui revient du corps par les veines caves.",
+        },
+        {
+          id: 'og', nom: "l'oreillette gauche", court: 'oreillette gauche', sang: 'o2',
+          svg: '<path class="cv-cav o2 cv-cible" d="M244,178 C260,168 288,170 304,184 C318,198 322,222 314,240 C304,258 278,264 256,258 C240,252 232,234 234,216 C236,200 238,186 244,178 Z"/>',
+          noms: lab(278, 212, ['Oreillette', 'gauche']), num: [278, 216],
+          role: "Elle reçoit le sang riche en " + O2 + " qui revient des poumons par les veines pulmonaires.",
+        },
+        {
+          id: 'vd', nom: 'le ventricule droit', court: 'ventricule droit', sang: 'co2',
+          svg: '<path class="cv-cav co2 cv-cible" d="M126,300 C152,292 186,292 208,298 C214,330 226,362 242,394 C210,388 174,366 150,340 C138,328 130,314 126,300 Z"/>',
+          noms: lab(200, 362, ['Ventricule', 'droit']), num: [198, 360],
+          role: "En se contractant, il envoie le sang riche en " + CO2 + " vers les poumons, par l'artère pulmonaire.",
+        },
+        {
+          id: 'vg', nom: 'le ventricule gauche', court: 'ventricule gauche', sang: 'o2',
+          svg: '<path class="cv-cav o2 cv-cible" d="M234,296 C256,288 284,288 302,298 C312,326 310,358 298,378 C288,394 274,398 266,392 C254,364 242,330 234,296 Z"/>',
+          noms: lab(283, 352, ['Ventricule', 'gauche']), num: [282, 352],
+          role: "Il envoie le sang riche en " + O2 + " dans tout le corps, par l'aorte. Sa paroi est la plus épaisse : c'est lui qui pousse le sang le plus loin.",
+        },
+        {
+          id: 'paroi', nom: 'la paroi interventriculaire', court: 'paroi interventriculaire',
+          svg: '<path class="cv-paroi cv-cible" style="fill:url(#{G})" d="M208,298 L234,296 C242,330 254,366 266,392 L242,394 C226,362 214,330 208,298 Z"/>',
+          noms: '<path d="M252,380 L288,432" stroke="var(--encre-2)" stroke-width="1"/>' + lab(300, 448, 'Paroi interventriculaire'), num: [236, 344],
+          role: "Le mur de muscle qui sépare le côté droit du côté gauche du cœur : le sang riche en " + O2 + " et le sang riche en " + CO2 + " ne se mélangent jamais.",
+        },
+        {
+          id: 'valv', nom: 'les valvules', court: 'valvules', jeu: false,
+          svg:
+            '<path fill="transparent" d="M118,280 H170 V314 H118 Z M244,258 H304 V300 H244 Z"/>' +
+            // muscles piliers et cordages : ils tiennent les valvules entre oreillette et ventricule
+            '<path class="cv-pap" d="M150,352 Q161,330 172,352 Q161,358 150,352 Z M270,338 Q281,316 292,338 Q281,344 270,338 Z"/>' +
+            '<path class="cv-cord" d="M146,306 L157,340 M152,308 L165,340 M270,290 L277,326 M282,292 L286,326"/>' +
+            '<path class="cv-valve cv-cible" d="M126,288 Q138,300 146,306 M166,284 Q158,300 152,308 M252,266 Q262,280 270,290 M298,264 Q290,280 282,292"/>' +
+            '<path class="cv-valve" d="M186,302 Q191,294 196,302 Q201,294 206,302 M226,302 Q231,294 236,302 Q241,294 246,302"/>',
+          noms: '', num: [146, 296],
+          role: "Des clapets, tenus par des cordages. Entre chaque oreillette et son ventricule, ils laissent passer le sang dans un seul sens ; à la sortie des ventricules, ils l'empêchent de revenir dans le cœur.",
         },
       ],
       etapes: [
-        { t: "Le sang qui revient du corps, riche en " + CO2 + ", arrive par les veines caves dans l'oreillette droite.", on: ['vcs', 'vci', 'od'], m: [['M122,12 V150', 'co2'], ['M40,404 V196 Q40,160 74,160 H104', 'co2']] },
-        { t: "L'oreillette droite se contracte : le sang passe dans le ventricule droit. La valvule l'empêche de revenir en arrière.", on: ['od', 'vd', 'valv'], m: [['M111,152 V262', 'co2']] },
-        { t: "Le ventricule droit se contracte et envoie le sang dans l'artère pulmonaire, vers les deux poumons.", on: ['vd', 'ap'], m: [['M122,266 Q162,262 162,200 V76 H24', 'co2'], ['M122,266 Q162,262 162,200 V76 H306', 'co2']] },
-        { t: "Dans les poumons, le sang s'est chargé en " + O2 + ". Il revient par les veines pulmonaires dans l'oreillette gauche.", on: ['vp', 'og'], m: [['M376,138 H250', 'o2'], ['M376,166 H250', 'o2']] },
-        { t: "L'oreillette gauche se contracte : le sang passe dans le ventricule gauche.", on: ['og', 'vg', 'valv'], m: [['M249,152 V262', 'o2']] },
-        { t: "Le ventricule gauche, le plus musclé, envoie le sang riche en " + O2 + " dans l'aorte, vers tout le corps. La paroi interventriculaire sépare les deux côtés : les deux sangs ne se mélangent jamais.", on: ['vg', 'aorte', 'paroi'], m: [['M240,268 Q200,262 200,200 V70 Q200,26 244,26 H294 Q334,26 334,100', 'o2']] },
+        { t: "Le sang qui revient du corps, riche en " + CO2 + ", arrive par les veines caves dans l'oreillette droite.", on: ['vcs', 'vci', 'od'], m: [['M112,6 V204', 'co2'], ['M98,452 C96,400 98,330 112,246', 'co2']] },
+        { t: "L'oreillette droite se contracte : le sang passe dans le ventricule droit. Les valvules l'empêchent de revenir en arrière.", on: ['od', 'vd', 'valv'], m: [['M126,232 C140,270 152,300 180,352', 'co2']] },
+        { t: "Le ventricule droit se contracte et envoie le sang dans l'artère pulmonaire, vers les deux poumons.", on: ['vd', 'ap'], m: [['M184,356 C196,330 200,316 196,304 C190,270 178,240 178,200 L178,136 H30', 'co2'], ['M184,356 C196,330 200,316 196,304 C190,270 178,240 178,200 L178,136 H370', 'co2']] },
+        { t: "Dans les poumons, le sang s'est chargé en " + O2 + ". Il revient par les veines pulmonaires dans l'oreillette gauche.", on: ['vp', 'og'], m: [['M398,196 C370,196 340,200 286,212', 'o2'], ['M398,234 C370,234 342,232 286,224', 'o2']] },
+        { t: "L'oreillette gauche se contracte : le sang passe dans le ventricule gauche.", on: ['og', 'vg', 'valv'], m: [['M276,228 C278,262 280,300 284,346', 'o2']] },
+        { t: "Le ventricule gauche, le plus musclé, envoie le sang riche en " + O2 + " dans l'aorte, vers tout le corps. La paroi interventriculaire sépare les deux côtés : les deux sangs ne se mélangent jamais.", on: ['vg', 'aorte', 'paroi'], m: [['M284,346 C270,328 248,316 236,304 C228,272 212,244 210,206 L210,96 C210,52 236,30 270,30 C302,30 326,48 330,80 L330,98', 'o2']] },
       ],
     },
 
@@ -6609,85 +6635,94 @@ html.pres .balise::after{display:none}
       vb: '0 0 380 500',
       note: "Deux circuits partent du cœur : la petite circulation vers les poumons, la grande circulation vers tous les organes.",
       fond:
-        '<rect class="cv-mur" x="130" y="198" width="120" height="110" rx="24"/>' +
-        lab(161, 324, 'côté droit', 'middle', 'petit') + lab(219, 324, 'côté gauche', 'middle', 'petit'),
+        '<path class="cv-mur" style="fill:url(#{G})" d="M134,206 C126,222 126,250 132,270 C140,292 168,312 200,326 C228,314 250,292 252,266 C254,240 250,216 242,206 C232,198 146,198 134,206 Z"/>' +
+        lab(150, 344, 'côté droit', 'middle', 'petit') + lab(232, 344, 'côté gauche', 'middle', 'petit') +
+        lab(190, 496, 'muscles, intestin, reins, cerveau…', 'middle', 'petit'),
       avant: ['vp', 'vc'],
       parts: [
         {
           id: 'poumons', nom: 'les poumons', court: 'poumons',
-          svg: '<rect class="cv-org cv-cible" x="110" y="18" width="160" height="70" rx="26"/>',
-          noms: lab(190, 42, 'Poumons'), num: [128, 34],
+          svg:
+            '<path class="cv-trachee" d="M190,2 V30 M190,30 L178,42 M190,30 L202,42"/>' +
+            '<path class="cv-poumon cv-cible" d="M178,40 C160,26 132,30 120,52 C108,74 110,96 124,102 C142,106 162,100 178,94 Z"/>' +
+            '<path class="cv-poumon cv-cible" d="M202,40 C220,26 248,30 260,52 C272,74 270,96 256,102 C238,106 218,100 202,94 Z"/>',
+          noms: lab(106, 58, 'Poumons', 'end'), num: [134, 52],
           role: "Ici, le sang rejette le " + CO2 + " et se charge en " + O2 + ", dans les capillaires des alvéoles pulmonaires. Puis il retourne au cœur.",
         },
         {
           id: 'organes', nom: 'les organes', court: 'organes',
-          svg: '<rect class="cv-org cv-cible" x="110" y="412" width="160" height="70" rx="26"/>',
-          noms: lab(190, 434, 'Organes') + lab(190, 448, 'muscles, cerveau, intestin…', 'middle', 'petit'), num: [128, 428],
+          svg:
+            '<rect class="cv-org cv-cible" x="110" y="412" width="160" height="72" rx="26"/>' +
+            // de petits organes : l'intestin, les reins, un muscle
+            '<path class="cv-icone" d="M126,446 C126,436 142,436 142,446 C142,456 158,456 158,446 C158,436 174,436 174,446 C174,458 126,458 126,450"/>' +
+            '<ellipse class="cv-icone-r" cx="196" cy="446" rx="6" ry="9"/><ellipse class="cv-icone-r" cx="214" cy="446" rx="6" ry="9"/>' +
+            '<path class="cv-icone-r" d="M232,446 C240,434 260,434 268,446 C260,458 240,458 232,446 Z"/><path class="cv-icone" style="stroke-width:1" d="M240,441 H260 M238,446 H262 M240,451 H260"/>',
+          noms: lab(190, 428, 'Organes'), num: [126, 428],
           role: "Dans les capillaires de chaque organe, le sang donne l'" + O2 + " et les nutriments aux cellules, et reprend le " + CO2 + " et les déchets.",
         },
         {
           id: 'cap', nom: 'les capillaires', court: 'capillaires',
-          svg: '<rect x="122" y="54" width="148" height="24" fill="transparent"/><rect x="122" y="452" width="148" height="24" fill="transparent"/>' +
-            '<path class="cv-cap co2 cv-vx" d="M126,66 q7,-12 14,0 t14,0 t14,0 t14,0 t14,0"/><path class="cv-cap o2 cv-vx" d="M196,66 q7,-12 14,0 t14,0 t14,0 t14,0 t14,0"/>' +
-            '<path class="cv-cap co2 cv-vx" d="M126,464 q7,-12 14,0 t14,0 t14,0 t14,0 t14,0"/><path class="cv-cap o2 cv-vx" d="M196,464 q7,-12 14,0 t14,0 t14,0 t14,0 t14,0"/>',
-          noms: '', num: [250, 66],
+          svg: '<rect x="122" y="60" width="136" height="22" fill="transparent"/><rect x="122" y="460" width="148" height="20" fill="transparent"/>' +
+            '<path class="cv-cap co2 cv-vx" d="M126,74 q6,-10 12,0 t12,0 t12,0 t12,0"/><path class="cv-cap o2 cv-vx" d="M206,74 q6,-10 12,0 t12,0 t12,0 t12,0"/>' +
+            '<path class="cv-cap co2 cv-vx" d="M126,472 q7,-12 14,0 t14,0 t14,0 t14,0 t14,0"/><path class="cv-cap o2 cv-vx" d="M196,472 q7,-12 14,0 t14,0 t14,0 t14,0 t14,0"/>',
+          noms: '', num: [232, 74],
           role: "Des vaisseaux plus fins qu'un cheveu, entre les artères et les veines. C'est à travers leur paroi que se font les échanges : dans les poumons (" + O2 + " et " + CO2 + ") et dans les organes (" + O2 + ", nutriments, " + CO2 + ", déchets).",
         },
         {
           id: 'vc', nom: 'les veines caves', court: 'veines caves', sang: 'co2',
-          svg: hit('M110,447 H104 Q86,447 86,429 V246 Q86,228 104,228 H142', 22) + vx('M110,447 H104 Q86,447 86,429 V246 Q86,228 104,228 H142', 'co2 cv-cible', 12) + fl(86, 340, -90),
+          svg: hit('M110,447 H104 Q86,447 86,429 V246 Q86,228 104,228 H142', 22) + tube('M110,447 H104 Q86,447 86,429 V246 Q86,228 104,228 H142', 'co2', 12) + fl(86, 340, -90),
           noms: lab(78, 372, ['Veines', 'caves'], 'end'), num: [86, 300],
           role: "Elles ramènent au cœur, dans l'oreillette droite, le sang riche en " + CO2 + " qui vient des organes.",
         },
         {
           id: 'vp', nom: 'les veines pulmonaires', court: 'veines pulmonaires', sang: 'o2',
-          svg: hit('M222,86 V210', 22) + vx('M222,86 V210', 'o2 cv-cible', 10) + fl(222, 150, 90),
+          svg: hit('M222,86 V210', 22) + tube('M222,86 V210', 'o2', 10) + fl(222, 150, 90),
           noms: lab(232, 152, ['Veines', 'pulmonaires'], 'start'), num: [222, 120],
           role: "Elles ramènent des poumons vers l'oreillette gauche le sang riche en " + O2 + ".",
         },
         {
-          id: 'od', nom: "l'oreillette droite", court: 'oreillette droite', sang: 'co2',
-          svg: '<rect class="cv-cav co2 cv-cible" x="140" y="208" width="42" height="40" rx="8"/>',
-          noms: '<text class="cv-abr" x="161" y="232">OD</text>', num: [161, 228],
-          role: "Elle reçoit le sang riche en " + CO2 + " qui revient des organes.",
-        },
-        {
-          id: 'og', nom: "l'oreillette gauche", court: 'oreillette gauche', sang: 'o2',
-          svg: '<rect class="cv-cav o2 cv-cible" x="198" y="208" width="42" height="40" rx="8"/>',
-          noms: '<text class="cv-abr" x="219" y="232">OG</text>', num: [219, 228],
-          role: "Elle reçoit le sang riche en " + O2 + " qui revient des poumons.",
-        },
-        {
-          id: 'vd', nom: 'le ventricule droit', court: 'ventricule droit', sang: 'co2',
-          svg: '<rect class="cv-cav co2 cv-cible" x="140" y="254" width="42" height="44" rx="10"/>',
-          noms: '<text class="cv-abr" x="161" y="280">VD</text>', num: [161, 276],
-          role: "Il envoie le sang vers les poumons : c'est le départ de la petite circulation.",
-        },
-        {
-          id: 'vg', nom: 'le ventricule gauche', court: 'ventricule gauche', sang: 'o2',
-          svg: '<rect class="cv-cav o2 cv-cible" x="198" y="254" width="42" height="44" rx="10"/>',
-          noms: '<text class="cv-abr" x="219" y="280">VG</text>', num: [219, 276],
-          role: "Il envoie le sang vers tous les organes : c'est le départ de la grande circulation.",
-        },
-        {
           id: 'ap', nom: "l'artère pulmonaire", court: 'artère pulmonaire', sang: 'co2',
-          svg: hit('M176,272 Q190,272 190,258 V112 Q190,98 176,98 H170 Q160,98 160,86', 20) + vx('M176,272 Q190,272 190,258 V112 Q190,98 176,98 H170 Q160,98 160,86', 'co2 cv-cible', 9) + fl(190, 160, -90),
+          svg: hit('M176,272 Q190,272 190,258 V112 Q190,98 176,98 H170 Q160,98 160,86', 20) + tube('M176,272 Q190,272 190,258 V112 Q190,98 176,98 H170 Q160,98 160,86', 'co2', 9) + fl(190, 160, -90),
           noms: lab(182, 152, ['Artère', 'pulmonaire'], 'end'), num: [190, 190],
           role: "Elle conduit le sang riche en " + CO2 + " du ventricule droit vers les poumons.",
         },
         {
           id: 'aorte', nom: "l'aorte", court: 'aorte', sang: 'o2',
-          svg: hit('M234,290 H276 Q294,290 294,308 V430 Q294,447 274,447 H268', 22) + vx('M234,290 H276 Q294,290 294,308 V430 Q294,447 274,447 H268', 'o2 cv-cible', 12) + fl(294, 380, 90),
+          svg: hit('M234,290 H276 Q294,290 294,308 V430 Q294,447 274,447 H268', 22) + tube('M234,290 H276 Q294,290 294,308 V430 Q294,447 274,447 H268', 'o2', 12) + fl(294, 380, 90),
           noms: lab(302, 372, 'Aorte', 'start'), num: [294, 340],
           role: "Elle part du ventricule gauche et conduit le sang riche en " + O2 + " vers tous les organes.",
+        },
+        {
+          id: 'od', nom: "l'oreillette droite", court: 'oreillette droite', sang: 'co2',
+          svg: '<ellipse class="cv-cav co2 cv-cible" cx="161" cy="228" rx="20" ry="18"/>',
+          noms: '<text class="cv-abr" x="161" y="232">OD</text>', num: [161, 228],
+          role: "Elle reçoit le sang riche en " + CO2 + " qui revient des organes.",
+        },
+        {
+          id: 'og', nom: "l'oreillette gauche", court: 'oreillette gauche', sang: 'o2',
+          svg: '<ellipse class="cv-cav o2 cv-cible" cx="219" cy="228" rx="20" ry="18"/>',
+          noms: '<text class="cv-abr" x="219" y="232">OG</text>', num: [219, 228],
+          role: "Elle reçoit le sang riche en " + O2 + " qui revient des poumons.",
+        },
+        {
+          id: 'vd', nom: 'le ventricule droit', court: 'ventricule droit', sang: 'co2',
+          svg: '<path class="cv-cav co2 cv-cible" d="M142,254 H184 V296 Q166,300 152,286 Q142,274 142,254 Z"/>',
+          noms: '<text class="cv-abr" x="164" y="278">VD</text>', num: [161, 276],
+          role: "Il envoie le sang vers les poumons : c'est le départ de la petite circulation.",
+        },
+        {
+          id: 'vg', nom: 'le ventricule gauche', court: 'ventricule gauche', sang: 'o2',
+          svg: '<path class="cv-cav o2 cv-cible" d="M196,254 H238 Q240,280 222,300 Q206,310 196,304 Z"/>',
+          noms: '<text class="cv-abr" x="214" y="280">VG</text>', num: [219, 276],
+          role: "Il envoie le sang vers tous les organes : c'est le départ de la grande circulation.",
         },
       ],
       etapes: [
         { t: "Le sang riche en " + CO2 + " revient des organes par les veines caves et entre dans l'oreillette droite.", on: ['vc', 'od'], m: [['M140,447 H104 Q86,447 86,429 V246 Q86,228 104,228 H161', 'co2']], cercle: 'grande' },
         { t: "Il passe dans le ventricule droit.", on: ['od', 'vd'], m: [['M161,228 V276', 'co2']] },
-        { t: "Le ventricule droit l'envoie par l'artère pulmonaire vers les poumons : c'est le début de la petite circulation.", on: ['vd', 'ap'], m: [['M161,276 Q176,272 186,268 Q190,266 190,258 V112 Q190,98 176,98 H170 Q160,98 160,66', 'co2']], cercle: 'petite' },
-        { t: "Dans les capillaires des poumons, le sang rejette le " + CO2 + " et se charge en " + O2 + ".", on: ['poumons', 'cap'], m: [['M160,66 Q191,36 222,66', 'co2>o2']], cercle: 'petite' },
-        { t: "Riche en " + O2 + ", il revient par les veines pulmonaires dans l'oreillette gauche : fin de la petite circulation.", on: ['vp', 'og'], m: [['M222,66 V228', 'o2']], cercle: 'petite' },
+        { t: "Le ventricule droit l'envoie par l'artère pulmonaire vers les poumons : c'est le début de la petite circulation.", on: ['vd', 'ap'], m: [['M161,276 Q176,272 186,268 Q190,266 190,258 V112 Q190,98 176,98 H170 Q160,98 160,72', 'co2']], cercle: 'petite' },
+        { t: "Dans les capillaires des poumons, le sang rejette le " + CO2 + " et se charge en " + O2 + ".", on: ['poumons', 'cap'], m: [['M160,72 Q191,48 222,72', 'co2>o2']], cercle: 'petite' },
+        { t: "Riche en " + O2 + ", il revient par les veines pulmonaires dans l'oreillette gauche : fin de la petite circulation.", on: ['vp', 'og'], m: [['M222,72 V228', 'o2']], cercle: 'petite' },
         { t: "Il passe dans le ventricule gauche.", on: ['og', 'vg'], m: [['M219,228 V276', 'o2']] },
         { t: "Le ventricule gauche l'envoie dans l'aorte, vers tous les organes : c'est la grande circulation.", on: ['vg', 'aorte'], m: [['M219,276 Q224,290 234,290 H276 Q294,290 294,308 V430 Q294,447 274,447 H240', 'o2']], cercle: 'grande' },
         { t: "Dans les capillaires des organes, le sang donne l'" + O2 + " et les nutriments, et reprend le " + CO2 + " et les déchets. Puis il repart vers le cœur : le tour recommence.", on: ['organes', 'cap'], m: [['M240,447 Q190,476 140,447', 'o2>co2']], cercle: 'grande' },
@@ -6707,25 +6742,25 @@ html.pres .balise::after{display:none}
       parts: [
         {
           id: 'ar', nom: "l'artère rénale", court: 'artère rénale', sang: 'o2',
-          svg: hit('M206,132 H88 M206,132 H292', 18) + vx('M206,132 H88 M206,132 H292', 'o2 cv-cible', 8),
+          svg: hit('M206,132 H88 M206,132 H292', 18) + tube('M206,132 H88 M206,132 H292', 'o2', 8),
           noms: lab(250, 112, ['Artère', 'rénale'], 'middle', 'petit'), num: [244, 132],
           role: "Une branche de l'aorte : elle apporte au rein le sang à filtrer.",
         },
         {
           id: 'vci', nom: 'la veine cave inférieure', court: 'veine cave inférieure', sang: 'co2',
-          svg: hit('M174,6 V250', 22) + vx('M174,6 V250', 'co2 cv-cible', 14) + fl(174, 90, -90),
+          svg: hit('M174,6 V250', 22) + tube('M174,6 V250', 'co2', 14) + fl(174, 90, -90),
           noms: lab(166, 16, 'Veine cave inférieure', 'end'), num: [174, 60],
           role: "La grande veine qui ramène au cœur le sang du bas du corps, dont le sang filtré par les reins.",
         },
         {
           id: 'aorte', nom: "l'aorte", court: 'aorte', sang: 'o2',
-          svg: hit('M206,6 V250', 22) + vx('M206,6 V250', 'o2 cv-cible', 14) + fl(206, 90, 90),
+          svg: hit('M206,6 V250', 22) + tube('M206,6 V250', 'o2', 14) + fl(206, 90, 90),
           noms: lab(214, 16, 'Aorte', 'start'), num: [206, 60],
           role: "La grande artère qui part du cœur. Elle donne une branche à chaque rein : l'artère rénale.",
         },
         {
           id: 'vr', nom: 'la veine rénale', court: 'veine rénale', sang: 'co2',
-          svg: hit('M174,168 H88 M174,168 H292', 18) + vx('M174,168 H88 M174,168 H292', 'co2 cv-cible', 8),
+          svg: hit('M174,168 H88 M174,168 H292', 18) + tube('M174,168 H88 M174,168 H292', 'co2', 8),
           noms: lab(250, 188, ['Veine', 'rénale'], 'middle', 'petit'), num: [244, 168],
           role: "Elle ramène le sang filtré par le rein vers la veine cave inférieure.",
         },
@@ -6739,7 +6774,7 @@ html.pres .balise::after{display:none}
         },
         {
           id: 'uretere', nom: "l'uretère", court: 'uretère', sang: 'urine',
-          svg: hit('M88,192 C100,240 136,272 166,306 M292,192 C280,240 244,272 214,306', 18) + vx('M88,192 C100,240 136,272 166,306 M292,192 C280,240 244,272 214,306', 'urine cv-cible', 6),
+          svg: hit('M88,192 C100,240 136,272 166,306 M292,192 C280,240 244,272 214,306', 18) + tube('M88,192 C100,240 136,272 166,306 M292,192 C280,240 244,272 214,306', 'urine', 6),
           noms: lab(114, 274, 'Uretère', 'end') + lab(266, 274, 'Uretère', 'start'), num: [126, 266],
           role: "Le conduit qui amène l'urine du rein à la vessie. Il y en a deux, un par rein.",
         },
@@ -6751,7 +6786,7 @@ html.pres .balise::after{display:none}
         },
         {
           id: 'uretre', nom: "l'urètre", court: 'urètre', sang: 'urine',
-          svg: hit('M190,372 V434', 20) + vx('M190,372 V434', 'urine cv-cible', 7),
+          svg: hit('M190,372 V434', 20) + tube('M190,372 V434', 'urine', 7),
           noms: lab(200, 422, 'Urètre', 'start'), num: [190, 406],
           role: "Le conduit par lequel l'urine sort de la vessie, vers l'extérieur du corps. Il n'y en a qu'un.",
         },
@@ -6771,17 +6806,21 @@ html.pres .balise::after{display:none}
 
   /* ---------- le schéma en texte SVG ----------
      o.numeros : { id: n } -> pastilles numérotées, sans noms ; o.noms : étiquettes ; o.inter : parties à toucher */
+  let nG = 0;
   function svg(vue, o) {
     o = o || {};
-    const V = VUES[vue];
+    const V = VUES[vue],
+      G = 'cvg' + ++nG,
+      g = (s) => s.replace(/\{G\}/g, G);
     const part = (p) => {
       const a = o.inter ? ` data-p="${p.id}" role="button" tabindex="0" aria-label="${p.court}"` : '';
-      return `<g class="cv-p"${a}>${p.svg}</g>`;
+      return `<g class="cv-p"${a}>${g(p.svg)}</g>`;
     };
     const avant = V.parts.filter((p) => V.avant.includes(p.id)),
       apres = V.parts.filter((p) => !V.avant.includes(p.id));
     let h = `<svg class="cv-svg${o.cls ? ' ' + o.cls : ''}" viewBox="${V.vb}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${V.titre} : schéma">`;
-    h += avant.map(part).join('') + V.fond + apres.map(part).join('');
+    h += `<defs><linearGradient id="${G}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" class="cv-g-a"/><stop offset="1" class="cv-g-b"/></linearGradient></defs>`;
+    h += avant.map(part).join('') + g(V.fond) + apres.map(part).join('');
     if (o.noms) h += `<g class="cv-noms">${V.parts.map((p) => p.noms).join('')}</g>`;
     if (o.numeros)
       for (const p of V.parts)
