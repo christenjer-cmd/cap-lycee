@@ -18,6 +18,8 @@
   --f-texte:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --f-math:"STIX Two Text","Cambria Math",Cambria,"Times New Roman",serif;
   --r-carte:16px; --r-bouton:12px; --r-petit:8px;
+  /* schémas du système cardiovasculaire : rouge = sang riche en O2, bleu = sang riche en CO2, comme dans les fiches de classe */
+  --o2:#cf2f2a; --o2-fond:#f9d3cf; --co2:#2c5fd0; --co2-fond:#d3e0fb; --muscle:#e7a99f; --muscle-trait:#b9645a; --urine:#d6a300; --urine-fond:#fbeab0;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -26,6 +28,7 @@
     --juste:#83d9ab; --juste-fond:#1b382b; --faux:#ff9f90; --faux-fond:#42241f; --vu:#f1d674; --vu-fond:#3a3316;
     --flamme:#ffa565; --flamme-fond:#43291a; --or:#f1d674; --or-fond:#3a3316;
     --s-maths:#5d5320; --s-francais:#5e2e3f; --s-allemand:#2b5331; --s-anglais:#244b67; --s-sciences:#1e5049; --s-geographie:#5f4120; --s-histoire:#42356d;
+    --o2:#ff7a70; --o2-fond:#5a2622; --co2:#7fa6ff; --co2-fond:#21305a; --muscle:#7a3f39; --muscle-trait:#c98479; --urine:#f1cf5a; --urine-fond:#4a3d12;
     color-scheme:dark;
   }
 }
@@ -35,6 +38,7 @@
   --juste:#83d9ab; --juste-fond:#1b382b; --faux:#ff9f90; --faux-fond:#42241f; --vu:#f1d674; --vu-fond:#3a3316;
   --flamme:#ffa565; --flamme-fond:#43291a; --or:#f1d674; --or-fond:#3a3316;
   --s-maths:#5d5320; --s-francais:#5e2e3f; --s-allemand:#2b5331; --s-anglais:#244b67; --s-sciences:#1e5049; --s-geographie:#5f4120; --s-histoire:#42356d;
+  --o2:#ff7a70; --o2-fond:#5a2622; --co2:#7fa6ff; --co2-fond:#21305a; --muscle:#7a3f39; --muscle-trait:#c98479; --urine:#f1cf5a; --urine-fond:#4a3d12;
   color-scheme:dark;
 }
 :root[data-theme="light"]{color-scheme:light}
@@ -630,7 +634,77 @@ html.pres .balise::after{display:none}
   html.pres .s-corps{padding-bottom:170px}
 }
 
+/* ---------- atelier : le système cardiovasculaire (coeur.js) ---------- */
+.atelier{background:var(--feuille);border:1px solid var(--trait);border-radius:var(--r-carte);padding:12px 12px 14px}
+.atelier .segments{margin-top:0}
+.atelier .segments+.segments{margin-top:8px}
+.atelier .segments button{font-size:14px;min-height:42px;color:var(--encre)}
+.atelier .segments button[aria-pressed="true"]{color:var(--sur-accent)}
+.cv-zone{margin:10px auto 0;max-width:420px}
+.cv-svg{display:block;width:100%;height:auto;overflow:visible;font-family:var(--f-texte)}
+.cv-fig{max-width:340px;margin:8px auto 0}
+.cv-mur{fill:var(--muscle);stroke:var(--muscle-trait);stroke-width:2}
+.cv-cav{stroke:var(--muscle-trait);stroke-width:1.5}
+.cv-cav.co2{fill:var(--co2-fond)}
+.cv-cav.o2{fill:var(--o2-fond)}
+.cv-cav.urine{fill:var(--urine-fond);stroke:var(--urine)}
+.cv-paroi{fill:var(--muscle);stroke:var(--muscle-trait);stroke-width:1.5}
+.cv-vx{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.cv-vx.co2{stroke:var(--co2)}
+.cv-vx.o2{stroke:var(--o2)}
+.cv-vx.urine{stroke:var(--urine)}
+.cv-fl.co2{fill:var(--co2)}
+.cv-fl.o2{fill:var(--o2)}
+.cv-fl.urine{fill:var(--urine)}
+.cv-valve{fill:none;stroke:var(--feuille);stroke-width:3;stroke-linecap:round}
+.cv-org{fill:var(--papier);stroke:var(--encre-2);stroke-width:1.5}
+.cv-rein{fill:var(--muscle);stroke:var(--muscle-trait);stroke-width:2}
+.cv-cap{fill:none;stroke-width:2.2;stroke-linecap:round}
+.cv-hit{fill:none;stroke:transparent;stroke-linecap:round;pointer-events:stroke}
+.cv-lab{fill:var(--encre);font-size:11.5px;font-weight:600;pointer-events:none}
+.cv-lab.petit{font-size:10px;font-weight:500;fill:var(--encre-2)}
+.cv-abr{fill:var(--encre);font-size:11px;font-weight:700;text-anchor:middle;pointer-events:none}
+.cv-num circle{fill:var(--feuille);stroke:var(--encre);stroke-width:1.5}
+.cv-num text{fill:var(--encre);font-size:12px;font-weight:700;text-anchor:middle}
+.cv-m{fill:none;stroke:none}
+.cv-p[data-p]{cursor:pointer;outline:none}
+.cv-p[data-p]:focus-visible .cv-cible,.cv-p[data-p]:hover .cv-cible{filter:brightness(1.08)}
+.cv-p[data-p]:focus-visible{outline:2px dashed var(--accent)}
+.cv-p.on :is(.cv-cav,.cv-org,.cv-rein,.cv-paroi){stroke:var(--accent);stroke-width:3.5}
+.cv-p.on :is(.cv-vx,.cv-valve){filter:drop-shadow(0 0 4px var(--accent))}
+.cv-p.bon :is(.cv-cav,.cv-org,.cv-rein,.cv-paroi){stroke:var(--juste);stroke-width:4}
+.cv-p.bon :is(.cv-vx,.cv-valve){filter:drop-shadow(0 0 6px var(--juste)) drop-shadow(0 0 2px var(--juste))}
+.cv-p.faux :is(.cv-cav,.cv-org,.cv-rein,.cv-paroi){stroke:var(--faux);stroke-width:4}
+.cv-p.faux :is(.cv-vx,.cv-valve){filter:drop-shadow(0 0 6px var(--faux)) drop-shadow(0 0 2px var(--faux))}
+.cv-svg.estompe .cv-p:not(.on){opacity:.28}
+.cv-goutte{stroke:var(--feuille);stroke-width:1.5}
+.cv-goutte.co2{fill:var(--co2)}
+.cv-goutte.o2{fill:var(--o2)}
+.cv-goutte.urine{fill:var(--urine)}
+.cv-goutte.suivie{stroke:var(--encre);stroke-width:2.5}
+.cv-info{margin-top:10px;min-height:76px;padding:10px 12px;border-radius:var(--r-petit);background:var(--papier)}
+.cv-info p{margin:4px 0 0}
+.cv-info b{font-size:16px}
+.cv-chip{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:99px;font-size:12.5px;font-weight:600;vertical-align:2px}
+.cv-chip.o2{background:var(--o2-fond);color:var(--o2)}
+.cv-chip.co2{background:var(--co2-fond);color:var(--co2)}
+.cv-chip.urine{background:var(--urine-fond);color:var(--encre)}
+.cv-ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.cv-ctrl .btn-2{min-height:44px;padding:8px 14px;font-size:15px;flex:1 1 auto}
+.cv-ctrl label{display:flex;align-items:center;gap:8px;font-size:14.5px;cursor:pointer}
+.cv-ctrl input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent)}
+.cv-legende{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:8px;font-size:13px;color:var(--encre-2)}
+.cv-pouls{text-align:center}
+.cv-pouls .cv-bat{width:120px;height:108px;margin:10px auto 0;display:block}
+.cv-bat path{fill:var(--o2);transform-origin:50% 55%;animation:cv-bat .8s ease-in-out infinite}
+@keyframes cv-bat{0%,100%{transform:scale(1)}12%{transform:scale(1.14)}24%{transform:scale(.98)}36%{transform:scale(1.06)}}
+.cv-bpm{font-size:15px;margin:6px 0 0}
+.cv-bpm b{font-size:30px;font-family:var(--f-titre);color:var(--o2)}
+.cv-pouls .bloc{text-align:left;margin-top:10px;background:var(--papier)}
+.cv-pouls input{width:84px;min-height:42px;font-size:17px;padding:4px 8px;border:1.5px solid var(--trait);border-radius:var(--r-petit);background:var(--feuille);color:var(--encre)}
+.cv-chrono{font-family:var(--f-titre);font-size:26px;font-weight:700;color:var(--accent)}
 @media (prefers-reduced-motion: reduce){
+  .cv-bat path{animation:none}
   .secoue,.combo.pop,.retour.ok{animation:none}
   .xp-pop,.confettis{display:none}
   .a-plein,.s-cases i,.btn,.btn-2,.btn-clair,.choix-b{transition:none}
@@ -6414,6 +6488,839 @@ html.pres .balise::after{display:none}
   });
 })();
 </script>
+<script>/* coeur.js */
+'use strict';
+/* Cap Lycée — sciences : le système cardiovasculaire en schémas interactifs, dessinés pour l'appli.
+   Trois schémas (le cœur, la circulation, les reins) et le pouls.
+   CL.coeur.figure(vue, { numeros }) rend un schéma fixe (texte SVG, sans DOM) pour les questions ;
+   CL.ateliers.coeur(el) monte l'atelier dans la page du chapitre : explorer (toucher une partie), suivre le sang
+   (pas à pas ou en lecture), jeu des noms, et le pouls (rythme selon l'effort, 220 – âge, mesurer son pouls).
+   Comme dans les fiches de la classe : le cœur est vu de face, sa droite est à ta gauche ;
+   rouge = sang riche en O2, bleu = sang riche en CO2, jaune = urine. Aucun exemple de maladie. */
+(function () {
+  const O2 = 'O<sub>2</sub>',
+    CO2 = 'CO<sub>2</sub>';
+  const SANG = { o2: 'sang riche en ' + O2, co2: 'sang riche en ' + CO2, urine: 'urine' };
+
+  /* ---------- petits outils de dessin ---------- */
+  const vx = (d, s, w, extra) => `<path class="cv-vx ${s}" d="${d}" stroke-width="${w}"${extra || ''}/>`;
+  const hit = (d, w) => `<path class="cv-hit" d="${d}" stroke-width="${w}"/>`;
+  /* flèche blanche posée sur un vaisseau : le sens du sang */
+  const fl = (x, y, a) => `<polygon class="cv-valve" style="fill:var(--feuille);stroke:none" points="-4,-4 5,0 -4,4" transform="translate(${x} ${y}) rotate(${a})"/>`;
+  const lab = (x, y, txt, anc, cls) => {
+    const l = [].concat(txt);
+    return `<text class="cv-lab${cls ? ' ' + cls : ''}" x="${x}" y="${y}" text-anchor="${anc || 'middle'}">${l.map((s, i) => `<tspan x="${x}"${i ? ' dy="13"' : ''}>${s}</tspan>`).join('')}</text>`;
+  };
+  const labV = (x, y, txt) => `<text class="cv-lab" x="${x}" y="${y}" text-anchor="start" transform="rotate(-90 ${x} ${y})">${txt}</text>`;
+
+  /* ================= les trois schémas =================
+     Chaque partie : id, nom (avec article), court (pour les listes), sang, svg (la forme, dont .cv-cible),
+     noms (étiquette affichée avec les noms), num (place du numéro), role, jeu (false : pas dans le jeu ni les questions). */
+  const VUES = {
+    coeur: {
+      titre: 'Le cœur',
+      vb: '0 0 380 420',
+      note: "Le cœur est vu de face, comme sur tes fiches : son côté droit est à ta gauche.",
+      avant: [
+        // vaisseaux qui entrent dans le cœur : dessinés sous le muscle
+        'vcs', 'vci', 'vp',
+      ],
+      fond: '<path class="cv-mur" d="M58,124 Q58,104 80,104 H280 Q302,104 302,124 V236 Q302,300 252,346 Q216,378 186,382 Q156,376 118,346 Q58,300 58,236 Z"/>',
+      parts: [
+        {
+          id: 'vcs', nom: 'la veine cave supérieure', court: 'veine cave supérieure', sang: 'co2',
+          svg: hit('M122,10 V124', 26) + vx('M122,10 V124', 'co2 cv-cible', 18) + fl(122, 44, 90),
+          noms: lab(112, 18, 'Veine cave supérieure', 'end'), num: [122, 52],
+          role: "Elle ramène au cœur le sang du haut du corps (tête, bras), riche en " + CO2 + ".",
+        },
+        {
+          id: 'vci', nom: 'la veine cave inférieure', court: 'veine cave inférieure', sang: 'co2',
+          svg: hit('M40,410 V196 Q40,160 74,160', 26) + vx('M40,410 V196 Q40,160 74,160', 'co2 cv-cible', 18) + fl(40, 300, -90),
+          noms: labV(26, 400, 'Veine cave inférieure'), num: [40, 250],
+          role: "Elle ramène au cœur le sang du bas du corps (jambes, organes du ventre), riche en " + CO2 + ".",
+        },
+        {
+          id: 'vp', nom: 'les veines pulmonaires', court: 'veines pulmonaires', sang: 'o2',
+          svg: hit('M376,138 H290 M376,166 H290', 20) + vx('M376,138 H290 M376,166 H290', 'o2 cv-cible', 12) + fl(330, 138, 180) + fl(330, 166, 180),
+          noms: lab(376, 196, ['Veines', 'pulmonaires'], 'end'), num: [352, 152],
+          role: "Elles ramènent dans l'oreillette gauche le sang riche en " + O2 + " qui vient des poumons. Ce sont des veines : elles arrivent au cœur.",
+        },
+        {
+          id: 'od', nom: "l'oreillette droite", court: 'oreillette droite', sang: 'co2',
+          svg: '<rect class="cv-cav co2 cv-cible" x="72" y="118" width="78" height="66" rx="14"/>',
+          noms: lab(111, 146, ['Oreillette', 'droite']), num: [111, 140],
+          role: "Elle reçoit le sang riche en " + CO2 + " qui revient du corps par les veines caves.",
+        },
+        {
+          id: 'og', nom: "l'oreillette gauche", court: 'oreillette gauche', sang: 'o2',
+          svg: '<rect class="cv-cav o2 cv-cible" x="210" y="118" width="78" height="66" rx="14"/>',
+          noms: lab(249, 146, ['Oreillette', 'gauche']), num: [249, 140],
+          role: "Elle reçoit le sang riche en " + O2 + " qui revient des poumons par les veines pulmonaires.",
+        },
+        {
+          id: 'vd', nom: 'le ventricule droit', court: 'ventricule droit', sang: 'co2',
+          svg: '<path class="cv-cav co2 cv-cible" d="M72,198 H172 V334 Q122,322 94,288 Q72,262 72,236 Z"/>',
+          noms: lab(122, 258, ['Ventricule', 'droit']), num: [122, 272],
+          role: "En se contractant, il envoie le sang riche en " + CO2 + " vers les poumons, par l'artère pulmonaire.",
+        },
+        {
+          id: 'vg', nom: 'le ventricule gauche', court: 'ventricule gauche', sang: 'o2',
+          svg: '<path class="cv-cav o2 cv-cible" d="M196,198 H276 V238 Q276,290 240,324 Q218,344 196,352 Z"/>',
+          noms: lab(236, 258, ['Ventricule', 'gauche']), num: [236, 272],
+          role: "Il envoie le sang riche en " + O2 + " dans tout le corps, par l'aorte. Sa paroi est la plus épaisse : c'est lui qui pousse le sang le plus loin.",
+        },
+        {
+          id: 'paroi', nom: 'la paroi interventriculaire', court: 'paroi interventriculaire',
+          svg: '<rect class="cv-paroi cv-cible" x="173" y="200" width="22" height="146" rx="6"/>',
+          noms: '<path d="M184,346 V392" stroke="var(--encre-2)" stroke-width="1"/>' + lab(184, 406, 'Paroi interventriculaire'), num: [184, 300],
+          role: "Le mur de muscle qui sépare le côté droit du côté gauche du cœur : le sang riche en " + O2 + " et le sang riche en " + CO2 + " ne se mélangent jamais.",
+        },
+        {
+          id: 'valv', nom: 'les valvules cardiaques', court: 'valvules cardiaques', jeu: false,
+          svg: '<rect x="90" y="182" width="42" height="20" fill="transparent"/><rect x="228" y="182" width="42" height="20" fill="transparent"/><path class="cv-valve cv-cible" d="M96,186 L110,197 M126,186 L112,197 M234,186 L248,197 M264,186 L250,197"/>',
+          noms: '', num: [111, 191],
+          role: "Des clapets entre chaque oreillette et son ventricule : le sang ne passe que dans un sens, de l'oreillette vers le ventricule.",
+        },
+        {
+          id: 'ap', nom: "l'artère pulmonaire", court: 'artère pulmonaire', sang: 'co2',
+          svg: hit('M162,200 V76 H24 M162,76 H306', 22) + vx('M162,200 V76 H24 M162,76 H306', 'co2 cv-cible', 14) + fl(162, 140, -90) + fl(60, 76, 180) + fl(286, 76, 0) + '<path class="cv-valve" d="M155,206 L162,198 L169,206"/>',
+          noms: lab(226, 98, 'Artère pulmonaire', 'start') + lab(20, 64, 'vers le poumon droit', 'start', 'petit') + lab(316, 62, 'vers le poumon gauche', 'end', 'petit'), num: [252, 76],
+          role: "Elle conduit le sang riche en " + CO2 + " du ventricule droit vers les deux poumons. C'est une artère, car elle part du cœur, même si son sang est pauvre en " + O2 + ".",
+        },
+        {
+          id: 'aorte', nom: "l'aorte", court: 'aorte', sang: 'o2',
+          svg: hit('M200,200 V70 Q200,26 244,26 H294 Q334,26 334,100', 26) + vx('M200,200 V70 Q200,26 244,26 H294 Q334,26 334,100', 'o2 cv-cible', 18) + fl(200, 150, -90) + fl(334, 80, 90) + '<path class="cv-valve" d="M193,206 L200,198 L207,206"/>',
+          noms: lab(270, 12, 'Aorte') + lab(334, 124, 'vers tout le corps', 'middle', 'petit'), num: [270, 26],
+          role: "La plus grosse artère du corps. Elle part du ventricule gauche et distribue le sang riche en " + O2 + " dans tout le corps.",
+        },
+      ],
+      etapes: [
+        { t: "Le sang qui revient du corps, riche en " + CO2 + ", arrive par les veines caves dans l'oreillette droite.", on: ['vcs', 'vci', 'od'], m: [['M122,12 V150', 'co2'], ['M40,404 V196 Q40,160 74,160 H104', 'co2']] },
+        { t: "L'oreillette droite se contracte : le sang passe dans le ventricule droit. La valvule l'empêche de revenir en arrière.", on: ['od', 'vd', 'valv'], m: [['M111,152 V262', 'co2']] },
+        { t: "Le ventricule droit se contracte et envoie le sang dans l'artère pulmonaire, vers les deux poumons.", on: ['vd', 'ap'], m: [['M122,266 Q162,262 162,200 V76 H24', 'co2'], ['M122,266 Q162,262 162,200 V76 H306', 'co2']] },
+        { t: "Dans les poumons, le sang s'est chargé en " + O2 + ". Il revient par les veines pulmonaires dans l'oreillette gauche.", on: ['vp', 'og'], m: [['M376,138 H250', 'o2'], ['M376,166 H250', 'o2']] },
+        { t: "L'oreillette gauche se contracte : le sang passe dans le ventricule gauche.", on: ['og', 'vg', 'valv'], m: [['M249,152 V262', 'o2']] },
+        { t: "Le ventricule gauche, le plus musclé, envoie le sang riche en " + O2 + " dans l'aorte, vers tout le corps. La paroi interventriculaire sépare les deux côtés : les deux sangs ne se mélangent jamais.", on: ['vg', 'aorte', 'paroi'], m: [['M240,268 Q200,262 200,200 V70 Q200,26 244,26 H294 Q334,26 334,100', 'o2']] },
+      ],
+    },
+
+    circulation: {
+      titre: 'La circulation',
+      vb: '0 0 380 500',
+      note: "Deux circuits partent du cœur : la petite circulation vers les poumons, la grande circulation vers tous les organes.",
+      fond:
+        '<rect class="cv-mur" x="130" y="198" width="120" height="110" rx="24"/>' +
+        lab(161, 324, 'côté droit', 'middle', 'petit') + lab(219, 324, 'côté gauche', 'middle', 'petit'),
+      avant: ['vp', 'vc'],
+      parts: [
+        {
+          id: 'poumons', nom: 'les poumons', court: 'poumons',
+          svg: '<rect class="cv-org cv-cible" x="110" y="18" width="160" height="70" rx="26"/>',
+          noms: lab(190, 42, 'Poumons'), num: [128, 34],
+          role: "Ici, le sang rejette le " + CO2 + " et se charge en " + O2 + ", dans les capillaires des alvéoles pulmonaires. Puis il retourne au cœur.",
+        },
+        {
+          id: 'organes', nom: 'les organes', court: 'organes',
+          svg: '<rect class="cv-org cv-cible" x="110" y="412" width="160" height="70" rx="26"/>',
+          noms: lab(190, 434, 'Organes') + lab(190, 448, 'muscles, cerveau, intestin…', 'middle', 'petit'), num: [128, 428],
+          role: "Dans les capillaires de chaque organe, le sang donne l'" + O2 + " et les nutriments aux cellules, et reprend le " + CO2 + " et les déchets.",
+        },
+        {
+          id: 'cap', nom: 'les capillaires', court: 'capillaires',
+          svg: '<rect x="122" y="54" width="148" height="24" fill="transparent"/><rect x="122" y="452" width="148" height="24" fill="transparent"/>' +
+            '<path class="cv-cap co2 cv-vx" d="M126,66 q7,-12 14,0 t14,0 t14,0 t14,0 t14,0"/><path class="cv-cap o2 cv-vx" d="M196,66 q7,-12 14,0 t14,0 t14,0 t14,0 t14,0"/>' +
+            '<path class="cv-cap co2 cv-vx" d="M126,464 q7,-12 14,0 t14,0 t14,0 t14,0 t14,0"/><path class="cv-cap o2 cv-vx" d="M196,464 q7,-12 14,0 t14,0 t14,0 t14,0 t14,0"/>',
+          noms: '', num: [250, 66],
+          role: "Des vaisseaux plus fins qu'un cheveu, entre les artères et les veines. C'est à travers leur paroi que se font les échanges : dans les poumons (" + O2 + " et " + CO2 + ") et dans les organes (" + O2 + ", nutriments, " + CO2 + ", déchets).",
+        },
+        {
+          id: 'vc', nom: 'les veines caves', court: 'veines caves', sang: 'co2',
+          svg: hit('M110,447 H104 Q86,447 86,429 V246 Q86,228 104,228 H142', 22) + vx('M110,447 H104 Q86,447 86,429 V246 Q86,228 104,228 H142', 'co2 cv-cible', 12) + fl(86, 340, -90),
+          noms: lab(78, 372, ['Veines', 'caves'], 'end'), num: [86, 300],
+          role: "Elles ramènent au cœur, dans l'oreillette droite, le sang riche en " + CO2 + " qui vient des organes.",
+        },
+        {
+          id: 'vp', nom: 'les veines pulmonaires', court: 'veines pulmonaires', sang: 'o2',
+          svg: hit('M222,86 V210', 22) + vx('M222,86 V210', 'o2 cv-cible', 10) + fl(222, 150, 90),
+          noms: lab(232, 152, ['Veines', 'pulmonaires'], 'start'), num: [222, 120],
+          role: "Elles ramènent des poumons vers l'oreillette gauche le sang riche en " + O2 + ".",
+        },
+        {
+          id: 'od', nom: "l'oreillette droite", court: 'oreillette droite', sang: 'co2',
+          svg: '<rect class="cv-cav co2 cv-cible" x="140" y="208" width="42" height="40" rx="8"/>',
+          noms: '<text class="cv-abr" x="161" y="232">OD</text>', num: [161, 228],
+          role: "Elle reçoit le sang riche en " + CO2 + " qui revient des organes.",
+        },
+        {
+          id: 'og', nom: "l'oreillette gauche", court: 'oreillette gauche', sang: 'o2',
+          svg: '<rect class="cv-cav o2 cv-cible" x="198" y="208" width="42" height="40" rx="8"/>',
+          noms: '<text class="cv-abr" x="219" y="232">OG</text>', num: [219, 228],
+          role: "Elle reçoit le sang riche en " + O2 + " qui revient des poumons.",
+        },
+        {
+          id: 'vd', nom: 'le ventricule droit', court: 'ventricule droit', sang: 'co2',
+          svg: '<rect class="cv-cav co2 cv-cible" x="140" y="254" width="42" height="44" rx="10"/>',
+          noms: '<text class="cv-abr" x="161" y="280">VD</text>', num: [161, 276],
+          role: "Il envoie le sang vers les poumons : c'est le départ de la petite circulation.",
+        },
+        {
+          id: 'vg', nom: 'le ventricule gauche', court: 'ventricule gauche', sang: 'o2',
+          svg: '<rect class="cv-cav o2 cv-cible" x="198" y="254" width="42" height="44" rx="10"/>',
+          noms: '<text class="cv-abr" x="219" y="280">VG</text>', num: [219, 276],
+          role: "Il envoie le sang vers tous les organes : c'est le départ de la grande circulation.",
+        },
+        {
+          id: 'ap', nom: "l'artère pulmonaire", court: 'artère pulmonaire', sang: 'co2',
+          svg: hit('M176,272 Q190,272 190,258 V112 Q190,98 176,98 H170 Q160,98 160,86', 20) + vx('M176,272 Q190,272 190,258 V112 Q190,98 176,98 H170 Q160,98 160,86', 'co2 cv-cible', 9) + fl(190, 160, -90),
+          noms: lab(182, 152, ['Artère', 'pulmonaire'], 'end'), num: [190, 190],
+          role: "Elle conduit le sang riche en " + CO2 + " du ventricule droit vers les poumons.",
+        },
+        {
+          id: 'aorte', nom: "l'aorte", court: 'aorte', sang: 'o2',
+          svg: hit('M234,290 H276 Q294,290 294,308 V430 Q294,447 274,447 H268', 22) + vx('M234,290 H276 Q294,290 294,308 V430 Q294,447 274,447 H268', 'o2 cv-cible', 12) + fl(294, 380, 90),
+          noms: lab(302, 372, 'Aorte', 'start'), num: [294, 340],
+          role: "Elle part du ventricule gauche et conduit le sang riche en " + O2 + " vers tous les organes.",
+        },
+      ],
+      etapes: [
+        { t: "Le sang riche en " + CO2 + " revient des organes par les veines caves et entre dans l'oreillette droite.", on: ['vc', 'od'], m: [['M140,447 H104 Q86,447 86,429 V246 Q86,228 104,228 H161', 'co2']], cercle: 'grande' },
+        { t: "Il passe dans le ventricule droit.", on: ['od', 'vd'], m: [['M161,228 V276', 'co2']] },
+        { t: "Le ventricule droit l'envoie par l'artère pulmonaire vers les poumons : c'est le début de la petite circulation.", on: ['vd', 'ap'], m: [['M161,276 Q176,272 186,268 Q190,266 190,258 V112 Q190,98 176,98 H170 Q160,98 160,66', 'co2']], cercle: 'petite' },
+        { t: "Dans les capillaires des poumons, le sang rejette le " + CO2 + " et se charge en " + O2 + ".", on: ['poumons', 'cap'], m: [['M160,66 Q191,36 222,66', 'co2>o2']], cercle: 'petite' },
+        { t: "Riche en " + O2 + ", il revient par les veines pulmonaires dans l'oreillette gauche : fin de la petite circulation.", on: ['vp', 'og'], m: [['M222,66 V228', 'o2']], cercle: 'petite' },
+        { t: "Il passe dans le ventricule gauche.", on: ['og', 'vg'], m: [['M219,228 V276', 'o2']] },
+        { t: "Le ventricule gauche l'envoie dans l'aorte, vers tous les organes : c'est la grande circulation.", on: ['vg', 'aorte'], m: [['M219,276 Q224,290 234,290 H276 Q294,290 294,308 V430 Q294,447 274,447 H240', 'o2']], cercle: 'grande' },
+        { t: "Dans les capillaires des organes, le sang donne l'" + O2 + " et les nutriments, et reprend le " + CO2 + " et les déchets. Puis il repart vers le cœur : le tour recommence.", on: ['organes', 'cap'], m: [['M240,447 Q190,476 140,447', 'o2>co2']], cercle: 'grande' },
+      ],
+      cercles: {
+        petite: { nom: 'La petite circulation', on: ['vd', 'ap', 'poumons', 'cap', 'vp', 'og'], t: "Cœur droit → artère pulmonaire → poumons → veines pulmonaires → cœur gauche. Elle sert à recharger le sang en " + O2 + "." },
+        grande: { nom: 'La grande circulation', on: ['vg', 'aorte', 'organes', 'cap', 'vc', 'od'], t: "Cœur gauche → aorte → organes → veines caves → cœur droit. Elle apporte l'" + O2 + " et les nutriments à toutes les cellules du corps." },
+      },
+    },
+
+    reins: {
+      titre: 'Les reins',
+      vb: '0 0 380 440',
+      note: "Le système urinaire filtre le sang : vu de face, comme le cœur.",
+      fond: '',
+      avant: ['ar'],
+      parts: [
+        {
+          id: 'ar', nom: "l'artère rénale", court: 'artère rénale', sang: 'o2',
+          svg: hit('M206,132 H88 M206,132 H292', 18) + vx('M206,132 H88 M206,132 H292', 'o2 cv-cible', 8),
+          noms: lab(250, 112, ['Artère', 'rénale'], 'middle', 'petit'), num: [244, 132],
+          role: "Une branche de l'aorte : elle apporte au rein le sang à filtrer.",
+        },
+        {
+          id: 'vci', nom: 'la veine cave inférieure', court: 'veine cave inférieure', sang: 'co2',
+          svg: hit('M174,6 V250', 22) + vx('M174,6 V250', 'co2 cv-cible', 14) + fl(174, 90, -90),
+          noms: lab(166, 16, 'Veine cave inférieure', 'end'), num: [174, 60],
+          role: "La grande veine qui ramène au cœur le sang du bas du corps, dont le sang filtré par les reins.",
+        },
+        {
+          id: 'aorte', nom: "l'aorte", court: 'aorte', sang: 'o2',
+          svg: hit('M206,6 V250', 22) + vx('M206,6 V250', 'o2 cv-cible', 14) + fl(206, 90, 90),
+          noms: lab(214, 16, 'Aorte', 'start'), num: [206, 60],
+          role: "La grande artère qui part du cœur. Elle donne une branche à chaque rein : l'artère rénale.",
+        },
+        {
+          id: 'vr', nom: 'la veine rénale', court: 'veine rénale', sang: 'co2',
+          svg: hit('M174,168 H88 M174,168 H292', 18) + vx('M174,168 H88 M174,168 H292', 'co2 cv-cible', 8),
+          noms: lab(250, 188, ['Veine', 'rénale'], 'middle', 'petit'), num: [244, 168],
+          role: "Elle ramène le sang filtré par le rein vers la veine cave inférieure.",
+        },
+        {
+          id: 'rein', nom: 'le rein', court: 'rein',
+          svg:
+            '<path class="cv-rein cv-cible" d="M70,88 C38,86 22,118 22,150 C22,184 40,214 72,212 C88,211 96,200 92,188 C88,176 84,164 84,150 C84,136 88,124 92,112 C96,100 88,89 70,88 Z"/>' +
+            '<path class="cv-rein cv-cible" d="M310,88 C342,86 358,118 358,150 C358,184 340,214 308,212 C292,211 284,200 288,188 C292,176 296,164 296,150 C296,136 292,124 288,112 C284,100 292,89 310,88 Z"/>',
+          noms: lab(56, 232, 'Rein') + lab(322, 232, 'Rein'), num: [56, 150],
+          role: "Les deux reins filtrent le sang : ils en retirent les déchets et l'eau en trop, et fabriquent l'urine.",
+        },
+        {
+          id: 'uretere', nom: "l'uretère", court: 'uretère', sang: 'urine',
+          svg: hit('M88,192 C100,240 136,272 166,306 M292,192 C280,240 244,272 214,306', 18) + vx('M88,192 C100,240 136,272 166,306 M292,192 C280,240 244,272 214,306', 'urine cv-cible', 6),
+          noms: lab(114, 274, 'Uretère', 'end') + lab(266, 274, 'Uretère', 'start'), num: [126, 266],
+          role: "Le conduit qui amène l'urine du rein à la vessie. Il y en a deux, un par rein.",
+        },
+        {
+          id: 'vessie', nom: 'la vessie', court: 'vessie', sang: 'urine',
+          svg: '<path class="cv-cav urine cv-cible" d="M150,302 Q190,284 230,302 Q248,332 232,360 Q190,382 148,360 Q132,332 150,302 Z"/>',
+          noms: lab(190, 338, 'Vessie'), num: [190, 334],
+          role: "La poche qui stocke l'urine avant qu'elle sorte du corps.",
+        },
+        {
+          id: 'uretre', nom: "l'urètre", court: 'urètre', sang: 'urine',
+          svg: hit('M190,372 V434', 20) + vx('M190,372 V434', 'urine cv-cible', 7),
+          noms: lab(200, 422, 'Urètre', 'start'), num: [190, 406],
+          role: "Le conduit par lequel l'urine sort de la vessie, vers l'extérieur du corps. Il n'y en a qu'un.",
+        },
+      ],
+      etapes: [
+        { t: "Le sang arrive dans chaque rein par l'artère rénale, une branche de l'aorte. Il contient des déchets fabriqués par les cellules.", on: ['aorte', 'ar'], m: [['M206,40 V132 H64', 'o2'], ['M206,40 V132 H316', 'o2']] },
+        { t: "Le rein filtre le sang : il en retire les déchets et l'eau en trop. Avec eux, il fabrique l'urine.", on: ['rein'], m: [['M64,132 Q50,160 84,190', 'urine'], ['M316,132 Q330,160 296,190', 'urine']] },
+        { t: "Le sang filtré repart par la veine rénale vers la veine cave inférieure, puis vers le cœur.", on: ['vr', 'vci'], m: [['M64,168 H174 V20', 'co2'], ['M316,168 H174 V20', 'co2']] },
+        { t: "L'urine descend du rein jusqu'à la vessie par l'uretère.", on: ['uretere'], m: [['M88,192 C100,240 136,272 166,306', 'urine'], ['M292,192 C280,240 244,272 214,306', 'urine']] },
+        { t: "La vessie stocke l'urine. Quand elle est pleine, l'urine sort du corps par l'urètre.", on: ['vessie', 'uretre'], m: [['M190,330 V434', 'urine']] },
+      ],
+    },
+  };
+
+  const PART = {};
+  for (const v in VUES) for (const p of VUES[v].parts) PART[v + ':' + p.id] = p;
+
+  /* ---------- le schéma en texte SVG ----------
+     o.numeros : { id: n } -> pastilles numérotées, sans noms ; o.noms : étiquettes ; o.inter : parties à toucher */
+  function svg(vue, o) {
+    o = o || {};
+    const V = VUES[vue];
+    const part = (p) => {
+      const a = o.inter ? ` data-p="${p.id}" role="button" tabindex="0" aria-label="${p.court}"` : '';
+      return `<g class="cv-p"${a}>${p.svg}</g>`;
+    };
+    const avant = V.parts.filter((p) => V.avant.includes(p.id)),
+      apres = V.parts.filter((p) => !V.avant.includes(p.id));
+    let h = `<svg class="cv-svg${o.cls ? ' ' + o.cls : ''}" viewBox="${V.vb}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${V.titre} : schéma">`;
+    h += avant.map(part).join('') + V.fond + apres.map(part).join('');
+    if (o.noms) h += `<g class="cv-noms">${V.parts.map((p) => p.noms).join('')}</g>`;
+    if (o.numeros)
+      for (const p of V.parts)
+        if (o.numeros[p.id]) h += `<g class="cv-num"><circle cx="${p.num[0]}" cy="${p.num[1]}" r="11"/><text x="${p.num[0]}" y="${p.num[1] + 4}">${o.numeros[p.id]}</text></g>`;
+    if (o.inter) h += '<g class="cv-gouttes"></g>';
+    return h + '</svg>';
+  }
+
+  CL.coeur = {
+    VUES,
+    O2,
+    CO2,
+    parts: (vue) => VUES[vue].parts,
+    part: (vue, id) => PART[vue + ':' + id],
+    figure: (vue, o) => svg(vue, Object.assign({ cls: 'cv-fig' }, o || {})),
+  };
+
+  /* ================= l'atelier ================= */
+  const ONGLETS = [['coeur', 'Cœur'], ['circulation', 'Circulation'], ['reins', 'Reins'], ['pouls', 'Pouls']];
+  const MODES = [['explorer', 'Explorer'], ['suivre', 'Suivre le sang'], ['jeu', 'Jeu des noms']];
+  const RYTHMES = [
+    ['repos', 'Repos', 85, "Au repos, le cœur d'un adolescent bat de 80 à 100 fois par minute ; celui d'un adulte, de 70 à 90 fois."],
+    ['marche', 'Marche', 105, "Quand on bouge, les muscles travaillent : ils ont besoin de plus d'" + O2 + " et de nutriments. Le cœur accélère pour leur en envoyer plus."],
+    ['course', 'Course', 165, "Pendant un gros effort, le cœur bat très vite, et la respiration aussi. Sa limite : environ 220 moins l'âge, en battements par minute."],
+    ['recup', "Après l'effort", 0, "Quand l'effort s'arrête, le cœur ralentit peu à peu jusqu'à son rythme de repos : c'est la récupération. Plus on est entraîné, plus elle est rapide."],
+  ];
+  const calme = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const NS = 'http://www.w3.org/2000/svg';
+  const capit = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+  function monter(el) {
+    const st = { vue: 'circulation', mode: 'explorer', noms: true, etape: 0, lecture: false, sel: null, cercle: null, jeu: null, rythme: 'repos', bpm: 85 };
+    let raf = 0,
+      minuteur = 0,
+      recup = 0,
+      chrono = 0;
+    const arreter = () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(minuteur);
+      clearInterval(recup);
+      raf = minuteur = recup = 0;
+    };
+    const vivant = () => el.isConnected;
+
+    function rendre() {
+      arreter();
+      const seg = (liste, attr, val) => `<div class="segments" role="group">${liste.map(([k, n]) => `<button type="button" data-${attr}="${k}" aria-pressed="${k === val}">${n}</button>`).join('')}</div>`;
+      let h = seg(ONGLETS, 'cv-vue', st.vue);
+      if (st.vue === 'pouls') h += pouls();
+      else {
+        h += seg(MODES, 'cv-mode', st.mode);
+        const V = VUES[st.vue];
+        h += `<div class="cv-zone">${svg(st.vue, { inter: true, noms: st.noms && st.mode !== 'jeu' })}</div>`;
+        h += `<p class="petit" style="margin:6px 0 0;text-align:center">${V.note}</p>`;
+        h += `<div class="cv-info" aria-live="polite"></div><div class="cv-ctrl"></div>`;
+      }
+      el.innerHTML = h;
+      if (st.vue === 'pouls') return demarrerPouls();
+      if (st.mode === 'explorer') explorer();
+      else if (st.mode === 'suivre') suivre();
+      else jouer(true);
+    }
+    const zone = () => el.querySelector('.cv-svg');
+    const info = (h) => (el.querySelector('.cv-info').innerHTML = h);
+    const ctrl = (h) => (el.querySelector('.cv-ctrl').innerHTML = h);
+    const allumer = (ids, estomper) => {
+      const z = zone();
+      if (!z) return;
+      z.querySelectorAll('.cv-p').forEach((g) => g.classList.toggle('on', ids.includes(g.dataset.p)));
+      z.classList.toggle('estompe', !!estomper && ids.length > 0);
+    };
+    const chip = (s) => (s ? `<span class="cv-chip ${s}">${SANG[s]}</span>` : '');
+    const fiche = (p) => `<b>${capit(p.court)}</b>${chip(p.sang)}<p>${p.role}</p>`;
+
+    /* ----- explorer ----- */
+    function explorer() {
+      const V = VUES[st.vue];
+      let c = `<label><input type="checkbox" data-cv-noms ${st.noms ? 'checked' : ''}> Afficher les noms</label>`;
+      if (V.cercles) c += Object.entries(V.cercles).map(([k, x]) => `<button type="button" class="btn-2" data-cv-cercle="${k}" aria-pressed="${st.cercle === k}">${x.nom}</button>`).join('');
+      ctrl(c);
+      if (st.cercle && V.cercles) {
+        const x = V.cercles[st.cercle];
+        allumer(x.on, true);
+        info(`<b>${x.nom}</b><p>${x.t}</p>`);
+      } else if (st.sel && PART[st.vue + ':' + st.sel]) {
+        allumer([st.sel]);
+        info(fiche(PART[st.vue + ':' + st.sel]));
+      } else info(`<b>Touche une partie du schéma</b><p>Tu verras son nom et son rôle. Rouge : ${SANG.o2}. Bleu : ${SANG.co2}.</p>`);
+    }
+
+    /* ----- suivre le sang : une étape à la fois, avec les gouttes qui avancent ----- */
+    function suivre() {
+      const V = VUES[st.vue];
+      st.etape = Math.min(st.etape, V.etapes.length - 1);
+      ctrl(
+        `<button type="button" class="btn-2" data-cv-pas="-1">‹ Précédent</button>` +
+          `<button type="button" class="btn-2" data-cv-lecture>${st.lecture ? 'Pause' : 'Lecture'}</button>` +
+          `<button type="button" class="btn-2" data-cv-pas="1">Suivant ›</button>`
+      );
+      montrerEtape();
+    }
+    function montrerEtape() {
+      const V = VUES[st.vue],
+        E = V.etapes[st.etape];
+      allumer(E.on, true);
+      info(`<span class="petit">Étape ${st.etape + 1} sur ${V.etapes.length}${E.cercle ? ' · ' + (E.cercle === 'petite' ? 'petite circulation' : 'grande circulation') : ''}</span><p>${E.t}</p>`);
+      animer(E.m, () => {
+        if (st.lecture && vivant()) minuteur = setTimeout(() => pas(1), calme() ? 2600 : 1100);
+      });
+    }
+    function pas(d) {
+      arreter();
+      const n = VUES[st.vue].etapes.length;
+      st.etape = (st.etape + d + n) % n;
+      montrerEtape();
+    }
+    /* des gouttes le long des chemins m = [[d, sang], …] ; sang « co2>o2 » : la couleur change à mi-chemin */
+    function animer(m, fin) {
+      const z = zone();
+      if (!z) return;
+      const g = z.querySelector('.cv-gouttes');
+      g.innerHTML = '';
+      const pistes = m.map(([d, s]) => {
+        const p = document.createElementNS(NS, 'path');
+        p.setAttribute('d', d);
+        p.setAttribute('class', 'cv-m');
+        g.appendChild(p);
+        const c = document.createElementNS(NS, 'circle');
+        c.setAttribute('r', '7');
+        g.appendChild(c);
+        return { p, c, s, L: p.getTotalLength() };
+      });
+      const poser = (k) =>
+        pistes.forEach(({ p, c, s, L }) => {
+          const pt = p.getPointAtLength(L * k);
+          c.setAttribute('cx', pt.x);
+          c.setAttribute('cy', pt.y);
+          const [a, b] = s.split('>');
+          c.setAttribute('class', 'cv-goutte ' + (b && k > 0.5 ? b : a));
+        });
+      if (calme()) {
+        poser(1);
+        return fin && fin();
+      }
+      const duree = 1500,
+        t0 = performance.now();
+      const tour = (t) => {
+        if (!vivant()) return;
+        const k = Math.min(1, (t - t0) / duree);
+        poser(k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
+        if (k < 1) raf = requestAnimationFrame(tour);
+        else if (fin) fin();
+      };
+      raf = requestAnimationFrame(tour);
+    }
+
+    /* ----- jeu des noms ----- */
+    function jouer(nouveau) {
+      const parts = VUES[st.vue].parts.filter((p) => p.jeu !== false);
+      if (nouveau || !st.jeu || st.jeu.vue !== st.vue) {
+        const tirage = [];
+        while (tirage.length < 8) tirage.push(...CL.o.melange(parts.map((p) => p.id)));
+        st.jeu = { vue: st.vue, liste: tirage.slice(0, 8), i: 0, ok: 0, attente: false };
+      }
+      ctrl(`<button type="button" class="btn-2" data-cv-rejouer>Recommencer</button>`);
+      question();
+    }
+    function question() {
+      const J = st.jeu;
+      allumer([]);
+      if (J.i >= J.liste.length) {
+        const msg = J.ok === J.liste.length ? 'Parfait !' : J.ok >= 6 ? 'Très bien !' : 'Recommence pour progresser.';
+        return info(`<b>${J.ok} sur ${J.liste.length}</b><p>${msg} Touche « Recommencer » pour une nouvelle partie.</p>`);
+      }
+      const p = PART[st.vue + ':' + J.liste[J.i]];
+      info(`<span class="petit">Question ${J.i + 1} sur ${J.liste.length} · ${J.ok} juste${J.ok > 1 ? 's' : ''}</span><p>Touche <b>${p.nom}</b>.</p>`);
+    }
+    function repondre(id) {
+      const J = st.jeu;
+      if (!J || J.attente || J.i >= J.liste.length) return;
+      const bon = J.liste[J.i],
+        z = zone();
+      const g = (x) => z.querySelector(`.cv-p[data-p="${x}"]`);
+      J.attente = true;
+      if (id === bon) {
+        J.ok++;
+        g(id).classList.add('bon');
+        info(`<b>Oui !</b><p>C'est bien ${PART[st.vue + ':' + bon].nom}.</p>`);
+      } else {
+        g(id).classList.add('faux');
+        g(bon).classList.add('bon');
+        info(`<b>Non : tu as touché ${PART[st.vue + ':' + id].nom}.</b><p>${capit(PART[st.vue + ':' + bon].nom)} est en vert.</p>`);
+      }
+      minuteur = setTimeout(
+        () => {
+          if (!vivant()) return;
+          z.querySelectorAll('.bon,.faux').forEach((x) => x.classList.remove('bon', 'faux'));
+          J.i++;
+          J.attente = false;
+          question();
+        },
+        id === bon ? 900 : 2000
+      );
+    }
+
+    /* ----- le pouls ----- */
+    function pouls() {
+      return (
+        `<div class="cv-pouls">` +
+        `<svg class="cv-bat" viewBox="0 0 100 90" aria-hidden="true"><path d="M50,84 C20,62 4,44 4,26 C4,12 15,4 27,4 C37,4 45,10 50,18 C55,10 63,4 73,4 C85,4 96,12 96,26 C96,44 80,62 50,84 Z"/></svg>` +
+        `<p class="cv-bpm" aria-live="polite"><b>${st.bpm}</b> battements par minute</p>` +
+        `<div class="segments" role="group">${RYTHMES.map(([k, n]) => `<button type="button" data-cv-rythme="${k}" aria-pressed="${k === st.rythme}">${n}</button>`).join('')}</div>` +
+        `<div class="cv-info" style="text-align:left"><p style="margin:0">${RYTHMES.find((r) => r[0] === st.rythme)[3]}</p></div>` +
+        `<div class="bloc"><b>Ta fréquence cardiaque maximale</b><p class="petit" style="margin:4px 0 8px">Une règle simple : 220 moins ton âge, en battements par minute.</p>` +
+        `<label>Ton âge : <input type="number" inputmode="numeric" min="5" max="99" data-cv-age> ans</label><p data-cv-max style="margin:8px 0 0"></p></div>` +
+        `<div class="bloc"><b>Mesure ton pouls</b><p class="petit" style="margin:4px 0 8px">Pose deux doigts (pas le pouce) à l'intérieur de ton poignet, sous le pouce. Lance le chrono et compte les battements pendant 15 secondes.</p>` +
+        `<div class="cv-ctrl" style="margin-top:0"><button type="button" class="btn-2" data-cv-chrono>Lancer 15 secondes</button><span class="cv-chrono" data-cv-reste aria-live="polite"></span></div>` +
+        `<label style="display:block;margin-top:10px">Battements comptés : <input type="number" inputmode="numeric" min="0" max="80" data-cv-compte></label><p data-cv-freq style="margin:8px 0 0"></p></div>` +
+        `</div>`
+      );
+    }
+    function regler(bpm) {
+      st.bpm = Math.round(bpm);
+      const b = el.querySelector('.cv-bpm b'),
+        p = el.querySelector('.cv-bat path');
+      if (b) b.textContent = st.bpm;
+      if (p) p.style.animationDuration = (60 / st.bpm).toFixed(2) + 's';
+    }
+    function demarrerPouls() {
+      if (st.rythme === 'recup') {
+        let v = 165;
+        regler(v);
+        recup = setInterval(() => {
+          if (!vivant()) return clearInterval(recup);
+          v = Math.max(78, v - Math.max(2, (v - 78) * 0.12));
+          regler(v);
+          if (v <= 78) clearInterval(recup);
+        }, 700);
+      } else regler(RYTHMES.find((r) => r[0] === st.rythme)[2]);
+    }
+    function lancerChrono(btn) {
+      clearInterval(chrono);
+      const fin = Date.now() + 15000,
+        r = el.querySelector('[data-cv-reste]');
+      btn.disabled = true;
+      chrono = setInterval(() => {
+        if (!vivant()) return clearInterval(chrono);
+        const s = Math.ceil((fin - Date.now()) / 1000);
+        if (s <= 0) {
+          clearInterval(chrono);
+          btn.disabled = false;
+          r.textContent = 'Stop !';
+          const c = el.querySelector('[data-cv-compte]');
+          if (c) c.focus();
+        } else r.textContent = s + ' s';
+      }, 200);
+    }
+
+    /* ----- événements ----- */
+    el.addEventListener('click', (ev) => {
+      const b = ev.target.closest('button, [data-p], input');
+      if (!b || !el.contains(b)) return;
+      if (b.dataset.cvVue) {
+        if (b.dataset.cvVue === st.vue) return;
+        st.vue = b.dataset.cvVue;
+        st.sel = st.cercle = null;
+        st.etape = 0;
+        st.lecture = false;
+        st.jeu = null;
+        return rendre();
+      }
+      if (b.dataset.cvMode) {
+        st.mode = b.dataset.cvMode;
+        st.sel = st.cercle = null;
+        st.lecture = false;
+        return rendre();
+      }
+      if (b.dataset.cvCercle) {
+        st.cercle = st.cercle === b.dataset.cvCercle ? null : b.dataset.cvCercle;
+        st.sel = null;
+        return explorer();
+      }
+      if (b.dataset.cvPas) {
+        st.lecture = false;
+        el.querySelector('[data-cv-lecture]').textContent = 'Lecture';
+        return pas(+b.dataset.cvPas);
+      }
+      if (b.hasAttribute('data-cv-lecture')) {
+        st.lecture = !st.lecture;
+        b.textContent = st.lecture ? 'Pause' : 'Lecture';
+        if (st.lecture) pas(1);
+        else arreter();
+        return;
+      }
+      if (b.hasAttribute('data-cv-rejouer')) return jouer(true);
+      if (b.dataset.cvRythme) {
+        st.rythme = b.dataset.cvRythme;
+        return rendre();
+      }
+      if (b.hasAttribute('data-cv-chrono')) return lancerChrono(b);
+      if (b.dataset.p) {
+        if (st.mode === 'jeu') return repondre(b.dataset.p);
+        if (st.mode === 'explorer') {
+          st.sel = b.dataset.p;
+          st.cercle = null;
+          return explorer();
+        }
+      }
+    });
+    el.addEventListener('keydown', (ev) => {
+      const g = ev.target.closest('[data-p]');
+      if (g && (ev.key === 'Enter' || ev.key === ' ')) {
+        ev.preventDefault();
+        g.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      }
+    });
+    el.addEventListener('change', (ev) => {
+      if (ev.target.hasAttribute('data-cv-noms')) {
+        st.noms = ev.target.checked;
+        const sel = st.sel,
+          cercle = st.cercle;
+        rendre();
+        st.sel = sel;
+        st.cercle = cercle;
+        explorer();
+      }
+    });
+    el.addEventListener('input', (ev) => {
+      if (ev.target.hasAttribute('data-cv-age')) {
+        const a = parseInt(ev.target.value, 10),
+          out = el.querySelector('[data-cv-max]');
+        out.innerHTML = a >= 5 && a <= 99 ? `220 – ${a} = <b>${220 - a}</b> battements par minute au maximum.` : '';
+      }
+      if (ev.target.hasAttribute('data-cv-compte')) {
+        const n = parseInt(ev.target.value, 10),
+          out = el.querySelector('[data-cv-freq]');
+        out.innerHTML = n > 0 && n < 80 ? `${n} × 4 = <b>${n * 4}</b> battements par minute (une minute = 4 fois 15 secondes).` : '';
+      }
+    });
+    rendre();
+  }
+
+  CL.ateliers = Object.assign(CL.ateliers || {}, { coeur: monter });
+})();
+</script>
+<script>/* sciences-cv.js */
+'use strict';
+/* Cap Lycée — sciences, biologie : le système cardiovasculaire (séquence 11 du plan d'études, 11e).
+   Calé sur la liste d'objectifs de l'enseignant de la classe (2026-27) et sur les fiches de synthèse S11-17 à S11-23.
+   Les schémas et l'atelier interactif sont dans coeur.js ; les phrases, questions et explications sont écrites pour l'appli.
+   Aucun exemple de maladie : ni « maladies du sang », ni greffe. Questions : [question, [bonne, fausse, …], explication]. */
+(function () {
+  const { banque, choix, melange, rnd } = CL.o;
+  const { O2, CO2 } = CL.coeur;
+  const capit = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+  /* ---------- légender un schéma : numéros tirés au hasard à chaque question ---------- */
+  const genNoms = (vue) => () => {
+    const parts = CL.coeur.parts(vue).filter((p) => p.jeu !== false);
+    const numeros = {};
+    melange(parts).forEach((p, i) => (numeros[p.id] = i + 1));
+    const cible = choix(parts),
+      n = numeros[cible.id],
+      fig = CL.coeur.figure(vue, { numeros });
+    const sol = [`Le numéro ${n}, c'est ${cible.nom}. ${cible.role}`];
+    if (rnd(0, 1)) {
+      const autres = melange(parts.filter((p) => p.id !== cible.id)).slice(0, 3);
+      return { type: 'qcm', enonce: `Que montre le numéro ${n} ?${fig}`, choix: [capit(cible.court), ...autres.map((p) => capit(p.court))], sol };
+    }
+    return { type: 'num', enonce: `Quel numéro montre ${cible.nom} ?${fig}`, rep: n, unite: '', sol };
+  };
+  const melanger = (...gens) => () => choix(gens)();
+
+  /* ---------- le cœur et la circulation ---------- */
+  const CIRC = [
+    ['Dans quel sens le sang traverse-t-il le côté droit du cœur ?', ["De l'oreillette droite vers le ventricule droit", "Du ventricule droit vers l'oreillette droite", "De l'oreillette droite vers l'oreillette gauche"], "Le sang entre toujours par une oreillette et sort par un ventricule. Les valvules l'empêchent de revenir en arrière."],
+    ['Par quels vaisseaux le sang riche en ' + CO2 + ' revient-il au cœur ?', ['Les veines caves', 'Les veines pulmonaires', "L'aorte"], "Les veines caves ramènent le sang des organes dans l'oreillette droite."],
+    ['Où va le sang qui sort du ventricule droit ?', ['Vers les poumons', 'Dans tout le corps', "Dans l'oreillette gauche"], "Le ventricule droit envoie le sang vers les poumons par l'artère pulmonaire : c'est la petite circulation."],
+    ['Où va le sang qui sort du ventricule gauche ?', ['Dans tout le corps', 'Vers les poumons', "Dans l'oreillette droite"], "Le ventricule gauche envoie le sang dans tout le corps par l'aorte : c'est la grande circulation."],
+    ["Quel sang l'aorte transporte-t-elle ?", ['Du sang riche en ' + O2, 'Du sang riche en ' + CO2, 'Un mélange des deux'], "L'aorte part du ventricule gauche : son sang vient des poumons, il est riche en " + O2 + '.'],
+    ["Quel sang l'artère pulmonaire transporte-t-elle ?", ['Du sang riche en ' + CO2, 'Du sang riche en ' + O2, 'Un mélange des deux'], "Attention au piège : c'est une artère, car elle part du cœur, mais elle conduit vers les poumons du sang riche en " + CO2 + '.'],
+    ['Quel sang les veines pulmonaires transportent-elles ?', ['Du sang riche en ' + O2, 'Du sang riche en ' + CO2, 'Un mélange des deux'], "Elles ramènent des poumons le sang qui vient de se charger en " + O2 + '.'],
+    ['Quel côté du cœur contient du sang riche en ' + O2 + ' ?', ['Le côté gauche', 'Le côté droit', 'Les deux côtés'], "Le côté gauche reçoit le sang des poumons, riche en " + O2 + ". Le côté droit reçoit le sang du corps, riche en " + CO2 + '.'],
+    ['Pourquoi les deux sangs ne se mélangent-ils pas dans le cœur ?', ['La paroi interventriculaire sépare le côté droit du côté gauche', 'Les valvules les séparent', 'Ils passent à des moments différents'], "La paroi interventriculaire est un mur de muscle entre les deux côtés du cœur."],
+    ['À quoi servent les valvules du cœur ?', ['À faire circuler le sang dans un seul sens', 'À fabriquer le sang', 'À mélanger le sang'], "Ce sont des clapets : le sang ne peut pas revenir en arrière."],
+    ["Qu'appelle-t-on la petite circulation ?", ['Le trajet cœur, poumons, cœur', 'Le trajet cœur, organes, cœur', 'La circulation dans les capillaires'], "Petite circulation : ventricule droit, artère pulmonaire, poumons, veines pulmonaires, oreillette gauche."],
+    ["Qu'appelle-t-on la grande circulation ?", ['Le trajet cœur, organes, cœur', 'Le trajet cœur, poumons, cœur', "Le trajet dans l'aorte seulement"], "Grande circulation : ventricule gauche, aorte, organes, veines caves, oreillette droite."],
+    ['Que se passe-t-il dans les poumons ?', ['Le sang rejette le ' + CO2 + " et se charge en " + O2, 'Le sang rejette l\'' + O2 + ' et se charge en ' + CO2, 'Le sang se charge en nutriments'], "Dans les capillaires des alvéoles pulmonaires, le sang échange ses gaz avec l'air que l'on respire."],
+    ['Pourquoi la paroi du ventricule gauche est-elle plus épaisse que celle du ventricule droit ?', ['Il doit envoyer le sang plus loin, dans tout le corps', 'Il reçoit plus de sang', 'Il contient du sang riche en ' + CO2], "Le ventricule gauche pousse le sang dans tout le corps ; le droit seulement jusqu'aux poumons, tout près du cœur."],
+    ['Combien le cœur a-t-il de cavités ?', ['Quatre : deux oreillettes et deux ventricules', 'Deux : un ventricule et une oreillette', 'Six'], "En haut, les oreillettes reçoivent le sang ; en bas, les ventricules l'envoient."],
+  ];
+
+  /* ---------- artères, veines, capillaires ---------- */
+  const VAISS = [
+    ['Comment appelle-t-on un vaisseau qui part du cœur ?', ['Une artère', 'Une veine', 'Un capillaire'], "Artère : part du cœur. Veine : revient au cœur."],
+    ['Comment appelle-t-on un vaisseau qui revient au cœur ?', ['Une veine', 'Une artère', 'Un capillaire'], "Veine : revient au cœur. Artère : part du cœur."],
+    ['Quels vaisseaux ont une paroi épaisse, musclée et élastique ?', ['Les artères', 'Les veines', 'Les capillaires'], "Les artères reçoivent le sang poussé fort par le cœur : leur paroi doit résister à cette pression."],
+    ['Quels vaisseaux ont des valvules tout le long, pour que le sang ne redescende pas ?', ['Les veines', 'Les artères', 'Les capillaires'], "Dans les veines, la pression est faible : des valvules empêchent le sang de refluer, par exemple dans les jambes."],
+    ['Dans quels vaisseaux le sang est-il poussé avec la plus forte pression ?', ['Les artères', 'Les veines', 'Les capillaires'], "Le sang sort du cœur avec force : la pression est forte dans les artères, faible dans les veines."],
+    ['Où se font les échanges entre le sang et les cellules ?', ['Dans les capillaires', 'Dans les artères', 'Dans les veines'], "La paroi des capillaires est si fine qu'elle laisse passer l'" + O2 + ", les nutriments, le " + CO2 + ' et les déchets.'],
+    ['Quand tu sens ton pouls au poignet, que sens-tu ?', ['Une artère qui se gonfle à chaque battement du cœur', 'Une veine qui se vide', 'Un muscle du bras qui se contracte'], "À chaque contraction du cœur, une onde de pression gonfle les artères : c'est le pouls."],
+    ['Une artère transporte-t-elle toujours du sang riche en ' + O2 + ' ?', ["Non : l'artère pulmonaire transporte du sang riche en " + CO2, 'Oui, toujours', "Non : aucune artère ne transporte d'" + O2], "Artère ou veine, c'est le sens qui compte (part du cœur ou y revient), pas le sang transporté."],
+    ['Quels sont les vaisseaux sanguins les plus fins ?', ['Les capillaires', 'Les veines caves', "Les artères pulmonaires"], "Un capillaire est plus fin qu'un cheveu : les globules rouges y passent l'un après l'autre."],
+    ['Quelle est la plus grosse artère du corps ?', ["L'aorte", "L'artère pulmonaire", "L'artère rénale"], "L'aorte part du ventricule gauche ; elle mesure environ 2,5 cm de diamètre."],
+    ['Entre quels vaisseaux se trouvent les capillaires ?', ['Entre les artères et les veines', 'Entre deux veines', 'Entre le cœur et les artères'], "Le sang passe des artères aux capillaires, où se font les échanges, puis aux veines qui le ramènent au cœur."],
+  ];
+
+  /* ---------- le sang ---------- */
+  const SANG = [
+    ['Quand on laisse reposer du sang dans un tube, que trouve-t-on au-dessus ?', ['Le plasma, un liquide jaunâtre', 'Les globules rouges', 'Les plaquettes'], "Les cellules, plus lourdes, tombent au fond ; le plasma reste au-dessus."],
+    ['De quoi le plasma est-il surtout composé ?', ["D'eau", 'De globules rouges', 'De graisses'], "Le plasma est surtout de l'eau, avec des protéines, des sels, des nutriments et des déchets dissous."],
+    ['Quel est le rôle des globules rouges ?', ["Transporter l'" + O2, 'Défendre le corps contre les microbes', 'Faire coaguler le sang'], "Les globules rouges contiennent l'hémoglobine, qui fixe l'" + O2 + '.'],
+    ['Quel est le rôle des globules blancs ?', ['Défendre le corps contre les microbes', "Transporter l'" + O2, 'Transporter les nutriments'], "Les globules blancs repèrent et détruisent les microbes qui entrent dans le corps."],
+    ['Quel est le rôle des plaquettes ?', ['Faire coaguler le sang', "Transporter l'" + O2, 'Défendre le corps contre les microbes'], "Les plaquettes s'agglutinent et forment un caillot : le sang coagule."],
+    ['Quelles cellules sont les plus nombreuses dans le sang ?', ['Les globules rouges', 'Les globules blancs', 'Les plaquettes'], "Environ 5 millions de globules rouges par millimètre cube de sang, contre quelques milliers de globules blancs."],
+    ['Où les cellules du sang sont-elles fabriquées ?', ['Dans la moelle rouge des os', 'Dans le cœur', 'Dans les reins'], "La moelle rouge, à l'intérieur des os plats (sternum, bassin) et, chez les jeunes, aussi des os longs, fabrique les cellules du sang."],
+    ["Quelle substance des globules rouges fixe l'" + O2 + ' ?', ["L'hémoglobine", 'Le glucose', 'Le plasma'], "L'hémoglobine contient du fer : c'est lui qui fixe l'" + O2 + ' et donne au sang sa couleur rouge.'],
+    ["Quel atome de l'hémoglobine fixe l'" + O2 + ' ?', ['Le fer', 'Le calcium', 'Le carbone'], "Le fer de l'hémoglobine fixe l'" + O2 + " dans les poumons et le libère dans les organes."],
+    ['Dans quelle partie du sang les nutriments voyagent-ils ?', ['Dans le plasma', 'Dans les globules rouges', 'Dans les plaquettes'], "Les nutriments, comme le glucose, sont dissous dans le plasma."],
+    ["Lequel n'est PAS un rôle du sang ?", ['Digérer les aliments', "Transporter l'" + O2 + ' et les nutriments', 'Défendre le corps'], "Le sang transporte (" + O2 + ", " + CO2 + ", nutriments, déchets, chaleur), défend le corps et coagule. La digestion, c'est le travail du système digestif."],
+    ['Quelle part du sang est faite de cellules ?', ['Un peu moins de la moitié', 'Presque tout', 'Un dixième'], "Environ 45 % de cellules, surtout des globules rouges, et 55 % de plasma."],
+    ['Combien de temps vit un globule rouge ?', ['Environ 3 à 4 mois', 'Un jour', 'Toute la vie'], "Ensuite, il est recyclé ; la moelle des os en fabrique sans cesse de nouveaux, environ 3 millions par seconde."],
+  ];
+
+  /* ---------- les liens avec les autres systèmes ---------- */
+  const SYST = [
+    ["Où l'" + O2 + ' entre-t-il dans le sang ?', ['Dans les poumons, au niveau des alvéoles', "Dans l'intestin", 'Dans les reins'], "L'" + O2 + " passe de l'air des alvéoles dans les capillaires qui les entourent."],
+    ['Où les nutriments entrent-ils dans le sang ?', ["Dans l'intestin grêle, au niveau des villosités", 'Dans les poumons', 'Dans la vessie'], "Après la digestion, les nutriments passent dans les capillaires des villosités intestinales."],
+    ['Par où le ' + CO2 + ' quitte-t-il le corps ?', ['Par les poumons, quand on expire', 'Par les reins', "Par l'intestin"], "Le " + CO2 + " passe du sang dans les alvéoles pulmonaires, puis il est rejeté quand on expire."],
+    ['Quel organe filtre le sang pour en retirer les déchets ?', ['Le rein', 'Le cœur', 'Le poumon'], "Les reins filtrent le sang et fabriquent l'urine avec les déchets et l'eau en trop."],
+    ["Dans quel ordre l'urine circule-t-elle ?", ['Rein, uretère, vessie, urètre', 'Rein, urètre, vessie, uretère', 'Vessie, rein, uretère, urètre'], "Le rein fabrique l'urine, l'uretère la conduit à la vessie, l'urètre la conduit hors du corps."],
+    ['Quel lien le système cardiovasculaire a-t-il avec le squelette ?', ['La moelle rouge des os fabrique les cellules du sang', 'Les os font circuler le sang', 'Le sang fabrique les os'], "Dans l'os spongieux, la moelle rouge fabrique les globules rouges, les globules blancs et les plaquettes."],
+    ['À quoi sert la vessie ?', ["À stocker l'urine", 'À filtrer le sang', "À fabriquer l'urine"], "La vessie est une poche : elle garde l'urine jusqu'à ce qu'on aille aux toilettes."],
+    ['Quel conduit relie un rein à la vessie ?', ["L'uretère", "L'urètre", "L'artère rénale"], "Uretère : du rein à la vessie (il y en a deux). Urètre : de la vessie vers l'extérieur (un seul)."],
+    ["Qu'apporte le sang aux cellules des muscles ?", ["De l'" + O2 + ' et des nutriments', 'Du ' + CO2 + ' et des déchets', "De l'urine"], "Avec l'" + O2 + " et les nutriments, les cellules produisent l'énergie dont elles ont besoin."],
+    ['Que reprend le sang aux cellules des muscles ?', ['Du ' + CO2 + ' et des déchets', "De l'" + O2 + ' et des nutriments', 'Des globules blancs'], "Le " + CO2 + " part vers les poumons, les autres déchets vers les reins."],
+    ['Quels systèmes font entrer des substances dans le sang ?', ['Le système respiratoire et le système digestif', 'Le système urinaire et le squelette', 'Le système urinaire seulement'], "Respiratoire : l'" + O2 + ". Digestif : les nutriments. Le système urinaire, lui, fait sortir des déchets."],
+  ];
+
+  /* ---------- le pouls : calculs et lecture d'un graphique ---------- */
+  function graphe() {
+    const R = choix([60, 70, 80]),
+      E = choix([140, 150, 160, 170]),
+      T = rnd(9, 11);
+    const v = [];
+    for (let m = 0; m <= 12; m++) {
+      if (m <= 2) v.push(R);
+      else if (m === 3) v.push(Math.round((R + E) / 20) * 10);
+      else if (m <= 6) v.push(E);
+      else if (m < T) v.push(Math.max(R + 10, Math.round((E - ((E - R) * (m - 6)) / (T - 6)) / 10) * 10));
+      else v.push(R);
+    }
+    const X = (m) => 44 + m * 23.5,
+      Y = (b) => 200 - (b - 40) * 1.125;
+    let s = '<svg class="cv-svg cv-fig" viewBox="0 0 340 236" role="img" aria-label="Graphique de la fréquence cardiaque">';
+    for (let b = 40; b <= 200; b += 10) s += `<path class="f-grille" d="M44,${Y(b)} H326"${b % 20 ? ' style="opacity:.5"' : ''}/>`;
+    for (let m = 0; m <= 12; m++) s += `<path class="f-grille" d="M${X(m)},20 V200"/>`;
+    for (let b = 40; b <= 200; b += 20) s += `<text class="f-gr" x="38" y="${Y(b) + 4}" text-anchor="end">${b}</text>`;
+    for (let m = 0; m <= 12; m += 2) s += `<text class="f-gr" x="${X(m)}" y="216" text-anchor="middle">${m}</text>`;
+    s += '<text class="f-gr" x="44" y="12">battements par minute</text><text class="f-gr" x="326" y="232" text-anchor="end">temps (minutes)</text>';
+    s += `<text class="cv-lab petit" x="${X(4.5)}" y="${Y(E) - 10}" text-anchor="middle">effort</text>`;
+    s += `<polyline class="cv-vx o2" stroke-width="2.5" points="${v.map((b, m) => X(m) + ',' + Y(b)).join(' ')}"/>`;
+    s += v.map((b, m) => `<circle cx="${X(m)}" cy="${Y(b)}" r="3.5" fill="var(--o2)"/>`).join('');
+    s += '</svg>';
+    const intro = "Ce graphique montre la fréquence cardiaque d'une élève avant, pendant et après une course.";
+    const q = rnd(0, 2);
+    if (q === 0) return { type: 'num', enonce: `${intro} Quelle est sa fréquence cardiaque au repos, avant l'effort ?${s}`, rep: R, unite: 'battements par minute', sol: [`Avant l'effort (minutes 0 à 2), la courbe reste à ${R} battements par minute.`] };
+    if (q === 1) return { type: 'num', enonce: `${intro} Quelle est sa fréquence cardiaque la plus haute ?${s}`, rep: E, unite: 'battements par minute', sol: [`Le plus haut point de la courbe, pendant l'effort, est à ${E} battements par minute.`] };
+    return { type: 'num', enonce: `${intro} À quelle minute sa fréquence cardiaque est-elle revenue à sa valeur de repos ?${s}`, rep: T, unite: 'minute', sol: [`La courbe redescend après l'effort et retrouve ${R} battements par minute à la minute ${T} : c'est la fin de la récupération.`] };
+  }
+  const genPouls = () => {
+    const k = rnd(0, 5);
+    if (k === 0) {
+      const a = rnd(12, 60);
+      return { type: 'num', enonce: `D'après la règle « 220 – âge », quelle est la fréquence cardiaque maximale d'une personne de ${a} ans ?`, rep: 220 - a, unite: 'battements par minute', sol: [`220 – ${a} = ${220 - a} battements par minute.`] };
+    }
+    if (k === 1) {
+      const n = rnd(16, 30);
+      return { type: 'num', enonce: `Tu comptes ${n} battements de ton pouls en 15 secondes. Quelle est ta fréquence cardiaque, en battements par minute ?`, rep: 4 * n, unite: 'battements par minute', sol: [`Une minute, c'est 4 fois 15 secondes : ${n} × 4 = ${4 * n}.`] };
+    }
+    if (k === 2) {
+      const f = rnd(12, 18) * 5;
+      return { type: 'num', enonce: `Un cœur bat ${f} fois par minute. Combien de fois bat-il en une heure ?`, rep: 60 * f, unite: 'battements', sol: [`Une heure, c'est 60 minutes : ${f} × 60 = ${60 * f}.`] };
+    }
+    return graphe();
+  };
+  const POULS = [
+    ["Pourquoi le cœur bat-il plus vite pendant un effort ?", ["Les muscles ont besoin de plus d'" + O2 + ' et de nutriments', 'Le sang devient plus épais', 'Les poumons sont fatigués'], "Le cœur envoie plus de sang aux muscles qui travaillent, et la respiration accélère aussi."],
+    ["Qu'appelle-t-on le temps de récupération ?", ["Le temps que met le cœur pour revenir à son rythme de repos après l'effort", "La durée de l'effort", 'Le temps entre deux battements'], "Plus une personne est entraînée, plus sa récupération est rapide."],
+    ['Qui a, en général, le cœur qui bat le plus lentement au repos ?', ['Un athlète entraîné', 'Un nouveau-né', 'Un enfant'], "Le cœur d'un athlète est très efficace : il envoie beaucoup de sang à chaque battement, donc il bat moins souvent."],
+  ];
+
+  /* ================= le chapitre ================= */
+  const sciences = CL.branches.find((b) => b.id === 'sciences');
+  sciences.intro =
+    "D'abord la biologie de ta classe : le système cardiovasculaire, avec ses schémas à explorer. Puis physique et chimie : électricité, forces et énergie, matière.";
+  sciences.parties.unshift({
+    titre: 'Biologie',
+    chapitres: [
+      {
+        id: 's-cardio',
+        titre: 'Le système cardiovasculaire',
+        resume: 'Le cœur, la petite et la grande circulation, artères et veines, le sang, les reins, le pouls.',
+        atelier: 'coeur',
+        lecon: [
+          '# Le cœur, une double pompe',
+          "> Le cœur est un muscle creux à quatre cavités : en haut, deux oreillettes qui reçoivent le sang ; en bas, deux ventricules qui l'envoient. La paroi interventriculaire sépare le côté droit du côté gauche.",
+          '> Côté droit : le sang riche en ' + CO2 + ', qui revient du corps. Côté gauche : le sang riche en ' + O2 + ', qui revient des poumons.',
+          "Sur les schémas, le cœur est vu de face : son côté droit est à ta gauche. Les valvules sont des clapets : le sang va toujours de l'oreillette vers le ventricule, puis vers l'artère.",
+          '# Deux circulations',
+          { table: { tete: ['', 'Petite circulation', 'Grande circulation'], lignes: [['part du', 'ventricule droit', 'ventricule gauche'], ['par', "l'artère pulmonaire", "l'aorte"], ['va vers', 'les poumons', 'tous les organes'], ['revient par', 'les veines pulmonaires', 'les veines caves'], ['dans', "l'oreillette gauche", "l'oreillette droite"], ['sert à', 'recharger le sang en ' + O2, "apporter l'" + O2 + ' et les nutriments aux cellules']] } },
+          '# Artères, veines, capillaires',
+          { table: { tete: ['', 'Artères', 'Veines'], lignes: [['sens', 'partent du cœur', 'reviennent au cœur'], ['paroi', 'épaisse, musclée, élastique', 'fine et souple'], ['pression', 'forte : on y sent le pouls', 'faible'], ['valvules', 'seulement à la sortie du cœur', 'tout le long : le sang ne redescend pas']] } },
+          "> Les capillaires, très fins, relient les artères aux veines : c'est à travers leur paroi que se font les échanges avec les cellules.",
+          "! Une artère part du cœur, même si son sang est pauvre en " + O2 + " : l'artère pulmonaire transporte du sang riche en " + CO2 + '.',
+          '# Le sang',
+          "> Environ 55 % de plasma, surtout de l'eau, avec les nutriments, les sels et les déchets ; et 45 % de cellules, fabriquées dans la moelle rouge des os.",
+          { table: { tete: ['Cellules', 'Rôle'], lignes: [['globules rouges', "transporter l'" + O2 + ", grâce à l'hémoglobine, qui contient du fer"], ['globules blancs', 'défendre le corps contre les microbes'], ['plaquettes', 'faire coaguler le sang : elles forment un caillot']] } },
+          'Les rôles du sang : transporter (' + O2 + ', ' + CO2 + ', nutriments, déchets, chaleur), défendre le corps, coaguler.',
+          '# Les liens avec les autres systèmes',
+          { table: { tete: ['Système', 'Lien avec le sang'], lignes: [['respiratoire', "l'" + O2 + ' entre et le ' + CO2 + ' sort, dans les capillaires des alvéoles pulmonaires'], ['digestif', 'les nutriments entrent, dans les capillaires des villosités intestinales'], ['urinaire', "les reins filtrent le sang ; l'urine passe par l'uretère, la vessie, puis l'urètre"], ['squelettique', 'la moelle rouge des os fabrique les cellules du sang']] } },
+          '# La fréquence cardiaque',
+          "> Le pouls, c'est le nombre de battements du cœur par minute : de 80 à 100 au repos chez un adolescent, de 70 à 90 chez un adulte. Pendant un effort, le cœur accélère pour apporter plus d'" + O2 + ' aux muscles.',
+          '= Fréquence maximale : 220 – âge. À 15 ans : 220 – 15 = 205 battements par minute.',
+          "Le temps de récupération, c'est le temps que met le cœur pour revenir à son rythme de repos après l'effort. Il est plus court chez une personne entraînée.",
+        ],
+        savoirs: [
+          { id: 'sc-cv-coeur', titre: 'Légender le cœur', gen: genNoms('coeur') },
+          { id: 'sc-cv-circulation', titre: 'La circulation du sang', gen: melanger(banque(CIRC), banque(CIRC), genNoms('circulation')) },
+          { id: 'sc-cv-vaisseaux', titre: 'Artères, veines, capillaires', gen: banque(VAISS) },
+          { id: 'sc-cv-sang', titre: 'La composition du sang', gen: banque(SANG) },
+          { id: 'sc-cv-systemes', titre: 'Les liens avec les autres systèmes', gen: melanger(banque(SYST), banque(SYST), genNoms('reins')) },
+          { id: 'sc-cv-pouls', titre: 'La fréquence cardiaque', gen: melanger(genPouls, genPouls, banque(POULS)) },
+        ],
+      },
+    ],
+  });
+})();
+</script>
 <script>/* geographie.js */
 'use strict';
 /* Cap Lycée — géographie de 11e : l'eau et ses enjeux calée sur le cours de la classe (diapos de l'enseignant : introduction,
@@ -7855,6 +8762,24 @@ html.pres .balise::after{display:none}
 
     /* ================= Anglais : English in Mind 11e ================= */
     'e-verbes': ["Student's Book p. 98 et Language Builder p. 82–85 : listes de verbes irréguliers.", [["Student's Book p. 98", 'Irregular verbs'], ['Language Builder p. 82–85', 'Irregular verbs']], ''],
+    /* ================= Sciences : séquence 11, le système cardiovasculaire (fiches de la classe) =================
+       Les fiches de travail sont dans son classeur, sur papier : leur ligne n'a que le corrigé. */
+    's-cardio': [
+      'Séquence 11 : fiches de synthèse S11-17 à S11-23, fiches de travail S11-3 à S11-16, fiche « La composition du sang ».',
+      [
+        ['Fiche de synthèse S11-17', 'Le système cardiovasculaire : petite et grande circulation'],
+        ['Fiche de synthèse S11-18', 'Les principales artères et veines'],
+        ['Fiches de synthèse S11-19–20', 'Les liens avec les systèmes respiratoire, digestif et urinaire'],
+        ['Fiches de synthèse S11-21–22', 'La structure et le fonctionnement du cœur'],
+        ['Fiche de synthèse S11-23', 'La fréquence cardiaque'],
+        ['Cahier « Le sang » p. 7', 'La composition du sang'],
+        ['Fiches de travail S11-3–4', 'Activités 1 et 2 : une énigme, et ta représentation de la circulation'],
+        ['Fiches de travail S11-5–9', 'Activité 3 : les relations entre les systèmes'],
+        ['Fiche de travail S11-10', "Activité 4 : la fréquence cardiaque selon l'effort"],
+        ['Fiches de travail S11-11–16', 'Activité 5 : la dissection du cœur'],
+      ],
+      'Les fiches de travail sont dans ton classeur : fais-les sur papier, puis ouvre « Corrigé » pour te corriger.',
+    ],
     /* ================= Allemand : geni@l klick, Deutsch für die Romandie, 10./11. Klasse, Band 1 ================= */
     'd-verbes': ['Arbeitsbuch p. 87 : la liste des verbes irréguliers.', [['Arbeitsbuch p. 87', 'Unregelmässige Verben : la liste du livre']], ''],
     'd-satzbau': ['Kursbuch, Grammatiküberblick : les subordonnées.', [['Kursbuch p. 100', 'Grammatiküberblick : weil, damit, dass, wenn, trotzdem']], ''],
@@ -7947,13 +8872,16 @@ html.pres .balise::after{display:none}
       'fr-indirect', 'fr-connect', 'fr-mots', 'fr-figures',
       'fr-recits', 'fr-poesie', 'fr-theatre', 'fr-presse',
     ],
-    allemand: ['de-v1', 'de-v2', 'de-v3', 'de-v4', 'de-satz', 'de-kasus', 'de-perfekt'],
+    allemand: [
+      'de-v1', 'de-v2', 'de-v3', 'de-v4', 'de-satz', 'de-kasus', 'de-perfekt',
+      'de-k1-weil', 'de-k2-komp', 'de-k3-sich', 'de-k4-adj', 'de-k5-dativ', 'de-k6-modal', 'de-k7-damit', 'de-k8-indirekt',
+    ],
     anglais: [
       'en-v2', 'en-v4',
       'en-u1-present', 'en-comp', 'en-u2-past', 'en-u3-cond', 'en-u4-modals', 'en-u4-future',
       'en-u5-pastcont', 'en-passive', 'en-pastperf', 'en-u7-tags', 'en-cond', 'en-u8-forsince',
     ],
-    sciences: ['el-notions', 'el-puissance', 'el-energie', 'fo-notions', 'fo-poids', 'en-rendement', 'ma-notions', 'ma-atomes'],
+    sciences: ['sc-cv-coeur', 'sc-cv-circulation', 'sc-cv-sang', 'el-notions', 'el-puissance', 'el-energie', 'fo-notions', 'fo-poids', 'en-rendement', 'ma-notions', 'ma-atomes'],
     geographie: [
       'gi-suisse', 'g1-ressource', 'ga-souterraines', 'g1-usages', 'gb-virtuelle', 'g1-cours', 'g2-mers', 'g2-gestion', 'ge-potable', 'gf-fm',
       'g3-sources', 'g3-choix', 'g4-reseaux', 'g4-enjeux', 'gk-cartes', 'g-echelle', 'g-lexique',
@@ -8088,6 +9016,8 @@ CL.enClasse = [
   'g-eau-mers',
   'g-eau-enjeux',
   'g-eau-fm',
+  /* Sciences (objectifs du test et fiches reçus le 20 novembre 2026) : séquence 11, le système cardiovasculaire. */
+  's-cardio',
 ];
 </script>
 <script>/* progres.js */
@@ -8767,7 +9697,7 @@ CL.enClasse = [
 /* Produit par outils/pages.py : ne pas modifier à la main.
    Pour chaque ligne « Dans tes manuels » (« chapitre|où ») : [extrait, nombre de pages, corrigé, nombre de pages].
    Les extraits sont des PDF chiffrés dans p/ ; p/cle.json donne leur mot de passe à qui a le code. */
-CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-relatifs|Livre p. 28–31":["d339bcca825e",4,"3aafe968af29",5],"m-relatifs|Fichier p. 5–7":["55f4cb23c7e3",3,"316d9b704c46",4],"m-relatifs|Fichier p. 8":["bb59f599ad29",1,"ed4082d3ef5d",1],"m-fractions|Fichier p. 9":["93cf46817458",1,"97fb9a4e6327",1],"m-fractions|Livre p. 32–39":["5907f8ceeeb4",8,"85440f7336e5",13],"m-fractions|Fichier p. 10–17":["ad2c7fb7a925",8,"8491b717c262",9],"m-fractions|Fichier p. 18":["c625f75d9fe6",1,"ed4082d3ef5d",1],"m-fractions|Fichier p. 19–20":["b305663bb165",2,"342552308419",3],"m-puissances|Fichier p. 21":["1d00afaada07",1,"14bca21b4594",2],"m-puissances|Livre p. 40–41":["68d3fc942c3b",2,"e7cf1ea0d701",3],"m-puissances|Fichier p. 22":["c973656ab216",1,"14bca21b4594",2],"m-puissances|Fichier p. 24":["13d9338795d3",1,"ed4082d3ef5d",1],"m-notation|Livre p. 41–43":["a405c1d67efb",3,"e198f35fd90a",3],"m-notation|Fichier p. 22–23":["f16733559989",2,"3d7eba7b5ea7",4],"m-notation|Fichier p. 24":["13d9338795d3",1,"ed4082d3ef5d",1],"m-racines|Livre p. 44–47":["02766b29fb2d",4,"f138f30b286c",4],"m-racines|Fichier p. 23":["4f7ad5193952",1,"16aa69baacae",2],"m-racines|Fichier p. 24":["13d9338795d3",1,"ed4082d3ef5d",1],"m-proportion|Fichier p. 57":["d9a823e13ef4",1,"82dd60fbb5c0",2],"m-proportion|Livre p. 98–106":["9904725f5526",9,"58ba464923a5",10],"m-proportion|Fichier p. 58–62":["b69623da3ee8",5,"350b022eae83",6],"m-proportion|Fichier p. 66":["d1c40cc3fac4",1,"c9fc3007b98c",1],"m-litteral|Fichier p. 70":["1ea35fdc8e9d",1,"d39300d34db0",1],"m-litteral|Livre p. 124–130":["4d19aee98f1b",7,"5c3a3de7c0a5",12],"m-litteral|Fichier p. 71–75":["27e78b70f815",5,"7e7d077b3ae2",6],"m-litteral|Fichier p. 76":["8df49fbfc1f1",1,"c9fc3007b98c",1],"m-litteral|Fichier p. 79":["de5f07a96591",1,"85322510cebd",1],"m-litteral|Fichier p. 80–84":["4c190d5a15ff",5,"84142fea33ba",5],"m-equations|Fichier p. 100":["d4b3684f4b00",1,"45e945d1e187",1],"m-equations|Livre p. 142–159":["b2e771f92d17",18,"4b102cae78b4",18],"m-equations|Fichier p. 101–105":["7b2fdb392b9a",5,"075af5269af8",6],"m-equations|Fichier p. 106–107":["70f4b38da44b",2,"c9fc3007b98c",1],"m-equations|Fichier p. 108":["fd003429f7c1",1,"023be3560df5",2],"m-equations|Fichier p. 109–112":["d89f3da50d92",4,"91f83f25605e",6],"m-pythagore|Fichier p. 175":["add43828976f",1,"5496df124cd1",1],"m-pythagore|Livre p. 238–245":["3ac313260015",8,"4c8fc5d68a04",8],"m-pythagore|Fichier p. 176":["63ef40df3fed",1,"",0],"m-pythagore|Fichier p. 177":["af882b2f365a",1,"189ec1838f3d",2],"m-pythagore|Fichier p. 178":["97486e3fffae",1,"",0],"m-identites|Livre p. 131–134":["4f79bbc03a3d",4,"8f3e329df794",8],"m-identites|Fichier p. 85–87":["7d9b04587645",3,"6fa6928ab002",2],"m-identites|Fichier p. 88":["0e3f58155843",1,"c9fc3007b98c",1],"m-factorisation|Livre p. 135–139":["bcd23344f825",5,"e7fa1a0a1b49",8],"m-factorisation|Fichier p. 89–93":["7c3588462911",5,"d175bb0a1149",4],"m-factorisation|Fichier p. 94":["217a1d7490ee",1,"c9fc3007b98c",1],"m-factorisation|Fichier p. 95–99":["36a8c9a9a09f",5,"2517c2d45261",5],"m-equations2|Livre p. 166–175":["f652d6c2fcbc",10,"3ac45e1a989d",9],"m-equations2|Fichier p. 114":["97256e504c83",1,"dd19d7edaf33",2],"m-equations2|Fichier p. 115–117":["d195fa59f72e",3,"ed4f9bc03bb3",1],"m-systemes|Livre p. 160–166":["c9adb81f8e6b",7,"2993e7867ff3",5],"m-systemes|Fichier p. 113":["2f00546ae525",1,"3dda8d487f0a",2],"m-systemes|Fichier p. 114":["97256e504c83",1,"dd19d7edaf33",2],"m-fonctions|Fichier p. 33":["5e408f715058",1,"d0f158df18f2",2],"m-fonctions|Livre p. 74–86":["4f4d273aafa4",13,"08e1b4e65715",26],"m-fonctions|Fichier p. 34–40":["d139588a0d6d",7,"be929a15e90c",7],"m-fonctions|Fichier p. 41":["f325d3168027",1,"ed4082d3ef5d",1],"m-fonctions|Fichier p. 44":["469417a0b637",1,"200f5eb97d5e",2],"m-fonctions|Livre p. 87–97":["ae871d3e21ea",11,"c7f582e95103",14],"m-fonctions|Fichier p. 45–53":["7ce477438ab1",9,"13d578828c5d",11],"m-fonctions|Fichier p. 54":["a31e30046586",1,"8dbc6f0edb43",2],"m-thales|Fichier p. 179":["dfe2e7b4c8af",1,"2f69214a5877",2],"m-thales|Livre p. 202–205":["6bf32ca00127",4,"1a9cc9d5b02c",4],"m-thales|Livre p. 246–251":["30a57ad4e24a",6,"6869c6aab59d",11],"m-thales|Fichier p. 180–188":["94f24de65089",9,"e697f7525ddb",8],"m-thales|Fichier p. 189":["469f4688d772",1,"8d6c2903822f",1],"m-thales|Fichier p. 190–192":["bf303021ba28",3,"4b7dba4e1cc8",3],"m-proba|Fichier p. 25":["642ead4d7806",1,"a80014298528",1],"m-proba|Livre p. 50–57":["bd5fdc17ab3c",8,"529740e4a352",6],"m-proba|Fichier p. 26":["30ce2d12390b",1,"2e9d89b655f1",2],"m-proba|Fichier p. 27":["1ca2c14c4a84",1,"ed4082d3ef5d",1],"m-proba|Fichier p. 28":["4678804f98e2",1,"",0],"m-diagrammes|Livre p. 115–121":["cfd31b49f4a6",7,"129c94f2810d",6],"m-diagrammes|Fichier p. 68–69":["907b4a518d28",2,"0763135b178c",2],"m-angles|Fichier p. 119":["b763e7ee2574",1,"e194c4e410c4",2],"m-angles|Livre p. 190–194":["4364a51c9cbd",5,"6fd88a00895c",7],"m-angles|Livre p. 195–201":["bd8942a50a7e",7,"d58f00dd9aa6",11],"m-angles|Fichier p. 120–128":["0925c1894d2e",9,"a4bda0bd37f7",12],"m-angles|Fichier p. 129":["f1d4a9814964",1,"87688e6bddf8",1],"m-angles|Fichier p. 130–131":["9eb888ab50d9",2,"",0],"m-transfo|Fichier p. 141":["a5632a358baa",1,"a64ebc3a0f61",2],"m-transfo|Livre p. 220–224":["907900435d12",5,"fb8302247b7a",17],"m-transfo|Fichier p. 142–159":["8f45d69acfae",18,"ba51155ad0f6",19],"m-transfo|Fichier p. 160":["2e3df2eae030",1,"87688e6bddf8",1],"m-transfo|Fichier p. 161":["12e7190f453b",1,"",0],"m-aires|Fichier p. 171":["0d601e8451d0",1,"",0],"m-aires|Livre p. 234–237":["af99606542ed",4,"8001648fdce9",5],"m-aires|Fichier p. 172–174":["c944ccafc4af",3,"9dfb5c814cac",3],"m-solides|Fichier p. 132":["2548e3afa6ef",1,"b232a57cf9d0",1],"m-solides|Livre p. 208–217":["a50414f83489",10,"39493a2980d1",18],"m-solides|Fichier p. 133–138":["a9726ae473d7",6,"31787a739f45",4],"m-solides|Fichier p. 139":["290ab6f21465",1,"87688e6bddf8",1],"m-solides|Fichier p. 193":["af847b86276d",1,"fb66861528f5",2],"m-solides|Livre p. 254–274":["7fece6ba5363",21,"6442110d9dcf",17],"m-solides|Fichier p. 194–195":["a104aa0687cc",2,"cb31e203157d",3],"m-solides|Fichier p. 196":["09514c4e7fc0",1,"8d6c2903822f",1],"m-solides|Fichier p. 197–198":["80f77a1805d3",2,"6d66c92dbd02",3],"m-solides|Fichier p. 199":["326977556eef",1,"8d6c2903822f",1],"m-grandeurs|Livre p. 107–114":["056eda6b9f43",8,"04ea01ba19c1",8],"m-grandeurs|Fichier p. 63–65":["224b2cfd17f3",3,"bbba3d67ac7c",3],"m-grandeurs|Fichier p. 201":["22148ba9ee03",1,"044fc59d8b6d",2],"m-grandeurs|Livre p. 276–284":["9c69b753b7c3",9,"9d22fcdeb563",7],"m-grandeurs|Fichier p. 202–203":["f6501260ce93",2,"3b341d5ca3a8",4],"m-grandeurs|Fichier p. 204":["e50a6ecfe3cc",1,"8d6c2903822f",1],"f-classes|Atelier p. 12–13":["5049029b419a",2,"743be90e899a",3],"f-classes|Atelier p. 90–95":["caae1a2b1ba7",6,"86a40ea18c08",4],"f-classes|Atelier p. 96–101":["6cfb21621d00",6,"4e7a4443ef9e",4],"f-classes|Livre unique p. 266–283":["aafaff547eb1",18,"7ddb7b01f2ca",8],"f-fonctions|Atelier p. 14–15":["9a1548da0092",2,"d237e1ee073a",2],"f-fonctions|Atelier p. 120–125":["e99a2e9db41f",6,"6044f549a5ac",4],"f-fonctions|Atelier p. 126–131":["680874d4ce1d",6,"029a121f9d87",5],"f-fonctions|Atelier p. 132–137":["12127cb96d29",6,"5df5ecbbeaad",4],"f-fonctions|Livre unique p. 292–297":["d8e5364360da",6,"dc278012a4b7",4],"f-complements|Atelier p. 140–145":["0a65c97cc7a2",6,"63d08df6c4ce",5],"f-complements|Atelier p. 146–151":["9e74d0360088",6,"9c1088445264",5],"f-complements|Atelier p. 152–155":["e16c2d913c8f",4,"bb4122ad51ee",4],"f-complements|Atelier p. 156–159":["323b16f77514",4,"97fe4e884711",3],"f-complements|Atelier p. 160–163":["b94ff83ae015",4,"194550529302",4],"f-complements|Livre unique p. 300–309":["189b2abeda4d",10,"275e8653dac0",6],"f-subordonnees|Atelier p. 112–117":["873bf3f2a8e5",6,"fa996c5f5e68",5],"f-subordonnees|Atelier p. 182–187":["8abd9b51cd26",6,"96cb75a37861",5],"f-subordonnees|Livre unique p. 284–291":["b69faa4b8a09",8,"6a6dd3ec97bf",5],"f-subordonnees|Livre unique p. 298–299":["43e5ca509c12",2,"ab434c9606eb",2],"f-phrases|Atelier p. 106–111":["b3f6926b11b8",6,"b03beb8d7ad5",4],"f-phrases|Livre unique p. 316–321":["a62a577a7021",6,"5ddda043bc39",5],"f-accords|Atelier p. 236–239":["fa8bfcdc9389",4,"815a86af3d86",4],"f-accords|Atelier p. 240–243":["e9c5419c5f8f",4,"a90ce3eb2eaa",4],"f-accords|Livre unique p. 344–353":["3dc930eb8708",10,"af8b9a3725a2",4],"f-participe|Atelier p. 244–247":["f4e89b6c732c",4,"ab7991210501",5],"f-participe|Atelier p. 248–251":["07976339088f",4,"98a2025806a9",6],"f-homophones|Atelier p. 224–227":["d856b5c8fdd0",4,"12661c5a5c86",4],"f-homophones|Atelier p. 228–231":["14f0843a70cf",4,"ce2eb5669bed",5],"f-homophones|Atelier p. 232–235":["314161b675a7",4,"a4cb21159fb4",5],"f-confusions|Atelier p. 252–255":["ad06c855555d",4,"f29223981867",3],"f-confusions|Atelier p. 256–259":["57e34b9bfec7",4,"e85c3f2891a0",5],"f-recit|Atelier p. 30–35":["90f9fc71875c",6,"3294b02fd704",4],"f-recit|Atelier p. 264–267":["e597640b67a5",4,"edfd0dbff50d",5],"f-recit|Atelier p. 268–271":["cf94eb87cad2",4,"1abfe35dca0a",4],"f-recit|Livre unique p. 330–333":["66196aff7263",4,"a9afd54720c2",2],"f-temps-composes|Atelier p. 272–275":["b3ad0d6fb047",4,"61c9b55d5128",5],"f-temps-composes|Atelier p. 280–283":["07640a931d1a",4,"496a6fee598a",4],"f-temps-composes|Livre unique p. 324–327":["8c60123c05ae",4,"ab3c5146017b",4],"f-temps-composes|Atelier p. 290–295":["4e0071d1a032",6,"",0],"f-modes|Atelier p. 276–279":["9fdd7a726c08",4,"c269d1bb2f1b",4],"f-modes|Livre unique p. 334–335":["7129ada4371b",2,"0891d407de2a",2],"f-enonciation|Atelier p. 24–29":["fe6a8cda02c5",6,"75d9982acc8e",5],"f-enonciation|Atelier p. 42–47":["8be7cac24043",6,"2d0090dd7be2",6],"f-enonciation|Livre unique p. 310–315":["b4d06f4236c4",6,"c6461be1b954",5],"f-enonciation|Livre unique p. 336–337":["a113c4b68254",2,"a7ce3fe3f74e",3],"f-argumenter|Atelier p. 64–69":["8aa430a6cab6",6,"25e662679ccf",5],"f-argumenter|Atelier p. 70–75":["6ba3ac44f2cd",6,"0bdfbb24d831",4],"f-argumenter|Atelier p. 76–81":["7fe4e14d33e2",6,"b9ef894581cf",5],"f-argumenter|Livre unique p. 160–185":["b57f53549e98",26,"50167bb680c6",15],"f-argumenter|Livre unique p. 186–207":["a40bd9843b81",22,"6967cf100c79",13],"f-argumenter|Livre unique p. 340–341":["21de5be19b5d",2,"59a88096d409",1],"f-mots|Atelier p. 192–195":["4b4df8a9bbfb",4,"5e1746808bcd",4],"f-mots|Atelier p. 220–223":["fab0f808108b",4,"35d4e536beb7",5],"f-mots|Livre unique p. 354–357":["93c91565214d",4,"1f8126da5964",4],"f-figures|Atelier p. 196–199":["9fd539f5bef1",4,"ddf8db02179b",3],"f-figures|Livre unique p. 364–367":["303e88897869",4,"a87fd5f73e70",3],"f-recits|Livre unique p. 16–41":["cdf229683e8e",26,"89c240256342",11],"f-recits|Livre unique p. 42–73":["062f1315e753",32,"5db9b0a8d7cc",22],"f-recits|Livre unique p. 94–123":["ae8ca95e671b",30,"002ac986f204",19],"f-recits|Livre unique p. 124–159":["879256dd6e24",36,"544c60b97c9f",15],"f-recits|Livre unique p. 362–363":["7dfe3e82f9e6",2,"a32eb8ca4689",2],"f-recits|Atelier p. 50–55":["7c327e668024",6,"16be31e8a65b",4],"f-poesie|Livre unique p. 74–93":["4d5303e1a566",20,"2afb47d31439",12],"f-poesie|Livre unique p. 368–371":["002669f9064e",4,"79bebb1ed731",3],"f-theatre|Livre unique p. 208–241":["3a7c4f4df157",34,"9b30a8f2bfaf",20],"f-theatre|Livre unique p. 360–361":["5b4a429a124f",2,"26b292dca146",2],"f-theatre|Atelier p. 102–105":["d4bc6039b130",4,"da96876f8aff",4],"f-presse|Livre unique p. 242–265":["ca4afdf90fb5",24,"8d1147e4f2b5",11],"d-verbes|Arbeitsbuch p. 87":["d996a1f7e7a7",1,"",0],"d-satzbau|Kursbuch p. 100":["26462a9ae143",1,"",0],"d-kasus|Kursbuch p. 102":["d39c981c1a73",1,"",0],"d-perfekt|Arbeitsbuch p. 87":["d996a1f7e7a7",1,"",0],"d-k1|Kursbuch p. 7–16":["2e2a3492e458",10,"9dbdee960c0b",10],"d-k1|Arbeitsbuch p. 7–14":["9cb1e83bf7a9",8,"4c929f1cefd4",2],"d-k2|Kursbuch p. 17–26":["cba4ed1b051f",10,"77ed64044292",10],"d-k2|Arbeitsbuch p. 15–22":["9cd4c290529a",8,"aa2a70ce69da",2],"d-k3|Kursbuch p. 27–36":["52244df3485b",10,"88d1b3dfa40e",10],"d-k3|Arbeitsbuch p. 23–30":["99595912e12d",8,"dc0e319141ac",2],"d-k4|Kursbuch p. 37–46":["fa07997f8dbc",10,"b985cf5e070c",10],"d-k4|Arbeitsbuch p. 31–38":["c7d3266bd2d2",8,"8ceae00f6395",2],"d-k4|Kursbuch p. 47–52":["47e0306056aa",6,"3a50935490fb",6],"d-k4|Arbeitsbuch p. 39–44":["5dbae966cf03",6,"1819f3f8bfb1",1],"d-k5|Kursbuch p. 53–62":["e6b6120c715e",10,"13fd3cced6fa",10],"d-k5|Arbeitsbuch p. 45–52":["679b2b9850e6",8,"d4cf07a771f0",2],"d-k6|Kursbuch p. 63–72":["29d2f35c439f",10,"64cf96a8507a",10],"d-k6|Arbeitsbuch p. 53–60":["f23067498125",8,"d45f1dbcf057",2],"d-k7|Kursbuch p. 73–82":["8aa2ce295274",10,"334b3097b798",10],"d-k7|Arbeitsbuch p. 61–68":["513d79d47e2f",8,"aa31020f45d1",2],"d-k8|Kursbuch p. 83–92":["8f3093df70ff",10,"210bd359bfb2",10],"d-k8|Arbeitsbuch p. 69–76":["534deff8edf6",8,"d90d4d415484",2],"d-k8|Kursbuch p. 93–98":["1cf36b4cafce",6,"3761bdfba098",6],"d-k8|Arbeitsbuch p. 77–82":["0b6ba2671aab",6,"8e59f98432e1",1],"e-verbes|Student's Book p. 98":["8576a696c626",1,"",0],"e-verbes|Language Builder p. 82–85":["4aef350e13f1",4,"",0],"e-u1|Student's Book p. 6–11":["53e4357caa4d",6,"163a43786329",17],"e-u1|Workbook p. 4–10":["b0f7013e9ff1",7,"9e1cde5bd23e",3],"e-u1|Language Builder p. 2–11":["b1a5733629e3",10,"8bbd59ba9dfc",2],"e-u2|Student's Book p. 12–17":["87f9475d4be4",6,"2654606432f8",15],"e-u2|Workbook p. 11–17":["811a47f3e52d",7,"c5a9244b1eb4",3],"e-u2|Language Builder p. 12–21":["d12497d2d779",10,"547edbc39578",2],"e-u2|Student's Book p. 18–19":["9932a24f070f",2,"bb7eec8af848",4],"e-u2|Workbook p. 18–21":["2c859b0081d9",4,"b12d009a78e6",3],"e-u3|Student's Book p. 20–25":["ad2d9dcfd1ea",6,"d835b1fdf27b",16],"e-u3|Workbook p. 22–28":["ae697af8b0a3",7,"d1b305f31269",3],"e-u3|Language Builder p. 22–31":["4dee7fe22abb",10,"ac1e6389e50f",2],"e-u4|Student's Book p. 26–31":["3d1a6b683719",6,"61aa36ce60ea",17],"e-u4|Workbook p. 29–35":["7bfceb0d7911",7,"c09a19ff330c",4],"e-u4|Language Builder p. 32–41":["f252debcbeb3",10,"4c2bd9d1e7ec",2],"e-u4|Student's Book p. 32–33":["65a10bca30dc",2,"ebea209a7a96",4],"e-u4|Workbook p. 36–39":["59aa32e13f44",4,"69c3f9f6dd20",3],"e-u5|Student's Book p. 34–39":["2aa94fc138f7",6,"bfa183a18d4b",18],"e-u5|Workbook p. 40–47":["a3437110ea8b",8,"d391ece76a49",4],"e-u5|Language Builder p. 42–51":["7731a94a8f47",10,"ac4926f3a432",2],"e-u6|Student's Book p. 40–45":["274ec8c49b5f",6,"0b93730f8935",12],"e-u6|Workbook p. 48–55":["562a6f5ed9eb",8,"fcb5455a752d",3],"e-u6|Language Builder p. 52–61":["f6b5d8290837",10,"dd22c06c67e6",2],"e-u6|Student's Book p. 46–47":["d2f8f4e70a2d",2,"7500ee53d424",4],"e-u6|Workbook p. 56–59":["f0659d8e044f",4,"3e4ad564a124",3],"e-u7|Student's Book p. 48–53":["c6376d4f344d",6,"69848b2311d4",17],"e-u7|Workbook p. 60–67":["f8531cad95c5",8,"a4e93b76f678",4],"e-u7|Language Builder p. 62–71":["3387d2b7fa42",10,"7d785572ea65",2],"e-u8|Student's Book p. 54–59":["4f6fed280ac0",6,"625da941e15b",13],"e-u8|Workbook p. 68–75":["cb1c95da6a19",8,"69f57fe9a6fb",3],"e-u8|Language Builder p. 72–81":["4f92e83c3220",10,"a8f757c68cb6",1],"e-u8|Student's Book p. 60–61":["869b37801193",2,"360daa716610",4],"e-u8|Workbook p. 76–79":["3861fd1c0e6d",4,"a8f357661811",2],"g-eau-intro|Diapos intro p. 1–13":["e3db9c94a7b2",13,"",0],"g-eau-intro|Livre p. 8–11":["c7ca1571d0e0",4,"",0],"g-eau-ressource|Diapos A p. 1–19":["44580b7da70a",19,"",0],"g-eau-ressource|Livre p. 12–19 · Fichier p. 1–4":["d10bf1188ba2",12,"",0],"g-eau-usages|Diapos B p. 1–10":["8e92840b8331",10,"",0],"g-eau-usages|Livre p. 20–25 · Fichier p. 5–8":["90125ed13cd6",10,"",0],"g-eau-cours|Diapos C p. 1–8":["ea44658d26c2",8,"",0],"g-eau-cours|Livre p. 26–31 · Fichier p. 9–10":["6511a12bb8d4",8,"",0],"g-eau-mers|Diapos D p. 1–12":["5fe67d543f91",12,"",0],"g-eau-mers|Livre p. 32–37 · Fichier p. 11–12":["b8189a6f346c",8,"",0],"g-eau-enjeux|Diapos E p. 1–12":["1ab8837cf2ee",12,"",0],"g-eau-enjeux|Livre p. 38–45 · Fichier p. 13–16":["7c17c0df8e83",12,"",0],"g-eau-fm|Diapos Franches-Montagnes p. 1–8":["06e277f55558",8,"",0],"g-eau-durable|Livre p. 46–51 · Fichier p. 17–20":["8b6e13459b70",10,"",0],"g-eau-durable|Livre p. 52–57 · Fichier p. 21–24":["5bf0acd077f4",10,"",0],"g-energie|Livre p. 58–61":["e36c8e1466b6",4,"",0],"g-energie|Livre p. 62–67 · Fichier p. 25–26":["7c1109f11bc0",8,"",0],"g-energie|Livre p. 68–73 · Fichier p. 27–28":["ee18acaee7f6",8,"",0],"g-energie|Livre p. 74–79 · Fichier p. 29–30":["0c3936ee2cbe",8,"",0],"g-energie|Livre p. 80–87 · Fichier p. 31–34":["1c3f59fe5a45",12,"",0],"g-energie|Livre p. 88–95 · Fichier p. 35–38":["f793cfe1e97c",12,"",0],"g-energie|Livre p. 96–101 · Fichier p. 39–42":["41f9160ac6a6",10,"",0],"g-energie|Livre p. 102–109 · Fichier p. 43–46":["7d292fb6ba59",12,"",0],"g-info|Livre p. 110–113":["854323c5c703",4,"",0],"g-info|Livre p. 114–117 · Fichier p. 47–48":["00ff6f0d93df",6,"",0],"g-info|Livre p. 118–121 · Fichier p. 49–50":["c9536f2c6acb",6,"",0],"g-info|Livre p. 122–129 · Fichier p. 51–54":["fae732240997",12,"",0],"g-info|Livre p. 130–137 · Fichier p. 55–58":["6a378837faba",12,"",0],"g-info|Livre p. 138–141 · Fichier p. 59–60":["9da319eb6548",6,"",0],"g-info|Livre p. 142–145 · Fichier p. 61–62":["eb8a2e002997",6,"",0],"g-info|Livre p. 146–151 · Fichier p. 63–66":["2b97f8e3c489",10,"",0],"g-info|Livre p. 152–157 · Fichier p. 67–72":["e3089fde8ab4",12,"",0],"g-outils|Outils p. 31":["801641767112",1,"",0],"g-outils|Outils p. 33":["a05deed9aa5f",1,"",0],"g-outils|Outils p. 46–51":["741e36e250b8",6,"",0],"g-outils|Outils p. 72":["bcf60476bd9a",1,"",0],"g-cartes|Diapos cartes p. 1–10":["5df745890fed",10,"",0],"g-mots|Livre p. 158–160":["9d586f6cba1a",3,"",0],"h-siecle|Livre p. 6–25":["63aa3cb0df24",20,"",0],"h-siecle|Fichier p. 1–8":["997787ef1821",8,"",0],"h-14-18|Livre p. 26–41":["a4f712b4216c",16,"",0],"h-14-18|Fichier p. 9–16":["1eae3b80269a",8,"",0],"h-dictatures|Livre p. 42–59":["2cabb4a1e36e",18,"",0],"h-dictatures|Fichier p. 17–24":["0d552b3ee079",8,"",0],"h-39-45|Livre p. 60–77":["c1cb34a9717d",18,"",0],"h-39-45|Fichier p. 25–32":["5e4a80c98a31",8,"",0],"h-crimes|Livre p. 78–91":["b154e54e518a",14,"",0],"h-crimes|Livre p. 92–93":["d51d2c497c76",2,"",0],"h-crimes|Fichier p. 33–38":["8056c30c7170",6,"",0],"h-crimes|Fichier p. 39–42":["67258dbd13a6",4,"",0],"h-decolonisation|Livre p. 94–109":["6652ef22db2c",16,"",0],"h-decolonisation|Fichier p. 43–48":["c3015614fcaa",6,"",0],"h-guerre-froide|Livre p. 110–125":["c7f1e78bca6a",16,"",0],"h-guerre-froide|Fichier p. 49–56":["04cd48889886",8,"",0],"h-moyen-orient|Livre p. 126–143":["9629d4d7dcdd",18,"",0],"h-moyen-orient|Fichier p. 57–64":["7fea5866d2c4",8,"",0],"h-europe|Livre p. 144–159":["593303e00127",16,"",0],"h-europe|Fichier p. 65–72":["985d010b2c66",8,"",0],"h-art|Livre p. 160–173":["17ba27fe6988",14,"",0],"h-art|Fichier p. 73–84":["e18222a8eff7",12,"",0],"h-outils|Livre p. 174–175":["d733e7fa52e2",2,"",0],"h-outils|Outils p. 18–21":["4327144226ae",4,"",0],"h-outils|Outils p. 22–29":["17f74cb8d240",8,"",0],"h-outils|Outils p. 44–45":["50e9f94e2764",2,"",0]};
+CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-relatifs|Livre p. 28–31":["d339bcca825e",4,"3aafe968af29",5],"m-relatifs|Fichier p. 5–7":["55f4cb23c7e3",3,"316d9b704c46",4],"m-relatifs|Fichier p. 8":["bb59f599ad29",1,"ed4082d3ef5d",1],"m-fractions|Fichier p. 9":["93cf46817458",1,"97fb9a4e6327",1],"m-fractions|Livre p. 32–39":["5907f8ceeeb4",8,"85440f7336e5",13],"m-fractions|Fichier p. 10–17":["ad2c7fb7a925",8,"8491b717c262",9],"m-fractions|Fichier p. 18":["c625f75d9fe6",1,"ed4082d3ef5d",1],"m-fractions|Fichier p. 19–20":["b305663bb165",2,"342552308419",3],"m-puissances|Fichier p. 21":["1d00afaada07",1,"14bca21b4594",2],"m-puissances|Livre p. 40–41":["68d3fc942c3b",2,"e7cf1ea0d701",3],"m-puissances|Fichier p. 22":["c973656ab216",1,"14bca21b4594",2],"m-puissances|Fichier p. 24":["13d9338795d3",1,"ed4082d3ef5d",1],"m-notation|Livre p. 41–43":["a405c1d67efb",3,"e198f35fd90a",3],"m-notation|Fichier p. 22–23":["f16733559989",2,"3d7eba7b5ea7",4],"m-notation|Fichier p. 24":["13d9338795d3",1,"ed4082d3ef5d",1],"m-racines|Livre p. 44–47":["02766b29fb2d",4,"f138f30b286c",4],"m-racines|Fichier p. 23":["4f7ad5193952",1,"16aa69baacae",2],"m-racines|Fichier p. 24":["13d9338795d3",1,"ed4082d3ef5d",1],"m-proportion|Fichier p. 57":["d9a823e13ef4",1,"82dd60fbb5c0",2],"m-proportion|Livre p. 98–106":["9904725f5526",9,"58ba464923a5",10],"m-proportion|Fichier p. 58–62":["b69623da3ee8",5,"350b022eae83",6],"m-proportion|Fichier p. 66":["d1c40cc3fac4",1,"c9fc3007b98c",1],"m-litteral|Fichier p. 70":["1ea35fdc8e9d",1,"d39300d34db0",1],"m-litteral|Livre p. 124–130":["4d19aee98f1b",7,"5c3a3de7c0a5",12],"m-litteral|Fichier p. 71–75":["27e78b70f815",5,"7e7d077b3ae2",6],"m-litteral|Fichier p. 76":["8df49fbfc1f1",1,"c9fc3007b98c",1],"m-litteral|Fichier p. 79":["de5f07a96591",1,"85322510cebd",1],"m-litteral|Fichier p. 80–84":["4c190d5a15ff",5,"84142fea33ba",5],"m-equations|Fichier p. 100":["d4b3684f4b00",1,"45e945d1e187",1],"m-equations|Livre p. 142–159":["b2e771f92d17",18,"4b102cae78b4",18],"m-equations|Fichier p. 101–105":["7b2fdb392b9a",5,"075af5269af8",6],"m-equations|Fichier p. 106–107":["70f4b38da44b",2,"c9fc3007b98c",1],"m-equations|Fichier p. 108":["fd003429f7c1",1,"023be3560df5",2],"m-equations|Fichier p. 109–112":["d89f3da50d92",4,"91f83f25605e",6],"m-pythagore|Fichier p. 175":["add43828976f",1,"5496df124cd1",1],"m-pythagore|Livre p. 238–245":["3ac313260015",8,"4c8fc5d68a04",8],"m-pythagore|Fichier p. 176":["63ef40df3fed",1,"",0],"m-pythagore|Fichier p. 177":["af882b2f365a",1,"189ec1838f3d",2],"m-pythagore|Fichier p. 178":["97486e3fffae",1,"",0],"m-identites|Livre p. 131–134":["4f79bbc03a3d",4,"8f3e329df794",8],"m-identites|Fichier p. 85–87":["7d9b04587645",3,"6fa6928ab002",2],"m-identites|Fichier p. 88":["0e3f58155843",1,"c9fc3007b98c",1],"m-factorisation|Livre p. 135–139":["bcd23344f825",5,"e7fa1a0a1b49",8],"m-factorisation|Fichier p. 89–93":["7c3588462911",5,"d175bb0a1149",4],"m-factorisation|Fichier p. 94":["217a1d7490ee",1,"c9fc3007b98c",1],"m-factorisation|Fichier p. 95–99":["36a8c9a9a09f",5,"2517c2d45261",5],"m-equations2|Livre p. 166–175":["f652d6c2fcbc",10,"3ac45e1a989d",9],"m-equations2|Fichier p. 114":["97256e504c83",1,"dd19d7edaf33",2],"m-equations2|Fichier p. 115–117":["d195fa59f72e",3,"ed4f9bc03bb3",1],"m-systemes|Livre p. 160–166":["c9adb81f8e6b",7,"2993e7867ff3",5],"m-systemes|Fichier p. 113":["2f00546ae525",1,"3dda8d487f0a",2],"m-systemes|Fichier p. 114":["97256e504c83",1,"dd19d7edaf33",2],"m-fonctions|Fichier p. 33":["5e408f715058",1,"d0f158df18f2",2],"m-fonctions|Livre p. 74–86":["4f4d273aafa4",13,"08e1b4e65715",26],"m-fonctions|Fichier p. 34–40":["d139588a0d6d",7,"be929a15e90c",7],"m-fonctions|Fichier p. 41":["f325d3168027",1,"ed4082d3ef5d",1],"m-fonctions|Fichier p. 44":["469417a0b637",1,"200f5eb97d5e",2],"m-fonctions|Livre p. 87–97":["ae871d3e21ea",11,"c7f582e95103",14],"m-fonctions|Fichier p. 45–53":["7ce477438ab1",9,"13d578828c5d",11],"m-fonctions|Fichier p. 54":["a31e30046586",1,"8dbc6f0edb43",2],"m-thales|Fichier p. 179":["dfe2e7b4c8af",1,"2f69214a5877",2],"m-thales|Livre p. 202–205":["6bf32ca00127",4,"1a9cc9d5b02c",4],"m-thales|Livre p. 246–251":["30a57ad4e24a",6,"6869c6aab59d",11],"m-thales|Fichier p. 180–188":["94f24de65089",9,"e697f7525ddb",8],"m-thales|Fichier p. 189":["469f4688d772",1,"8d6c2903822f",1],"m-thales|Fichier p. 190–192":["bf303021ba28",3,"4b7dba4e1cc8",3],"m-proba|Fichier p. 25":["642ead4d7806",1,"a80014298528",1],"m-proba|Livre p. 50–57":["bd5fdc17ab3c",8,"529740e4a352",6],"m-proba|Fichier p. 26":["30ce2d12390b",1,"2e9d89b655f1",2],"m-proba|Fichier p. 27":["1ca2c14c4a84",1,"ed4082d3ef5d",1],"m-proba|Fichier p. 28":["4678804f98e2",1,"",0],"m-diagrammes|Livre p. 115–121":["cfd31b49f4a6",7,"129c94f2810d",6],"m-diagrammes|Fichier p. 68–69":["907b4a518d28",2,"0763135b178c",2],"m-angles|Fichier p. 119":["b763e7ee2574",1,"e194c4e410c4",2],"m-angles|Livre p. 190–194":["4364a51c9cbd",5,"6fd88a00895c",7],"m-angles|Livre p. 195–201":["bd8942a50a7e",7,"d58f00dd9aa6",11],"m-angles|Fichier p. 120–128":["0925c1894d2e",9,"a4bda0bd37f7",12],"m-angles|Fichier p. 129":["f1d4a9814964",1,"87688e6bddf8",1],"m-angles|Fichier p. 130–131":["9eb888ab50d9",2,"",0],"m-transfo|Fichier p. 141":["a5632a358baa",1,"a64ebc3a0f61",2],"m-transfo|Livre p. 220–224":["907900435d12",5,"fb8302247b7a",17],"m-transfo|Fichier p. 142–159":["8f45d69acfae",18,"ba51155ad0f6",19],"m-transfo|Fichier p. 160":["2e3df2eae030",1,"87688e6bddf8",1],"m-transfo|Fichier p. 161":["12e7190f453b",1,"",0],"m-aires|Fichier p. 171":["0d601e8451d0",1,"",0],"m-aires|Livre p. 234–237":["af99606542ed",4,"8001648fdce9",5],"m-aires|Fichier p. 172–174":["c944ccafc4af",3,"9dfb5c814cac",3],"m-solides|Fichier p. 132":["2548e3afa6ef",1,"b232a57cf9d0",1],"m-solides|Livre p. 208–217":["a50414f83489",10,"39493a2980d1",18],"m-solides|Fichier p. 133–138":["a9726ae473d7",6,"31787a739f45",4],"m-solides|Fichier p. 139":["290ab6f21465",1,"87688e6bddf8",1],"m-solides|Fichier p. 193":["af847b86276d",1,"fb66861528f5",2],"m-solides|Livre p. 254–274":["7fece6ba5363",21,"6442110d9dcf",17],"m-solides|Fichier p. 194–195":["a104aa0687cc",2,"cb31e203157d",3],"m-solides|Fichier p. 196":["09514c4e7fc0",1,"8d6c2903822f",1],"m-solides|Fichier p. 197–198":["80f77a1805d3",2,"6d66c92dbd02",3],"m-solides|Fichier p. 199":["326977556eef",1,"8d6c2903822f",1],"m-grandeurs|Livre p. 107–114":["056eda6b9f43",8,"04ea01ba19c1",8],"m-grandeurs|Fichier p. 63–65":["224b2cfd17f3",3,"bbba3d67ac7c",3],"m-grandeurs|Fichier p. 201":["22148ba9ee03",1,"044fc59d8b6d",2],"m-grandeurs|Livre p. 276–284":["9c69b753b7c3",9,"9d22fcdeb563",7],"m-grandeurs|Fichier p. 202–203":["f6501260ce93",2,"3b341d5ca3a8",4],"m-grandeurs|Fichier p. 204":["e50a6ecfe3cc",1,"8d6c2903822f",1],"f-classes|Atelier p. 12–13":["5049029b419a",2,"743be90e899a",3],"f-classes|Atelier p. 90–95":["caae1a2b1ba7",6,"86a40ea18c08",4],"f-classes|Atelier p. 96–101":["6cfb21621d00",6,"4e7a4443ef9e",4],"f-classes|Livre unique p. 266–283":["aafaff547eb1",18,"7ddb7b01f2ca",8],"f-fonctions|Atelier p. 14–15":["9a1548da0092",2,"d237e1ee073a",2],"f-fonctions|Atelier p. 120–125":["e99a2e9db41f",6,"6044f549a5ac",4],"f-fonctions|Atelier p. 126–131":["680874d4ce1d",6,"029a121f9d87",5],"f-fonctions|Atelier p. 132–137":["12127cb96d29",6,"5df5ecbbeaad",4],"f-fonctions|Livre unique p. 292–297":["d8e5364360da",6,"dc278012a4b7",4],"f-complements|Atelier p. 140–145":["0a65c97cc7a2",6,"63d08df6c4ce",5],"f-complements|Atelier p. 146–151":["9e74d0360088",6,"9c1088445264",5],"f-complements|Atelier p. 152–155":["e16c2d913c8f",4,"bb4122ad51ee",4],"f-complements|Atelier p. 156–159":["323b16f77514",4,"97fe4e884711",3],"f-complements|Atelier p. 160–163":["b94ff83ae015",4,"194550529302",4],"f-complements|Livre unique p. 300–309":["189b2abeda4d",10,"275e8653dac0",6],"f-subordonnees|Atelier p. 112–117":["873bf3f2a8e5",6,"fa996c5f5e68",5],"f-subordonnees|Atelier p. 182–187":["8abd9b51cd26",6,"96cb75a37861",5],"f-subordonnees|Livre unique p. 284–291":["b69faa4b8a09",8,"6a6dd3ec97bf",5],"f-subordonnees|Livre unique p. 298–299":["43e5ca509c12",2,"ab434c9606eb",2],"f-phrases|Atelier p. 106–111":["b3f6926b11b8",6,"b03beb8d7ad5",4],"f-phrases|Livre unique p. 316–321":["a62a577a7021",6,"5ddda043bc39",5],"f-accords|Atelier p. 236–239":["fa8bfcdc9389",4,"815a86af3d86",4],"f-accords|Atelier p. 240–243":["e9c5419c5f8f",4,"a90ce3eb2eaa",4],"f-accords|Livre unique p. 344–353":["3dc930eb8708",10,"af8b9a3725a2",4],"f-participe|Atelier p. 244–247":["f4e89b6c732c",4,"ab7991210501",5],"f-participe|Atelier p. 248–251":["07976339088f",4,"98a2025806a9",6],"f-homophones|Atelier p. 224–227":["d856b5c8fdd0",4,"12661c5a5c86",4],"f-homophones|Atelier p. 228–231":["14f0843a70cf",4,"ce2eb5669bed",5],"f-homophones|Atelier p. 232–235":["314161b675a7",4,"a4cb21159fb4",5],"f-confusions|Atelier p. 252–255":["ad06c855555d",4,"f29223981867",3],"f-confusions|Atelier p. 256–259":["57e34b9bfec7",4,"e85c3f2891a0",5],"f-recit|Atelier p. 30–35":["90f9fc71875c",6,"3294b02fd704",4],"f-recit|Atelier p. 264–267":["e597640b67a5",4,"edfd0dbff50d",5],"f-recit|Atelier p. 268–271":["cf94eb87cad2",4,"1abfe35dca0a",4],"f-recit|Livre unique p. 330–333":["66196aff7263",4,"a9afd54720c2",2],"f-temps-composes|Atelier p. 272–275":["b3ad0d6fb047",4,"61c9b55d5128",5],"f-temps-composes|Atelier p. 280–283":["07640a931d1a",4,"496a6fee598a",4],"f-temps-composes|Livre unique p. 324–327":["8c60123c05ae",4,"ab3c5146017b",4],"f-temps-composes|Atelier p. 290–295":["4e0071d1a032",6,"",0],"f-modes|Atelier p. 276–279":["9fdd7a726c08",4,"c269d1bb2f1b",4],"f-modes|Livre unique p. 334–335":["7129ada4371b",2,"0891d407de2a",2],"f-enonciation|Atelier p. 24–29":["fe6a8cda02c5",6,"75d9982acc8e",5],"f-enonciation|Atelier p. 42–47":["8be7cac24043",6,"2d0090dd7be2",6],"f-enonciation|Livre unique p. 310–315":["b4d06f4236c4",6,"c6461be1b954",5],"f-enonciation|Livre unique p. 336–337":["a113c4b68254",2,"a7ce3fe3f74e",3],"f-argumenter|Atelier p. 64–69":["8aa430a6cab6",6,"25e662679ccf",5],"f-argumenter|Atelier p. 70–75":["6ba3ac44f2cd",6,"0bdfbb24d831",4],"f-argumenter|Atelier p. 76–81":["7fe4e14d33e2",6,"b9ef894581cf",5],"f-argumenter|Livre unique p. 160–185":["b57f53549e98",26,"50167bb680c6",15],"f-argumenter|Livre unique p. 186–207":["a40bd9843b81",22,"6967cf100c79",13],"f-argumenter|Livre unique p. 340–341":["21de5be19b5d",2,"59a88096d409",1],"f-mots|Atelier p. 192–195":["4b4df8a9bbfb",4,"5e1746808bcd",4],"f-mots|Atelier p. 220–223":["fab0f808108b",4,"35d4e536beb7",5],"f-mots|Livre unique p. 354–357":["93c91565214d",4,"1f8126da5964",4],"f-figures|Atelier p. 196–199":["9fd539f5bef1",4,"ddf8db02179b",3],"f-figures|Livre unique p. 364–367":["303e88897869",4,"a87fd5f73e70",3],"f-recits|Livre unique p. 16–41":["cdf229683e8e",26,"89c240256342",11],"f-recits|Livre unique p. 42–73":["062f1315e753",32,"5db9b0a8d7cc",22],"f-recits|Livre unique p. 94–123":["ae8ca95e671b",30,"002ac986f204",19],"f-recits|Livre unique p. 124–159":["879256dd6e24",36,"544c60b97c9f",15],"f-recits|Livre unique p. 362–363":["7dfe3e82f9e6",2,"a32eb8ca4689",2],"f-recits|Atelier p. 50–55":["7c327e668024",6,"16be31e8a65b",4],"f-poesie|Livre unique p. 74–93":["4d5303e1a566",20,"2afb47d31439",12],"f-poesie|Livre unique p. 368–371":["002669f9064e",4,"79bebb1ed731",3],"f-theatre|Livre unique p. 208–241":["3a7c4f4df157",34,"9b30a8f2bfaf",20],"f-theatre|Livre unique p. 360–361":["5b4a429a124f",2,"26b292dca146",2],"f-theatre|Atelier p. 102–105":["d4bc6039b130",4,"da96876f8aff",4],"f-presse|Livre unique p. 242–265":["ca4afdf90fb5",24,"8d1147e4f2b5",11],"d-verbes|Arbeitsbuch p. 87":["d996a1f7e7a7",1,"",0],"d-satzbau|Kursbuch p. 100":["26462a9ae143",1,"",0],"d-kasus|Kursbuch p. 102":["d39c981c1a73",1,"",0],"d-perfekt|Arbeitsbuch p. 87":["d996a1f7e7a7",1,"",0],"d-k1|Kursbuch p. 7–16":["2e2a3492e458",10,"9dbdee960c0b",10],"d-k1|Arbeitsbuch p. 7–14":["9cb1e83bf7a9",8,"4c929f1cefd4",2],"d-k2|Kursbuch p. 17–26":["cba4ed1b051f",10,"77ed64044292",10],"d-k2|Arbeitsbuch p. 15–22":["9cd4c290529a",8,"aa2a70ce69da",2],"d-k3|Kursbuch p. 27–36":["52244df3485b",10,"88d1b3dfa40e",10],"d-k3|Arbeitsbuch p. 23–30":["99595912e12d",8,"dc0e319141ac",2],"d-k4|Kursbuch p. 37–46":["fa07997f8dbc",10,"b985cf5e070c",10],"d-k4|Arbeitsbuch p. 31–38":["c7d3266bd2d2",8,"8ceae00f6395",2],"d-k4|Kursbuch p. 47–52":["47e0306056aa",6,"3a50935490fb",6],"d-k4|Arbeitsbuch p. 39–44":["5dbae966cf03",6,"1819f3f8bfb1",1],"d-k5|Kursbuch p. 53–62":["e6b6120c715e",10,"13fd3cced6fa",10],"d-k5|Arbeitsbuch p. 45–52":["679b2b9850e6",8,"d4cf07a771f0",2],"d-k6|Kursbuch p. 63–72":["29d2f35c439f",10,"64cf96a8507a",10],"d-k6|Arbeitsbuch p. 53–60":["f23067498125",8,"d45f1dbcf057",2],"d-k7|Kursbuch p. 73–82":["8aa2ce295274",10,"334b3097b798",10],"d-k7|Arbeitsbuch p. 61–68":["513d79d47e2f",8,"aa31020f45d1",2],"d-k8|Kursbuch p. 83–92":["8f3093df70ff",10,"210bd359bfb2",10],"d-k8|Arbeitsbuch p. 69–76":["534deff8edf6",8,"d90d4d415484",2],"d-k8|Kursbuch p. 93–98":["1cf36b4cafce",6,"3761bdfba098",6],"d-k8|Arbeitsbuch p. 77–82":["0b6ba2671aab",6,"8e59f98432e1",1],"e-verbes|Student's Book p. 98":["8576a696c626",1,"",0],"e-verbes|Language Builder p. 82–85":["4aef350e13f1",4,"",0],"e-u1|Student's Book p. 6–11":["53e4357caa4d",6,"163a43786329",17],"e-u1|Workbook p. 4–10":["b0f7013e9ff1",7,"9e1cde5bd23e",3],"e-u1|Language Builder p. 2–11":["b1a5733629e3",10,"8bbd59ba9dfc",2],"e-u2|Student's Book p. 12–17":["87f9475d4be4",6,"2654606432f8",15],"e-u2|Workbook p. 11–17":["811a47f3e52d",7,"c5a9244b1eb4",3],"e-u2|Language Builder p. 12–21":["d12497d2d779",10,"547edbc39578",2],"e-u2|Student's Book p. 18–19":["9932a24f070f",2,"bb7eec8af848",4],"e-u2|Workbook p. 18–21":["2c859b0081d9",4,"b12d009a78e6",3],"e-u3|Student's Book p. 20–25":["ad2d9dcfd1ea",6,"d835b1fdf27b",16],"e-u3|Workbook p. 22–28":["ae697af8b0a3",7,"d1b305f31269",3],"e-u3|Language Builder p. 22–31":["4dee7fe22abb",10,"ac1e6389e50f",2],"e-u4|Student's Book p. 26–31":["3d1a6b683719",6,"61aa36ce60ea",17],"e-u4|Workbook p. 29–35":["7bfceb0d7911",7,"c09a19ff330c",4],"e-u4|Language Builder p. 32–41":["f252debcbeb3",10,"4c2bd9d1e7ec",2],"e-u4|Student's Book p. 32–33":["65a10bca30dc",2,"ebea209a7a96",4],"e-u4|Workbook p. 36–39":["59aa32e13f44",4,"69c3f9f6dd20",3],"e-u5|Student's Book p. 34–39":["2aa94fc138f7",6,"bfa183a18d4b",18],"e-u5|Workbook p. 40–47":["a3437110ea8b",8,"d391ece76a49",4],"e-u5|Language Builder p. 42–51":["7731a94a8f47",10,"ac4926f3a432",2],"e-u6|Student's Book p. 40–45":["274ec8c49b5f",6,"0b93730f8935",12],"e-u6|Workbook p. 48–55":["562a6f5ed9eb",8,"fcb5455a752d",3],"e-u6|Language Builder p. 52–61":["f6b5d8290837",10,"dd22c06c67e6",2],"e-u6|Student's Book p. 46–47":["d2f8f4e70a2d",2,"7500ee53d424",4],"e-u6|Workbook p. 56–59":["f0659d8e044f",4,"3e4ad564a124",3],"e-u7|Student's Book p. 48–53":["c6376d4f344d",6,"69848b2311d4",17],"e-u7|Workbook p. 60–67":["f8531cad95c5",8,"a4e93b76f678",4],"e-u7|Language Builder p. 62–71":["3387d2b7fa42",10,"7d785572ea65",2],"e-u8|Student's Book p. 54–59":["4f6fed280ac0",6,"625da941e15b",13],"e-u8|Workbook p. 68–75":["cb1c95da6a19",8,"69f57fe9a6fb",3],"e-u8|Language Builder p. 72–81":["4f92e83c3220",10,"a8f757c68cb6",1],"e-u8|Student's Book p. 60–61":["869b37801193",2,"360daa716610",4],"e-u8|Workbook p. 76–79":["3861fd1c0e6d",4,"a8f357661811",2],"s-cardio|Fiche de synthèse S11-17":["5176ba454af2",1,"",0],"s-cardio|Fiche de synthèse S11-18":["e006c19013f9",1,"",0],"s-cardio|Fiches de synthèse S11-19–20":["b270ceceb3b7",2,"",0],"s-cardio|Fiches de synthèse S11-21–22":["080abfa61c17",2,"",0],"s-cardio|Fiche de synthèse S11-23":["d82b176f023d",1,"",0],"s-cardio|Cahier « Le sang » p. 7":["c0593351a45d",1,"",0],"s-cardio|Fiches de travail S11-3–4":["",0,"6d7c651accf9",3],"s-cardio|Fiches de travail S11-5–9":["",0,"0d441866550e",5],"s-cardio|Fiche de travail S11-10":["",0,"8968e0dc372a",2],"s-cardio|Fiches de travail S11-11–16":["",0,"1aab8788e6a0",6],"g-eau-intro|Diapos intro p. 1–13":["e3db9c94a7b2",13,"",0],"g-eau-intro|Livre p. 8–11":["c7ca1571d0e0",4,"",0],"g-eau-ressource|Diapos A p. 1–19":["44580b7da70a",19,"",0],"g-eau-ressource|Livre p. 12–19 · Fichier p. 1–4":["d10bf1188ba2",12,"",0],"g-eau-usages|Diapos B p. 1–10":["8e92840b8331",10,"",0],"g-eau-usages|Livre p. 20–25 · Fichier p. 5–8":["90125ed13cd6",10,"",0],"g-eau-cours|Diapos C p. 1–8":["ea44658d26c2",8,"",0],"g-eau-cours|Livre p. 26–31 · Fichier p. 9–10":["6511a12bb8d4",8,"",0],"g-eau-mers|Diapos D p. 1–12":["5fe67d543f91",12,"",0],"g-eau-mers|Livre p. 32–37 · Fichier p. 11–12":["b8189a6f346c",8,"",0],"g-eau-enjeux|Diapos E p. 1–12":["1ab8837cf2ee",12,"",0],"g-eau-enjeux|Livre p. 38–45 · Fichier p. 13–16":["7c17c0df8e83",12,"",0],"g-eau-fm|Diapos Franches-Montagnes p. 1–8":["06e277f55558",8,"",0],"g-eau-durable|Livre p. 46–51 · Fichier p. 17–20":["8b6e13459b70",10,"",0],"g-eau-durable|Livre p. 52–57 · Fichier p. 21–24":["5bf0acd077f4",10,"",0],"g-energie|Livre p. 58–61":["e36c8e1466b6",4,"",0],"g-energie|Livre p. 62–67 · Fichier p. 25–26":["7c1109f11bc0",8,"",0],"g-energie|Livre p. 68–73 · Fichier p. 27–28":["ee18acaee7f6",8,"",0],"g-energie|Livre p. 74–79 · Fichier p. 29–30":["0c3936ee2cbe",8,"",0],"g-energie|Livre p. 80–87 · Fichier p. 31–34":["1c3f59fe5a45",12,"",0],"g-energie|Livre p. 88–95 · Fichier p. 35–38":["f793cfe1e97c",12,"",0],"g-energie|Livre p. 96–101 · Fichier p. 39–42":["41f9160ac6a6",10,"",0],"g-energie|Livre p. 102–109 · Fichier p. 43–46":["7d292fb6ba59",12,"",0],"g-info|Livre p. 110–113":["854323c5c703",4,"",0],"g-info|Livre p. 114–117 · Fichier p. 47–48":["00ff6f0d93df",6,"",0],"g-info|Livre p. 118–121 · Fichier p. 49–50":["c9536f2c6acb",6,"",0],"g-info|Livre p. 122–129 · Fichier p. 51–54":["fae732240997",12,"",0],"g-info|Livre p. 130–137 · Fichier p. 55–58":["6a378837faba",12,"",0],"g-info|Livre p. 138–141 · Fichier p. 59–60":["9da319eb6548",6,"",0],"g-info|Livre p. 142–145 · Fichier p. 61–62":["eb8a2e002997",6,"",0],"g-info|Livre p. 146–151 · Fichier p. 63–66":["2b97f8e3c489",10,"",0],"g-info|Livre p. 152–157 · Fichier p. 67–72":["e3089fde8ab4",12,"",0],"g-outils|Outils p. 31":["801641767112",1,"",0],"g-outils|Outils p. 33":["a05deed9aa5f",1,"",0],"g-outils|Outils p. 46–51":["741e36e250b8",6,"",0],"g-outils|Outils p. 72":["bcf60476bd9a",1,"",0],"g-cartes|Diapos cartes p. 1–10":["5df745890fed",10,"",0],"g-mots|Livre p. 158–160":["9d586f6cba1a",3,"",0],"h-siecle|Livre p. 6–25":["63aa3cb0df24",20,"",0],"h-siecle|Fichier p. 1–8":["997787ef1821",8,"",0],"h-14-18|Livre p. 26–41":["a4f712b4216c",16,"",0],"h-14-18|Fichier p. 9–16":["1eae3b80269a",8,"",0],"h-dictatures|Livre p. 42–59":["2cabb4a1e36e",18,"",0],"h-dictatures|Fichier p. 17–24":["0d552b3ee079",8,"",0],"h-39-45|Livre p. 60–77":["c1cb34a9717d",18,"",0],"h-39-45|Fichier p. 25–32":["5e4a80c98a31",8,"",0],"h-crimes|Livre p. 78–91":["b154e54e518a",14,"",0],"h-crimes|Livre p. 92–93":["d51d2c497c76",2,"",0],"h-crimes|Fichier p. 33–38":["8056c30c7170",6,"",0],"h-crimes|Fichier p. 39–42":["67258dbd13a6",4,"",0],"h-decolonisation|Livre p. 94–109":["6652ef22db2c",16,"",0],"h-decolonisation|Fichier p. 43–48":["c3015614fcaa",6,"",0],"h-guerre-froide|Livre p. 110–125":["c7f1e78bca6a",16,"",0],"h-guerre-froide|Fichier p. 49–56":["04cd48889886",8,"",0],"h-moyen-orient|Livre p. 126–143":["9629d4d7dcdd",18,"",0],"h-moyen-orient|Fichier p. 57–64":["7fea5866d2c4",8,"",0],"h-europe|Livre p. 144–159":["593303e00127",16,"",0],"h-europe|Fichier p. 65–72":["985d010b2c66",8,"",0],"h-art|Livre p. 160–173":["17ba27fe6988",14,"",0],"h-art|Fichier p. 73–84":["e18222a8eff7",12,"",0],"h-outils|Livre p. 174–175":["d733e7fa52e2",2,"",0],"h-outils|Outils p. 18–21":["4327144226ae",4,"",0],"h-outils|Outils p. 22–29":["17f74cb8d240",8,"",0],"h-outils|Outils p. 44–45":["50e9f94e2764",2,"",0]};
 </script>
 <script>/* ecriture.js */
 'use strict';
@@ -9736,6 +10666,9 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
     if (!P.presentation) h += `<div class="liste classe-l">${boutonClasse(c)}</div>`;
     for (const d of (CL.docsProf && CL.docsProf[c.id]) || []) h += `<details class="lecon prof"><summary><span>${d.titre}<small>De ton enseignant${d.date ? ' · ' + d.date : ''}</small></span></summary><div class="lecon-corps">${leconHTML(d.lecon)}</div></details>`;
     h += `<details class="lecon"${commence && !P.presentation ? '' : ' open'}><summary>L'essentiel</summary><div class="lecon-corps">${leconHTML(c.lecon)}</div></details>`;
+    /* un atelier interactif (schémas à toucher, animations), monté après l'affichage : CL.ateliers[c.atelier](élément) */
+    const atelier = c.atelier && CL.ateliers && CL.ateliers[c.atelier];
+    if (atelier) h += `<section><h2>Explorer</h2><div class="atelier" id="atelier"></div></section>`;
     h += `<section><h2>S'entraîner</h2><div class="liste">`;
     for (const s of c.savoirs) {
       const f = E.sav[s.id],
@@ -9760,6 +10693,7 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
     if (P.presentation) h += `<section class="ia-b"><h2>Une question ?</h2><div class="bloc"><div class="actions" style="margin-top:0"><button class="btn" data-a="ia" data-ctx="c" data-c="${c.id}">Demander à Claude</button></div></div></section>`;
     else h += `<section><h2>Une question ?</h2><div class="bloc" id="note-chap"><p style="margin:0 0 12px">Si quelque chose n'est pas clair dans ce chapitre, <span class="ia-b">demande à Claude de te l'expliquer, ou </span>note-le : ça ira dans ta liste « À voir en séance ».</p><div class="actions" style="margin-top:0"><button class="btn ia-b" data-a="ia" data-ctx="c" data-c="${c.id}">Demander à Claude</button><button class="btn-2" data-a="note-c" data-c="${c.id}">Je ne comprends pas quelque chose</button></div></div></section>`;
     poser(h);
+    if (atelier && $('#atelier')) atelier($('#atelier'));
   }
 
   /* ---------- progrès ---------- */
