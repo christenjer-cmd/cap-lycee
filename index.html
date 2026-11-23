@@ -142,6 +142,9 @@ p{margin:0 0 10px}
 .coche.fait .case-m{background:var(--juste);border-color:var(--juste)}
 .coche.fait .case-m::after{content:"";position:absolute;left:6px;top:1px;width:6px;height:12px;border:solid var(--feuille);border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
 .coche.fait b{color:var(--encre-2);text-decoration:line-through;text-decoration-thickness:1px}
+/* une ligne commencée exercice par exercice : un trait dans la case */
+.coche.partiel .case-m{border-color:var(--accent)}
+.coche.partiel .case-m::after{content:"";position:absolute;left:4px;right:4px;top:8px;height:2.5px;border-radius:2px;background:var(--accent)}
 .coche small{font-variant-numeric:tabular-nums}
 .e-man{padding:1px 7px;border-radius:99px;border:1px solid var(--trait)}
 .e-man.complet{background:var(--juste-fond);color:var(--juste);border-color:transparent}
@@ -496,8 +499,8 @@ td:last-child{color:var(--encre-2);white-space:normal;min-width:9em}
 .ec .ec-vide{height:.5em;margin:0}
 .ec-apercu{margin-top:8px;padding:6px 12px;border:1px dashed var(--trait);border-radius:var(--r-petit);background:var(--feuille)}
 .tb-lab{display:block;font-weight:700;font-size:14px;margin:0 0 6px}
-.tb-texte,.br-txt,.rep-t,.rep-lc{display:block;width:100%;padding:10px 12px;border:1.5px solid var(--encre-2);border-radius:var(--r-petit);background:var(--feuille);color:var(--encre);font:17px/1.5 var(--f-math);resize:vertical}
-.tb-texte:focus,.br-txt:focus,.rep-t:focus,.rep-lc:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-doux)}
+.tb-texte,.br-txt,.rep-t,.rep-lc,.q-t{display:block;width:100%;padding:10px 12px;border:1.5px solid var(--encre-2);border-radius:var(--r-petit);background:var(--feuille);color:var(--encre);font:17px/1.5 var(--f-math);resize:vertical}
+.tb-texte:focus,.br-txt:focus,.rep-t:focus,.rep-lc:focus,.q-t:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-doux)}
 
 /* ---------- le Tableau (tableau.js) : plus large, la feuille à gauche et les outils à droite sur grand écran ---------- */
 #app.large{max-width:1180px}
@@ -547,6 +550,37 @@ td:last-child{color:var(--encre-2);white-space:normal;min-width:9em}
 .d-etapes p{margin:0;line-height:1.7}
 .s-cases i.aidee{background:var(--vu)}
 .m-rep{padding:0 14px 14px 48px}
+/* exercice par exercice : à faire, fait (bleu), corrigé (vert, coché) */
+.m-ex{padding:0 14px 14px 48px}
+.ex-aide{margin:2px 0 8px}
+.ex-leg{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 10px;font-size:13.5px;color:var(--encre-2)}
+.ex-leg i{display:inline-block;width:16px;height:16px;margin-right:6px;vertical-align:-3px;border-radius:5px;border:1.5px solid var(--trait);background:var(--feuille)}
+.ex-leg i.e1{border:2px solid var(--accent);background:var(--accent-doux)}
+.ex-leg i.e2{border-color:var(--juste);background:var(--juste)}
+.ex-g{margin:12px 0 6px;font-size:13.5px;font-weight:700;color:var(--encre-2)}
+.ex-grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px}
+.ex-u{min-height:42px;padding:4px 2px;border-radius:10px;border:1.5px solid var(--trait);background:var(--feuille);color:var(--encre-2);font:600 14px/1.1 var(--f-texte);font-variant-numeric:tabular-nums;cursor:pointer;white-space:nowrap}
+.ex-u:hover{border-color:var(--encre-2)}
+.ex-u.e1{border:2px solid var(--accent);background:var(--accent-doux);color:var(--accent)}
+.ex-u.e2{border-color:var(--juste);background:var(--juste);color:var(--feuille)}
+.ex-u.e2::before{content:"✓\00a0"}
+.ex-compte{margin:10px 0 0;font-weight:600}
+@media (max-width:480px){.m-ex{padding-left:14px}}
+/* l'onglet Questions */
+.q-br{display:flex;flex-wrap:wrap;gap:8px}
+.q-br button{min-height:42px;padding:6px 14px;border-radius:99px;border:1.5px solid var(--trait);background:var(--feuille);color:var(--encre);font-weight:600;font-size:15px;cursor:pointer}
+.q-br button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--sur-accent)}
+.q-lab{margin-top:16px}
+.q-lab small{font-weight:400;color:var(--encre-2)}
+.q-sel{display:block;width:100%;min-height:46px;padding:8px 12px;border:1.5px solid var(--encre-2);border-radius:var(--r-petit);background:var(--feuille);color:var(--encre);font:16px var(--f-texte)}
+.q-sel:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-doux)}
+.etiq.e-q{background:var(--accent-doux);color:var(--accent)}
+.note-texte{margin:8px 0 0;font-size:16px;white-space:pre-wrap}
+.note-rep{margin:10px 0 0;padding:8px 12px;border-radius:var(--r-petit);background:var(--juste-fond);color:var(--encre)}
+.note-rep b{color:var(--juste)}
+.f-nouv{margin-right:8px;vertical-align:2px;font-family:var(--f-texte)}
+.fiche-q{margin:16px 0 4px;padding:8px 12px;border-left:3px solid var(--accent);border-radius:0 var(--r-petit) var(--r-petit) 0;background:var(--accent-doux)}
+.fiche-q small{display:block;font-size:12.5px;font-weight:700;color:var(--encre-2);margin-bottom:2px}
 .btn-p.a-rep{color:var(--juste)}
 .methode{margin-top:10px;font-size:14.5px}
 .methode ol{margin:4px 0 0;padding-left:20px}
@@ -604,7 +638,8 @@ html.ia-ouvert,html.ia-ouvert body{overflow:hidden}
 #barre{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--feuille);border-top:1px solid var(--trait);padding-bottom:env(safe-area-inset-bottom,0px)}
 .b-in{max-width:560px;margin:0 auto;display:flex;padding:0 max(4px,env(safe-area-inset-right,0px)) 0 max(4px,env(safe-area-inset-left,0px))}
 #barre a{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px 7px;font-size:11.5px;color:var(--encre-2);text-decoration:none}
-.n-g{display:grid;place-items:center;min-width:46px;height:28px;padding:0 6px;border-radius:99px}
+.n-g{position:relative;display:grid;place-items:center;min-width:46px;height:28px;padding:0 6px;border-radius:99px}
+.pastille{position:absolute;top:1px;right:7px;width:9px;height:9px;border-radius:50%;background:var(--faux);box-shadow:0 0 0 2px var(--feuille)}
 .n-g svg{width:22px;height:22px}
 #barre a[aria-current="page"]{color:var(--encre);font-weight:700}
 #barre a[aria-current="page"] .n-g{background:var(--accent-doux);color:var(--accent)}
@@ -9052,8 +9087,16 @@ html.pres .balise::after{display:none}
     'h-art': [['h-14-18', 'Dada et les peintres des tranchées'], ['h-dictatures', 'la propagande et la censure'], ['h-siecle', 'la société de consommation']],
   };
 
+  /* CL.fichesProf : toutes les fiches, dans l'ordre où elles ont été écrites (l'onglet Questions les montre de la plus récente à la plus ancienne).
+     chap peut être null : une fiche qui ne va dans aucun chapitre, seulement dans l'onglet Questions.
+     Une fiche qui répond à une question de l'élève porte pour: 'ab12' (le numéro court donné dans son message) et question: 'son texte'. */
   CL.docsProf = {};
-  CL.prof = (chap, doc) => (CL.docsProf[chap] = CL.docsProf[chap] || []).push(doc);
+  CL.fichesProf = [];
+  CL.prof = (chap, doc) => {
+    doc.chap = chap || null;
+    if (chap) (CL.docsProf[chap] = CL.docsProf[chap] || []).push(doc);
+    CL.fichesProf.push(doc);
+  };
 })();
 </script>
 <script>/* fiches.js */
@@ -9273,12 +9316,14 @@ CL.enClasse = [
     lectureOK = true;
   /* repos : jours de repos ; classe : chapitres signalés « en classe » sur cet appareil ; notes : à voir en séance ; sauv : dernière copie du code de sauvegarde ;
      rep : ses réponses écrites aux exercices des manuels, par ligne « Dans tes manuels » (chapitre|où) ;
-     surp : ses réponses tapées directement sur les pages, dans la visionneuse : surp[page] = [[x, y, texte], …] (millièmes de la largeur) */
-  const vide = () => ({ v: 1, sav: {}, jours: {}, point: {}, theme: 'auto', cree: jour(), xp: 0, troph: {}, obj: 12, rec: 0, c: {}, man: {}, repos: {}, classe: {}, notes: [], sauv: null, rep: {}, surp: {} });
+     surp : ses réponses tapées directement sur les pages, dans la visionneuse : surp[page] = [[x, y, texte], …] (millièmes de la largeur) ;
+     ex : exercice par exercice, ex[chapitre|où][unité] = 1 (fait) ou 2 (corrigé), exj[chapitre|où] = dernier jour touché ;
+     lus : les fiches de l'enseignant qu'elle a ouvertes ; qbr : le brouillon de sa question, dans l'onglet Questions */
+  const vide = () => ({ v: 1, sav: {}, jours: {}, point: {}, theme: 'auto', cree: jour(), xp: 0, troph: {}, obj: 12, rec: 0, c: {}, man: {}, repos: {}, classe: {}, notes: [], sauv: null, rep: {}, surp: {}, ex: {}, exj: {}, lus: {}, qbr: null });
   const valide = (o) => !!(o && o.v === 1 && o.sav && o.jours);
   /* les questions faites, et tout ce qu'il y aurait à perdre (questions, notes, réponses, pages cochées, points faits) */
   const questions = (o) => Object.values((o && o.sav) || {}).reduce((a, f) => a + ((f && f.n) || 0), 0);
-  const poids = (o) => questions(o) + ['notes', 'rep', 'surp', 'man', 'point'].reduce((a, k) => a + Object.keys((o && o[k]) || {}).length, 0);
+  const poids = (o) => questions(o) + ['notes', 'rep', 'surp', 'man', 'point', 'ex'].reduce((a, k) => a + Object.keys((o && o[k]) || {}).length, 0);
   function charger() {
     let brut;
     try {
@@ -9476,7 +9521,7 @@ CL.enClasse = [
   }
 
   /* ---------- points et niveau ---------- */
-  const XP = { juste: 10, faux: 3, passe: 1, sansFaute: 20, seance: 30, objectif: 20, manuel: 10 };
+  const XP = { juste: 10, faux: 3, passe: 1, sansFaute: 20, seance: 30, objectif: 20, manuel: 10, exo: 2 };
   function gagner(n) {
     E.xp += n;
     const j = jourRec();
@@ -9626,6 +9671,113 @@ CL.enClasse = [
     }
     return out.sort((a, z) => z.le.localeCompare(a.le));
   }
+  /* ---------- exercice par exercice, dans une ligne « Dans tes manuels » ----------
+     Les unités se lisent dans le texte de la ligne : des numéros d'activités (ES56 à ES76), des leçons (Leçons 1 à 8),
+     des activités numérotées (Activités 1 et 2), des fiches (S11-5–9), sinon des pages (Livre p. 62–67 · Fichier p. 25–26).
+     Une ligne d'une seule page n'en a pas : sa case suffit. Chaque unité passe de « à faire » à « fait », puis « corrigé ». */
+  const MAX_UNITES = 120;
+  function unites(ou, quoi) {
+    const G = [],
+      q = String(quoi || '').replace(/<[^>]+>/g, '');
+    /* id : la clé enregistrée ; court : le texte de la case ; nom : pour le lecteur d'écran ; t : le début d'une plage dans le bilan */
+    const groupe = (type, titre, a, z, id, court, nom, tx) => {
+      if (z > a && z - a < MAX_UNITES) G.push({ type, titre, u: Array.from({ length: z - a + 1 }, (_, i) => ({ id: id(a + i), court: court(a + i), nom: nom(a + i), t: (tx || id)(a + i) })) });
+    };
+    for (const m of q.matchAll(/\b([A-Z]{2,4})(\d+)\s*à\s*(?:\1)?(\d+)\b/g)) groupe(/^Activit/.test(q) ? 'activite' : 'exercice', m[0], +m[2], +m[3], (n) => m[1] + n, (n) => m[1] + n, (n) => m[1] + n);
+    if (!G.length) {
+      const m = /\b(Leçon|Activité)s\s+(\d+)\s+(?:à|et)\s+(\d+)\b/.exec(q);
+      if (m) groupe(m[1] === 'Leçon' ? 'lecon' : 'activite', m[0], +m[2], +m[3], (n) => m[1][0] + n, String, (n) => m[1].toLowerCase() + ' ' + n, (n) => m[1].toLowerCase() + ' ' + n);
+    }
+    if (!G.length && !/^Diapos/.test(ou)) {
+      const parts = String(ou).split(' · ');
+      for (const p of parts) {
+        let m = /^(.*?)\s*p\.\s*(\d+)\s*[–-]\s*(\d+)$/.exec(p);
+        if (m) {
+          const livre = m[1].trim();
+          groupe('page', `${livre} p. ${m[2]}–${m[3]}`, +m[2], +m[3], (n) => (parts.length > 1 ? livre + ' ' : '') + 'p. ' + n, String, (n) => (parts.length > 1 ? livre + ', ' : '') + 'page ' + n);
+          continue;
+        }
+        m = /\b([A-Z]\d+-)(\d+)\s*[–-]\s*(\d+)$/.exec(p);
+        if (m) groupe('fiche', p, +m[2], +m[3], (n) => m[1] + n, (n) => m[1] + n, (n) => 'fiche ' + m[1] + n);
+      }
+    }
+    return G.reduce((a, g) => a + g.u.length, 0) >= 2 ? G : [];
+  }
+  const toutesUnites = (G) => G.reduce((a, g) => a.concat(g.u), []);
+  const etatEx = (cid, ou, u) => ((E.ex || {})[cid + '|' + ou] || {})[u] || 0;
+  /* le compte d'une ligne : tot unités, fait (dont corrigées), corr */
+  function exLigne(cid, ou, quoi) {
+    const U = toutesUnites(unites(ou, quoi)),
+      l = (E.ex || {})[cid + '|' + ou] || {};
+    return { tot: U.length, fait: U.filter((u) => l[u.id] >= 1).length, corr: U.filter((u) => l[u.id] === 2).length };
+  }
+  /* à faire → fait → corrigé → à faire ; quand tout est fait, la ligne se coche d'elle-même (ligne: true) */
+  function basculerEx(cid, ou, quoi, u) {
+    const k = cid + '|' + ou;
+    if (!E.ex) E.ex = {};
+    if (!E.exj) E.exj = {};
+    const l = E.ex[k] || (E.ex[k] = {}),
+      ap = ((l[u] || 0) + 1) % 3;
+    if (ap) l[u] = ap;
+    else delete l[u];
+    if (!Object.keys(l).length) delete E.ex[k];
+    E.exj[k] = jour();
+    gagner(ap ? XP.exo : -Math.min(2 * XP.exo, E.xp));
+    const x = exLigne(cid, ou, quoi);
+    let ligne = false;
+    if (x.tot && x.fait === x.tot && !E.man[k]) {
+      E.man[k] = jour();
+      gagner(XP.manuel);
+      ligne = true;
+    }
+    return { etat: ap, ligne };
+  }
+  /* ce qui a bougé depuis n jours, ligne par ligne, avec les unités corrigées et celles faites seulement */
+  function exRecents(n) {
+    const out = [];
+    for (const k in E.exj || {}) {
+      const i = k.indexOf('|'),
+        ch = CHAP[k.slice(0, i)];
+      if (!ch || ecart(E.exj[k], jour()) > n) continue;
+      const it = (ch.c.faire || []).find(([ou]) => ou === k.slice(i + 1));
+      if (!it) continue;
+      const U = toutesUnites(unites(it[0], it[1])),
+        l = (E.ex || {})[k] || {};
+      const corr = U.filter((u) => l[u.id] === 2),
+        fait = U.filter((u) => l[u.id] === 1);
+      if (corr.length || fait.length) out.push({ b: ch.b, c: ch.c, ou: it[0], quoi: it[1], le: E.exj[k], U, corr, fait });
+    }
+    return out.sort((a, z) => z.le.localeCompare(a.le));
+  }
+  /* des unités en plages lisibles, dans l'ordre de la ligne : ES56–ES58, ES60 */
+  function plages(U, choisies) {
+    const pris = new Set(choisies.map((u) => u.id)),
+      out = [];
+    let debut = null,
+      prec = null;
+    for (const u of U.concat([null])) {
+      if (u && pris.has(u.id)) {
+        if (!debut) debut = u;
+        prec = u;
+      } else if (debut) {
+        out.push(debut === prec ? debut.t : `${debut.t}–${prec.court}`);
+        debut = null;
+      }
+    }
+    return out.join(', ');
+  }
+
+  /* ---------- les fiches de l'enseignant : ouvertes ou pas encore ---------- */
+  const cleFiche = (d) => (d.chap || '') + '|' + d.titre;
+  const ficheLue = (d) => !!(E.lus && E.lus[cleFiche(d)]);
+  function lireFiche(d) {
+    if (!E.lus) E.lus = {};
+    if (E.lus[cleFiche(d)]) return false;
+    E.lus[cleFiche(d)] = jour();
+    return true;
+  }
+  const fichesNouvelles = () => (CL.fichesProf || []).filter((d) => !ficheLue(d));
+
   const TROPHEES = [
     { id: 'depart', g: '1', nom: 'Premier pas', txt: 'Terminer une première série', ok: () => (E.c.series || 0) >= 1 },
     { id: 'point', g: '√', nom: 'Point de départ', txt: 'Faire le point dans une branche', ok: () => Object.keys(E.point).length > 0 },
@@ -9679,6 +9831,12 @@ CL.enClasse = [
     return note;
   }
   const retirerNote = (id) => (E.notes = E.notes.filter((x) => x.id !== id));
+  /* le numéro court d'une note, repris dans le message à l'enseignant : sa fiche de réponse le cite (pour: 'ab12') */
+  const refNote = (n) => String(n.id || '').slice(-4);
+  function marquerEnvoyees(ids) {
+    for (const n of E.notes) if (ids.includes(n.id)) n.env = jour();
+  }
+  const reponseA = (n) => (CL.fichesProf || []).find((d) => d.pour && d.pour === refNote(n)) || null;
 
   /* ---------- mes réponses aux exercices des manuels : une zone libre par ligne, gardée dans la sauvegarde ---------- */
   const reponse = (cid, ou) => (E.rep && E.rep[cid + '|' + ou]) || '';
@@ -9878,8 +10036,9 @@ CL.enClasse = [
     jour, plus, ecart, sauver, fiche, niv, reussir, echouer, echeance, aRevoir, aRetravailler, etatChap, ici,
     gagner, niveau, serieJours, semaine, noter, compter, nouveauxTrophees, seance, premierNouveau, total, nbNiv,
     faitManuel, basculerManuel, manuelChap, manuelBranche, nbManuel, manuelRecents,
+    unites, toutesUnites, etatEx, exLigne, basculerEx, exRecents, plages, cleFiche, ficheLue, lireFiche, fichesNouvelles,
     REPOS_SEMAINE, repos, reposPossible, basculerRepos, derniersJours,
-    enClasse, basculerClasse, ajouterNote, retirerNote, reponse, ecrireReponse, nbReponses, surPage, ecrireSurPage, nbSurPage,
+    enClasse, basculerClasse, ajouterNote, retirerNote, refNote, marquerEnvoyees, reponseA, reponse, ecrireReponse, nbReponses, surPage, ecrireSurPage, nbSurPage,
     exporter, lireCode, remplacer, avec, resume,
   };
 })();
@@ -10530,31 +10689,36 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
   const noteOu = (n) => {
     const ch = CHAP[n.chap],
       sv = n.sav && SAV[n.sav];
-    return ch ? `${ch.b.nom} · ${ch.c.titre}${sv ? ' · ' + sv.s.titre : ''}` : '';
+    return ch ? `${ch.b.nom} · ${ch.c.titre}${sv ? ' · ' + sv.s.titre : ''}` : n.b && BR[n.b] ? BR[n.b].nom : '';
   };
+  const TYPES_NOTE = { erreur: ['Erreur signalée', 'e-cons'], question: ['Question', 'e-q'], aide: ['Pas compris', 'e-retr'] };
+  const typeNote = (n) => TYPES_NOTE[n.type] || TYPES_NOTE.aide;
   function noteHTML(n) {
+    const rep = P.reponseA(n);
     return (
-      `<div class="note-i"><div class="note-t"><span class="etiq ${n.type === 'erreur' ? 'e-cons' : 'e-retr'}">${n.type === 'erreur' ? 'Erreur signalée' : 'Pas compris'}</span><small>le ${dateCourte(n.le)}</small></div>` +
-      `<b>${noteOu(n)}</b>` +
+      `<div class="note-i"><div class="note-t"><span class="etiq ${typeNote(n)[1]}">${typeNote(n)[0]}</span><small>le ${dateCourte(n.le)} · ${n.env ? 'envoyée le ' + dateCourte(n.env) : 'pas encore envoyée'}</small></div>` +
+      (noteOu(n) ? `<b>${noteOu(n)}</b>` : '') +
       (n.q ? `<p class="note-q">${echap(n.q)}</p>` : '') +
       (n.rep || n.attendu ? `<p class="petit">Ta réponse : ${echap(n.rep || '–')}<br>Réponse de l’appli : ${echap(n.attendu || '–')}</p>` : '') +
       (n.dem ? `<div class="note-dem"><small>${/^Exercice du manuel/.test(n.q || '') ? 'Tes réponses' : 'Ton brouillon'}</small><div class="ec">${CL.ecr.rendu(n.dem)}</div></div>` : '') +
       (n.ia ? `<div class="note-dem"><small>Dernière réponse de Claude</small><div class="ec">${CL.ecr.rendu(n.ia.replace(/\*\*/g, ''))}</div></div>` : '') +
-      (n.mot ? `<p class="note-mot">« ${echap(n.mot)} »</p>` : '') +
+      (n.mot ? (n.type === 'question' ? `<div class="note-texte ec">${CL.ecr.rendu(n.mot)}</div>` : `<p class="note-mot">« ${echap(n.mot)} »</p>`) : '') +
+      (rep ? `<p class="note-rep"><b>Ton enseignant t'a répondu.</b> <button class="lien-b" data-a="fiche-ouvrir" data-f="${echap(P.cleFiche(rep))}">Lire la fiche « ${rep.titre} »</button></p>` : '') +
       `<div class="note-act">${CHAP[n.chap] ? `<a class="btn-2" href="#${n.chap}">Ouvrir le chapitre</a>` : ''}<button class="btn-2" data-a="note-suppr" data-id="${n.id}">Réglé, je retire</button></div></div>`
     );
   }
-  function notesTexte() {
-    const L = P.E.notes;
-    return [`À voir en séance (Cap Lycée, ${CL.maintenant().toLocaleDateString('fr-CH')})`]
+  /* le message pour l'enseignant ; le numéro court (n° ab12) permet à sa fiche de réponse de retrouver la question */
+  function notesTexte(L) {
+    L = L || P.E.notes;
+    return [`Mes questions pour mon enseignant (Cap Lycée, ${CL.maintenant().toLocaleDateString('fr-CH')})`]
       .concat(
         L.map((n, k) => {
-          const l = ['', `${k + 1}. ${n.type === 'erreur' ? 'Erreur signalée' : 'Pas compris'}, le ${dateCourte(n.le)} : ${noteOu(n).replace(/ · /g, ' / ')}`];
+          const l = ['', `${k + 1}. ${typeNote(n)[0]}, le ${dateCourte(n.le)}${noteOu(n) ? ' : ' + noteOu(n).replace(/ · /g, ' / ') : ''} (n° ${P.refNote(n)})`];
           if (n.q) l.push('   Question : ' + n.q);
           if (n.rep || n.attendu) l.push(`   Ma réponse : ${n.rep || '–'} ; réponse de l'appli : ${n.attendu || '–'}`);
           if (n.dem) l.push(`   ${/^Exercice du manuel/.test(n.q || '') ? 'Mes réponses' : 'Mon brouillon'} : ` + n.dem.replace(/\s*\n\s*/g, ' / '));
           if (n.ia) l.push('   Réponse de Claude : ' + n.ia.replace(/\s*\n\s*/g, ' / '));
-          if (n.mot) l.push('   Remarque : ' + n.mot);
+          if (n.mot) l.push((n.type === 'question' ? '   Ma question : ' : '   Remarque : ') + n.mot.replace(/\s*\n\s*/g, '\n   '));
           return l.join('\n');
         })
       )
@@ -10646,7 +10810,15 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
       const b = aFaire[0];
       h += `<div class="point"><b>${b.point.titre}</b><p>${pl(pointFile(b).length, 'question')} pour repérer ce que tu sais déjà. La séance du jour s'adapte ensuite : ce qui est acquis n'est plus proposé comme nouveau.</p>${aFaire.length > 1 ? `<p class="petit">Encore ${pl(aFaire.length - 1, 'branche')} après celle-ci, une à la fois.</p>` : ''}<button class="btn" data-a="point" data-b="${b.id}">Faire le point</button></div>`;
     }
-    if (E.notes.length) h += `<section><h2>À voir en séance</h2><div class="liste"><a class="ligne" href="#a-voir"><span class="l-corps"><b>${pl(E.notes.length, 'point noté', 'points notés')}</b><small>Copie la liste et envoie-la avant ta séance.</small></span><span class="chev" aria-hidden="true">›</span></a></div></section>`;
+    const nouvF = P.fichesNouvelles();
+    if (nouvF.length) {
+      const d = nouvF[nouvF.length - 1];
+      h += `<section><h2>De ton enseignant</h2><div class="liste"><a class="ligne" href="#questions"><span class="l-corps"><b>${d.titre}</b><small>${nouvF.length > 1 ? `Et ${pl(nouvF.length - 1, 'autre fiche')} à lire, dans Questions` : 'Une nouvelle fiche à lire, dans Questions'}</small></span><span class="etiq e-nouv">Nouvelle</span></a></div></section>`;
+    }
+    if (E.notes.length) {
+      const ne = E.notes.filter((n) => !n.env).length;
+      h += `<section><h2>Tes questions</h2><div class="liste"><a class="ligne" href="#questions"><span class="l-corps"><b>${pl(E.notes.length, 'question')}</b><small>${ne ? `${ne} pas encore envoyée${ne > 1 ? 's' : ''} à ton enseignant` : 'Tout est envoyé à ton enseignant'}</small></span><span class="chev" aria-hidden="true">›</span></a></div></section>`;
+    }
     if (E.dernier && CHAP[E.dernier]) {
       const { c, b } = CHAP[E.dernier];
       h += `<section><h2>Reprendre</h2><div class="liste"><a class="ligne" href="#${c.id}">${glyphe(b)}<span class="l-corps"><b>${c.titre}</b><small>${b.nom}</small></span>${balise(P.etatChap(c))}</a></div></section>`;
@@ -10751,9 +10923,35 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
   };
   /* la liste « Dans tes manuels » d'un chapitre : chaque ligne se coche et se décoche */
   const ligneManuel = (c, [ou, quoi], k) => {
-    const f = P.faitManuel(c.id, ou);
-    return `<button class="ligne coche${f ? ' fait' : ''}" data-a="manuel" data-c="${c.id}" data-k="${k}" aria-pressed="${f}"><span class="case-m" aria-hidden="true"></span><span class="l-corps"><b>${quoi}</b><small>${ou}</small></span></button>`;
+    const f = P.faitManuel(c.id, ou),
+      x = P.exLigne(c.id, ou, quoi);
+    return `<button class="ligne coche${f ? ' fait' : x.fait ? ' partiel' : ''}" data-a="manuel" data-c="${c.id}" data-k="${k}" aria-pressed="${f ? 'true' : x.fait ? 'mixed' : 'false'}"><span class="case-m" aria-hidden="true"></span><span class="l-corps"><b>${quoi}</b><small>${ou}${x.fait ? ' · ' + compteEx(x) : ''}</small></span></button>`;
   };
+  /* exercice par exercice : chaque case passe de « à faire » à « fait », puis « corrigé » (P.unites lit les numéros dans la ligne) */
+  const compteEx = (x) => `${x.fait} sur ${x.tot} fait${x.fait > 1 ? 's' : ''}${x.corr ? `, dont ${x.corr} corrigé${x.corr > 1 ? 's' : ''}` : ''}`;
+  const compteExLong = (x) => (!x.fait ? `Rien de marqué pour l'instant (${x.tot} en tout).` : x.corr === x.tot ? `Tout est fait et corrigé : ${x.tot} sur ${x.tot}.` : compteEx(x) + '.');
+  const NOM_DETAIL = { exercice: 'Exercice par exercice', activite: 'Activité par activité', lecon: 'Leçon par leçon', page: 'Page par page', fiche: 'Fiche par fiche' };
+  const ETAT_EX = ['à faire', 'fait', 'corrigé'];
+  const boutonEx = (c, [ou, quoi], k, ouvert) => {
+    const G = P.unites(ou, quoi);
+    if (!G.length) return '';
+    const x = P.exLigne(c.id, ou, quoi);
+    return `<button class="btn-p${x.fait ? ' a-rep' : ''}" data-a="ex-ouvrir" data-c="${c.id}" data-k="${k}" aria-expanded="${!!ouvert}" aria-controls="ex-${k}">${NOM_DETAIL[G[0].type]}<small>${x.fait} sur ${x.tot}</small></button>`;
+  };
+  const uniteEx = (c, ou, k, u) => {
+    const e = P.etatEx(c.id, ou, u.id);
+    return `<button class="ex-u e${e}" data-a="ex" data-c="${c.id}" data-k="${k}" data-u="${echap(u.id)}" aria-label="${echap(u.nom)} : ${ETAT_EX[e]}">${u.court}</button>`;
+  };
+  function panneauEx(c, k) {
+    const [ou, quoi] = c.faire[k],
+      G = P.unites(ou, quoi);
+    return (
+      `<p class="petit ex-aide">Touche une case une fois quand c'est fait, une deuxième fois quand c'est corrigé. Une troisième fois l'efface.</p>` +
+      `<p class="ex-leg" aria-hidden="true"><span><i></i>à faire</span><span><i class="e1"></i>fait</span><span><i class="e2"></i>corrigé</span></p>` +
+      G.map((g) => `${G.length > 1 ? `<p class="ex-g">${g.titre}</p>` : ''}<div class="ex-grille" role="group" aria-label="${echap(g.titre)}">${g.u.map((u) => uniteEx(c, ou, k, u)).join('')}</div>`).join('') +
+      `<p class="petit ex-compte" id="ex-cpt${k}" role="status">${compteExLong(P.exLigne(c.id, ou, quoi))}</p>`
+    );
+  }
   const compteManuel = (c) => {
     const m = P.manuelChap(c);
     return !m.ok ? "Rien de coché pour l'instant." : m.ok === m.tot ? `Tout est coché : ${m.tot} sur ${m.tot}.` : `${m.ok} sur ${m.tot} cochée${m.ok > 1 ? 's' : ''}.`;
@@ -10765,10 +10963,11 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
     const r = P.reponse(c.id, ou);
     return `<button class="btn-p${r ? ' a-rep' : ''}" data-a="rep-ouvrir" data-c="${c.id}" data-k="${k}" aria-expanded="${!!ouvert}" aria-controls="rep-${k}">${r ? 'Mes réponses' : 'Écrire mes réponses'}${r ? `<small>${pl(r.split('\n').filter((l) => l.trim()).length, 'ligne')}</small>` : ''}</button>`;
   };
-  const actionsManuel = (c, [ou], k) => {
-    const i = infoPages(c, ou);
+  const actionsManuel = (c, it, k) => {
+    const [ou] = it,
+      i = infoPages(c, ou);
     const b = (t, txt, n) => `<button class="btn-p" data-a="lc-ouvrir" data-c="${c.id}" data-k="${k}" data-t="${t}">${txt}<small>${pl(n, 'page')}</small></button>`;
-    return `<div class="m-act" id="m-act-${k}">${i && i[0] ? b('p', 'Ouvrir', i[1]) : ''}${i && i[2] ? b('c', 'Corrigé', i[3]) : ''}${boutonRep(c, ou, k)}</div><div class="m-rep" id="rep-${k}" hidden></div>`;
+    return `<div class="m-act" id="m-act-${k}">${i && i[0] ? b('p', 'Ouvrir', i[1]) : ''}${i && i[2] ? b('c', 'Corrigé', i[3]) : ''}${P.presentation ? '' : boutonEx(c, it, k)}${boutonRep(c, ou, k)}</div><div class="m-ex" id="ex-${k}" hidden></div><div class="m-rep" id="rep-${k}" hidden></div>`;
   };
   function zoneReponses(c, k) {
     const [ou, quoi] = c.faire[k],
@@ -10781,7 +10980,7 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
       `<details class="methode"><summary>Je bloque : comment m'y prendre ?</summary><ol>${methode(CHAP[c.id].b)
         .map((x) => `<li>${x}</li>`)
         .join('')}</ol>${regles(c).length ? `<p class="petit" style="margin:10px 0 4px"><b>La règle du chapitre</b></p>${regles(c).map((r) => `<p class="regle">${t(r)}</p>`).join('')}` : ''}` +
-      `<div id="rep-q${k}" style="margin-top:12px"><p class="petit" style="margin:0 0 8px">Toujours bloquée ? Ta question part dans ta liste « À voir en séance », avec ce que tu as déjà écrit.</p><div class="actions" style="margin-top:0"><button class="btn-2 ia-b" data-a="ia" data-ctx="m" data-c="${c.id}" data-k="${k}">Demander à Claude</button><button class="btn-2" data-a="rep-question" data-c="${c.id}" data-k="${k}">Poser ma question à mon enseignant</button></div></div></details>`
+      `<div id="rep-q${k}" style="margin-top:12px"><p class="petit" style="margin:0 0 8px">Toujours bloquée ? Ta question part dans l'onglet Questions, avec ce que tu as déjà écrit : tu pourras l'envoyer à ton enseignant.</p><div class="actions" style="margin-top:0"><button class="btn-2 ia-b" data-a="ia" data-ctx="m" data-c="${c.id}" data-k="${k}">Demander à Claude</button><button class="btn-2" data-a="rep-question" data-c="${c.id}" data-k="${k}">Poser ma question à mon enseignant</button></div></div></details>`
     );
   }
 
@@ -10858,7 +11057,7 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
     const commence = c.savoirs.some((s) => E.sav[s.id] && E.sav[s.id].n);
     let h = `<a class="retour-lien" href="#${b.id}">‹ ${b.nom}</a><header class="b-${b.id}"><p class="surtitre">${p.titre}</p><h1><span class="sur">${c.titre}</span></h1><p class="chapeau">${c.resume}</p>${c.manuel ? `<p class="manuel"><b>Dans ton manuel.</b> ${c.manuel}</p>` : ''}</header>`;
     if (!P.presentation) h += `<div class="liste classe-l">${boutonClasse(c)}</div>`;
-    for (const d of (CL.docsProf && CL.docsProf[c.id]) || []) h += `<details class="lecon prof"><summary><span>${d.titre}<small>De ton enseignant${d.date ? ' · ' + d.date : ''}</small></span></summary><div class="lecon-corps">${leconHTML(d.lecon)}</div></details>`;
+    for (const d of (CL.docsProf && CL.docsProf[c.id]) || []) h += ficheHTML(d, true);
     h += `<details class="lecon"${commence && !P.presentation ? '' : ' open'}><summary>L'essentiel</summary><div class="lecon-corps">${leconHTML(c.lecon)}</div></details>`;
     /* un atelier interactif (schémas à toucher, animations), monté après l'affichage : CL.ateliers[c.atelier](élément) */
     const atelier = c.atelier && CL.ateliers && CL.ateliers[c.atelier];
@@ -10885,7 +11084,7 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
     }
     /* en présentation, pas de liste « À voir en séance » (rien n'est enregistré) : seulement Claude, s'il répond */
     if (P.presentation) h += `<section class="ia-b"><h2>Une question ?</h2><div class="bloc"><div class="actions" style="margin-top:0"><button class="btn" data-a="ia" data-ctx="c" data-c="${c.id}">Demander à Claude</button></div></div></section>`;
-    else h += `<section><h2>Une question ?</h2><div class="bloc" id="note-chap"><p style="margin:0 0 12px">Si quelque chose n'est pas clair dans ce chapitre, <span class="ia-b">demande à Claude de te l'expliquer, ou </span>note-le : ça ira dans ta liste « À voir en séance ».</p><div class="actions" style="margin-top:0"><button class="btn ia-b" data-a="ia" data-ctx="c" data-c="${c.id}">Demander à Claude</button><button class="btn-2" data-a="note-c" data-c="${c.id}">Je ne comprends pas quelque chose</button></div></div></section>`;
+    else h += `<section><h2>Une question ?</h2><div class="bloc" id="note-chap"><p style="margin:0 0 12px">Si quelque chose n'est pas clair dans ce chapitre, <span class="ia-b">demande à Claude de te l'expliquer, ou </span>note-le : ça ira dans l'onglet Questions, pour ton enseignant.</p><div class="actions" style="margin-top:0"><button class="btn ia-b" data-a="ia" data-ctx="c" data-c="${c.id}">Demander à Claude</button><button class="btn-2" data-a="note-c" data-c="${c.id}">Je ne comprends pas quelque chose</button></div></div></section>`;
     poser(h);
     if (atelier && $('#atelier')) atelier($('#atelier'));
   }
@@ -10934,6 +11133,13 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
     if (recents.length) L.push('', 'Réussi ces 7 derniers jours :', ...noms(recents).map((x) => '- ' + x));
     const man = P.manuelRecents(7);
     if (man.length) L.push('', 'Dans les manuels, coché ces 7 derniers jours :', ...man.map((x) => `- ${x.b.nom}, ${x.c.titre} : ${x.quoi} (${x.ou})`));
+    const ex = P.exRecents(7);
+    if (ex.length)
+      L.push(
+        '',
+        'Exercice par exercice, ces 7 derniers jours :',
+        ...ex.map((x) => `- ${x.b.nom}, ${x.c.titre} : ${x.quoi} (${x.ou}) : ${[x.corr.length ? 'fait et corrigé ' + P.plages(x.U, x.corr) : '', x.fait.length ? 'fait, pas encore corrigé ' + P.plages(x.U, x.fait) : ''].filter(Boolean).join(' ; ')}.`)
+      );
     const nr = P.nbReponses();
     if (nr) L.push('', `Réponses écrites dans l'appli pour ${pl(nr, 'exercice du manuel', 'exercices du manuel')} (sous « Dans tes manuels », dans chaque chapitre).`);
     const ns = P.nbSurPage();
@@ -10941,16 +11147,66 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
     if (E.notes.length) L.push('', notesTexte());
     return L.join('\n');
   }
-  function vueAVoir() {
-    const L = P.E.notes;
-    let h = `<a class="retour-lien" href="#bilan">‹ Progrès</a><header><h1>À voir en séance</h1><p class="chapeau">Ce que tu as noté en travaillant. Copie la liste et envoie-la avant ta séance : vous la reprendrez ensemble. Quand un point est réglé, retire-le.</p></header>`;
-    if (!L.length) h += `<section><div class="bloc"><p style="margin:0">Rien pour l'instant. Pendant un exercice, après la correction, touche « Je ne comprends pas » ou « Signaler une erreur ». Dans un chapitre, tout en bas, touche « Je ne comprends pas quelque chose ». Tout arrive ici.</p></div></section>`;
-    else
-      h +=
-        `<section><div class="liste">${L.map(noteHTML).join('')}</div><div class="actions"><button class="btn" data-a="notes-copier">Copier la liste</button></div>` +
-        `<textarea class="copie" id="copie" readonly hidden aria-label="Liste en texte"></textarea><p class="petit" id="copie-msg" role="status" style="margin:8px 0 0"></p>` +
-        `<div id="zone-vider"><button class="lien-b" data-a="notes-vider">Tout retirer après la séance</button></div></section>`;
+  /* ---------- questions : poser une question entre deux séances, l'envoyer à l'enseignant, lire ses fiches ----------
+     La liste reprend tout ce qu'elle a noté en travaillant (pas compris, erreur signalée) et ses questions écrites ici.
+     Envoyer : la feuille de partage du téléphone (WhatsApp, SMS, mail) quand la page est ouverte seule, sinon une copie.
+     Les fiches de réponse sont écrites dans fiches.js (CL.prof), avec pour: le numéro court de sa question. */
+  let qMsg = '';
+  function ficheHTML(d, dansChap) {
+    const ch = d.chap && CHAP[d.chap],
+      nouv = !P.presentation && !P.ficheLue(d),
+      sous = [d.pour ? 'Réponse à ta question' : 'De ton enseignant', d.date, !dansChap && ch ? ch.b.nom + ' · ' + ch.c.titre : ''].filter(Boolean).join(' · ');
+    return (
+      `<details class="lecon prof" data-fiche="${echap(P.cleFiche(d))}"><summary><span>${nouv ? '<span class="etiq e-nouv f-nouv">Nouvelle</span>' : ''}${d.titre}<small>${sous}</small></span></summary><div class="lecon-corps">` +
+      (d.question ? `<div class="fiche-q"><small>Ta question</small>${CL.ecr.rendu(d.question)}</div>` : '') +
+      leconHTML(d.lecon) +
+      (!dansChap && ch ? `<p class="petit" style="margin-top:14px"><a href="#${ch.c.id}">Ouvrir le chapitre « ${ch.c.titre} »</a></p>` : '') +
+      `</div></details>`
+    );
+  }
+  function formQuestion() {
+    const q = P.E.qbr || {},
+      bs = CL.branches.filter((b) => b.parties.some((p) => p.chapitres.length)),
+      chaps = q.b && BR[q.b] ? BR[q.b].parties.reduce((a, p) => a.concat(p.chapitres), []) : [],
+      txt = q.txt || '';
+    return (
+      `<p class="tb-lab" id="q-b-lab">C'est pour quelle branche ?</p><div class="q-br" role="group" aria-labelledby="q-b-lab">${bs.map((b) => `<button data-a="q-b" data-b="${b.id}" aria-pressed="${q.b === b.id}">${b.nom}</button>`).join('')}<button data-a="q-b" data-b="" aria-pressed="${q.b === ''}">Autre chose</button></div>` +
+      (chaps.length ? `<label class="tb-lab q-lab" for="q-c">Quel chapitre ? <small>Si tu sais</small></label><select class="q-sel" id="q-c"><option value="">Je ne sais pas</option>${chaps.map((c) => `<option value="${c.id}"${q.c === c.id ? ' selected' : ''}>${c.titre}</option>`).join('')}</select>` : '') +
+      `<label class="tb-lab q-lab" for="q-txt">Ta question</label>${CL.ecr.barre('q-txt')}` +
+      `<textarea class="q-t" id="q-txt" rows="5" maxlength="1500" spellcheck="true" placeholder="Dis où c'est (livre, page, numéro de l'exercice) et ce que tu ne comprends pas. Par exemple :&#10;Fichier p. 135, ES60 : je ne vois pas comment dessiner le développement du cylindre.">${echap(txt)}</textarea>` +
+      `<div class="ec ec-apercu" id="q-ap"${CL.ecr.mis(txt) ? '' : ' hidden'}>${CL.ecr.rendu(txt)}</div>` +
+      `<div class="actions"><button class="btn" data-a="q-ajouter">Ajouter à mes questions</button></div><p class="petit" id="q-msg" role="status" style="margin:8px 0 0"></p>`
+    );
+  }
+  const nonEnvoyees = () => P.E.notes.filter((n) => !n.env);
+  function vueQuestions() {
+    const F = (CL.fichesProf || []).slice().reverse();
+    let h = `<header><h1>Questions</h1><p class="chapeau">${
+      P.presentation ? 'Les fiches écrites par ton enseignant, de la plus récente à la plus ancienne.' : "Une question entre deux séances ? Écris-la ici, puis envoie-la à ton enseignant. Il te répondra par une fiche, qui arrivera en bas de cette page."
+    }</p></header>`;
+    if (!P.presentation) {
+      const L = P.E.notes,
+        ne = nonEnvoyees().length;
+      h += `<section><h2>Pose ta question</h2><div class="bloc" id="q-form">${formQuestion()}</div></section>`;
+      h += `<section><h2>Tes questions${L.length ? ' · ' + L.length : ''}</h2>`;
+      if (!L.length) h += `<div class="bloc"><p style="margin:0">Rien pour l'instant. En travaillant, tu peux aussi noter ce qui coince : après la correction d'une question, « Je ne comprends pas » ou « Signaler une erreur » ; dans un chapitre, tout en bas, « Je ne comprends pas quelque chose ». Tout arrive ici.</p></div>`;
+      else
+        h +=
+          `<div class="liste">${L.map(noteHTML).join('')}</div>` +
+          `<div class="actions"><button class="btn" data-a="q-envoyer">${ne === 0 ? 'Renvoyer toute la liste' : ne === L.length ? 'Envoyer à mon enseignant' : ne === 1 ? 'Envoyer la nouvelle' : `Envoyer les ${ne} nouvelles`}</button>${ne && ne < L.length ? `<button class="btn-2" data-a="notes-copier">Copier toute la liste</button>` : ''}</div>` +
+          `<p class="petit" style="margin:8px 0 0">Tu peux joindre une photo de ta page dans le même message. Quand un point est réglé, retire-le.</p>` +
+          `<textarea class="copie" id="copie" readonly hidden aria-label="Tes questions en texte"></textarea><p class="petit" id="copie-msg" role="status" style="margin:8px 0 0">${qMsg}</p>` +
+          `<div id="zone-vider"><button class="lien-b" data-a="notes-vider">Tout retirer après la séance</button></div>`;
+      h += `</section>`;
+    }
+    h += `<section><h2>Les fiches de ton enseignant</h2>${F.length ? F.map((d) => ficheHTML(d)).join('') : `<div class="bloc"><p style="margin:0">Pas encore de fiche : elles arriveront ici.</p></div>`}</section>`;
+    qMsg = '';
     poser(h);
+  }
+  /* la pastille de l'onglet Questions : une fiche pas encore ouverte */
+  function majPastille() {
+    const p = $('#barre a[data-n="questions"] .pastille');
+    if (p) p.hidden = P.presentation || !P.fichesNouvelles().length;
   }
   function vueBilan() {
     const E = P.E,
@@ -10986,8 +11242,6 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
       for (const id of res) h += `<button class="ligne" data-a="serie" data-sav="${id}">${glyphe(SAV[id].b)}<span class="l-corps"><b>${SAV[id].s.titre}</b><small>${SAV[id].c.titre} · ${E.sav[id].ok} justes sur ${E.sav[id].n}</small></span><span class="chev" aria-hidden="true">›</span></button>`;
       h += `</div></section>`;
     }
-    const nn = E.notes.length;
-    h += `<section><h2>À voir en séance</h2><div class="liste"><a class="ligne" href="#a-voir"><span class="l-corps"><b>${nn ? pl(nn, 'point noté', 'points notés') : 'Rien de noté pour l’instant'}</b><small>Ce que tu ne comprends pas, ou une erreur que tu as repérée dans l’appli.</small></span><span class="chev" aria-hidden="true">›</span></a></div></section>`;
     h += `<section><h2>Partager</h2><div class="bloc"><p style="margin:0 0 10px">Un résumé en texte, à coller dans un message avant une séance avec ton enseignant.</p><button class="btn-2" data-a="copier">Copier le bilan</button><textarea class="copie" id="copie" readonly hidden aria-label="Bilan en texte"></textarea><p class="petit" id="copie-msg" role="status" style="margin:8px 0 0"></p></div></section>`;
     h += `<section><h2>Réglages</h2><div class="bloc"><b>Objectif du jour</b><div class="segments">${[[6, 'Court · 6'], [12, 'Normal · 12'], [18, 'Long · 18']].map(([v, n]) => `<button data-a="objectif" data-n="${v}" aria-pressed="${E.obj === v}">${n}</button>`).join('')}</div><p class="petit" style="margin:8px 0 0">Le nombre de questions de la séance du jour. Un jour compte pour ta série dès ${P.SEUIL_JOUR} questions.</p></div>`;
     h += `<div class="bloc"><b>Apparence</b><div class="segments">${[['auto', 'Comme l\'appareil'], ['clair', 'Clair'], ['sombre', 'Sombre']].map(([v, n]) => `<button data-a="theme" data-t="${v}" aria-pressed="${E.theme === v}">${n}</button>`).join('')}</div></div>`;
@@ -11015,7 +11269,7 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
     const r = P.avec(codeLu, P.resume),
       ici = P.resume();
     $('#code-apercu').innerHTML =
-      `<div class="apercu"><p><b>Sauvegarde${r.sv ? ' du ' + new Date(r.sv).toLocaleDateString('fr-CH') : ''}</b> : niveau ${r.niv}, ${pl(r.total, 'question')}, ${pl(r.reussis, 'savoir-faire réussi', 'savoir-faire réussis')}${r.notes ? ', ' + pl(r.notes, 'point') + ' à voir en séance' : ''}.</p>` +
+      `<div class="apercu"><p><b>Sauvegarde${r.sv ? ' du ' + new Date(r.sv).toLocaleDateString('fr-CH') : ''}</b> : niveau ${r.niv}, ${pl(r.total, 'question')}, ${pl(r.reussis, 'savoir-faire réussi', 'savoir-faire réussis')}${r.notes ? ', ' + pl(r.notes, 'question') : ''}.</p>` +
       `<p class="petit">Sur cet appareil : niveau ${ici.niv}, ${pl(ici.total, 'question')}. Reprendre la sauvegarde remplace ce qui est ici.${ici.total > r.total ? ' <b>Attention : cet appareil a plus de questions que la sauvegarde.</b>' : ''}</p>` +
       `<div class="actions"><button class="btn" data-a="code-remplacer">Reprendre cette sauvegarde</button><button class="btn-2" data-a="code-bilan">Voir son bilan sans rien changer</button><button class="btn-2" data-a="code-annuler">Annuler</button></div>` +
       `<textarea class="copie" id="code-bilan" readonly hidden aria-label="Bilan de la sauvegarde"></textarea></div>`;
@@ -11026,17 +11280,18 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
     accueil: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M15.8 8.2l-2.2 5.4-5.4 2.2 2.2-5.4z" fill="currentColor"/></svg>',
     branches: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.500 17c0-5.500 11-3.500 11-9.500" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="3.700" y="15.200" width="5.600" height="5.600" rx="1" transform="rotate(45 6.500 18)" fill="currentColor"/><rect x="14.700" y="3.200" width="5.600" height="5.600" rx="1" transform="rotate(45 17.500 6)" fill="currentColor"/></svg>',
     bilan: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V11M12 19V5M19 19v-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
+    questions: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 4.5h15a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-8.200L7 20v-3.500H4.500a1 1 0 0 1-1-1v-10a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.700 8.600a2.300 2.300 0 1 1 3.300 2.100c-.700.300-1 .800-1 1.500" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linecap="round"/><circle cx="12" cy="14.300" r="1" fill="currentColor"/></svg>',
     tableau: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12.5" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 20.5l2.2-4M16 20.5l-2.2-4M7 9.5c1.6-2 3-2 4 0s2.6 2 4.5-.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
     sortir: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h4.500A1.500 1.500 0 0 1 20 5.500v13a1.500 1.500 0 0 1-1.500 1.500H14M10 8l-4 4 4 4M6 12h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   };
   function barre() {
-    const lien = ([id, nom]) => `<a href="#${id}" data-n="${id}"><span class="n-g">${ICONES[id]}</span><span>${nom}</span></a>`;
+    const lien = ([id, nom]) => `<a href="#${id}" data-n="${id}"><span class="n-g">${ICONES[id]}${id === 'questions' ? '<i class="pastille" aria-hidden="true" hidden></i>' : ''}</span><span>${nom}</span></a>`;
     $('#barre-in').innerHTML = P.presentation
       ? `<p class="b-etat">Mode présentation · rien n'est enregistré</p>` +
-        [['branches', 'Parcours'], ['tableau', 'Tableau']].map(lien).join('') +
+        [['branches', 'Parcours'], ['tableau', 'Tableau'], ['questions', 'Questions']].map(lien).join('') +
         `<div class="b-item b-taille" role="group" aria-label="Taille de l'affichage"><span class="n-g"><button data-a="pres-taille" data-d="-1" aria-label="Plus petit"${taillePres ? '' : ' disabled'}>A−</button><button data-a="pres-taille" data-d="1" aria-label="Plus grand"${taillePres < TAILLES.length - 1 ? '' : ' disabled'}>A+</button></span><span>Taille</span></div>` +
         `<button class="b-item b-sortir" data-a="pres-quitter"><span class="n-g">${ICONES.sortir}</span><span>Terminer</span></button>`
-      : [['accueil', 'Accueil'], ['branches', 'Parcours'], ['tableau', 'Tableau'], ['bilan', 'Progrès']].map(lien).join('');
+      : [['accueil', 'Accueil'], ['branches', 'Parcours'], ['tableau', 'Tableau'], ['questions', 'Questions'], ['bilan', 'Progrès']].map(lien).join('');
   }
   function route() {
     /* un mode présentation oublié, ou ouvert par erreur, s'éteint de lui-même au bout de quelques heures */
@@ -11074,11 +11329,12 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
     } else if (h === 'bilan') {
       vueBilan();
       onglet = 'bilan';
-    } else if (h === 'a-voir') {
-      vueAVoir();
-      onglet = 'bilan';
+    } else if (h === 'questions' || h === 'a-voir') {
+      vueQuestions();
+      onglet = 'questions';
     } else vueAccueil();
     $$('#barre a').forEach((a) => (a.dataset.n === onglet ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
+    majPastille();
   }
   window.addEventListener('hashchange', () => {
     if (S) fermerSerie(true);
@@ -11586,6 +11842,95 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
       z.innerHTML = ouvrir ? zoneReponses(c, k) : '';
       el.outerHTML = boutonRep(c, c.faire[k][0], k, ouvrir);
       if (ouvrir) $('#rep-t' + k).focus({ preventScroll: true });
+    } else if (a === 'ex-ouvrir') {
+      const { c } = CHAP[el.dataset.c],
+        k = +el.dataset.k,
+        z = $('#ex-' + k),
+        ouvrir = z.hidden;
+      z.hidden = !ouvrir;
+      z.innerHTML = ouvrir ? panneauEx(c, k) : '';
+      el.outerHTML = boutonEx(c, c.faire[k], k, ouvrir);
+      const nb = $(`[data-a="ex-ouvrir"][data-k="${k}"]`);
+      if (nb) nb.focus({ preventScroll: true });
+    } else if (a === 'ex') {
+      const { c } = CHAP[el.dataset.c],
+        k = +el.dataset.k,
+        it = c.faire[k],
+        u = P.toutesUnites(P.unites(it[0], it[1])).find((x) => x.id === el.dataset.u);
+      if (!u) return;
+      const r = P.basculerEx(c.id, it[0], it[1], u.id),
+        tr = r.ligne ? P.nouveauxTrophees() : [];
+      P.sauver();
+      el.className = 'ex-u e' + r.etat;
+      el.setAttribute('aria-label', `${u.nom} : ${ETAT_EX[r.etat]}`);
+      const x = P.exLigne(c.id, it[0], it[1]);
+      $('#ex-cpt' + k).textContent = compteExLong(x) + (r.ligne ? ' Toute la ligne est faite : elle est cochée.' : '');
+      const lb = $(`[data-a="manuel"][data-k="${k}"]`);
+      if (lb) lb.outerHTML = ligneManuel(c, it, k);
+      const bb = $(`[data-a="ex-ouvrir"][data-k="${k}"]`);
+      if (bb) bb.outerHTML = boutonEx(c, it, k, true);
+      const cpt = $('#man-compte');
+      if (cpt && r.ligne) cpt.textContent = compteManuel(c) + (P.presentation ? '' : ` +${P.XP.manuel} points.`) + (tr.length ? ` Trophée : ${tr.map((y) => y.nom).join(', ')} !` : '');
+    }
+    /* l'onglet Questions */
+    else if (a === 'q-b') {
+      const q = Object.assign({}, P.E.qbr),
+        b = el.dataset.b;
+      q.b = q.b === b ? undefined : b;
+      q.c = '';
+      P.E.qbr = q;
+      P.sauver();
+      $('#q-form').innerHTML = formQuestion();
+      const nb = $$('[data-a="q-b"]').find((x) => x.dataset.b === b);
+      if (nb) nb.focus({ preventScroll: true });
+    } else if (a === 'q-ajouter') {
+      const q = P.E.qbr || {},
+        txt = ($('#q-txt').value || '').trim().slice(0, 1500);
+      if (!txt) {
+        $('#q-msg').textContent = "Écris d'abord ta question.";
+        return $('#q-txt').focus();
+      }
+      const n = { type: 'question', mot: txt };
+      if (q.b) n.b = q.b;
+      if (q.c && CHAP[q.c]) n.chap = q.c;
+      P.ajouterNote(n);
+      P.E.qbr = null;
+      P.sauver();
+      vueQuestions();
+      $('#q-msg').textContent = 'Ta question est dans ta liste, juste en dessous. Envoie-la à ton enseignant quand tu veux.';
+    } else if (a === 'q-envoyer') {
+      const L = nonEnvoyees().length ? nonEnvoyees() : P.E.notes,
+        ids = L.map((n) => n.id),
+        txt = notesTexte(L),
+        noter = () => {
+          P.marquerEnvoyees(ids);
+          P.sauver();
+        },
+        copier = () => copierTexte(txt, $('#copie'), $('#copie-msg'), 'Copié. Colle-le dans un message à ton enseignant (WhatsApp, SMS ou mail).', noter);
+      /* la feuille de partage seulement quand la page est ouverte seule (sur claude.ai, elle est refusée) */
+      let seule = false;
+      try {
+        seule = window.top === window;
+      } catch (e) {}
+      if (navigator.share && seule)
+        navigator.share({ title: 'Mes questions · Cap Lycée', text: txt }).then(
+          () => {
+            noter();
+            qMsg = 'Envoyé. Ton enseignant te répondra par une fiche, qui arrivera ici.';
+            vueQuestions();
+          },
+          (e) => {
+            if (e && e.name === 'AbortError') $('#copie-msg').textContent = "Pas envoyé : rien n'a changé.";
+            else copier();
+          }
+        );
+      else copier();
+    } else if (a === 'fiche-ouvrir') {
+      const d = $$('details[data-fiche]').find((x) => x.dataset.fiche === el.dataset.f);
+      if (d) {
+        d.open = true;
+        d.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      }
     } else if (a === 'rep-question') {
       const { c, b } = CHAP[el.dataset.c],
         [ou, quoi] = c.faire[+el.dataset.k],
@@ -11649,7 +11994,7 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
       P.sauver();
       noteEnCours = null;
       /* pendant une série, pas de lien : il ferait quitter la série en cours */
-      z.innerHTML = S ? `<p class="note-ok" role="status">C'est noté dans ta liste « À voir en séance ». Tu la retrouves dans Progrès.</p>` : `<p class="note-ok" role="status">C'est noté dans ta liste <a href="#a-voir">« À voir en séance »</a>.</p>`;
+      z.innerHTML = S ? `<p class="note-ok" role="status">C'est noté dans tes questions. Tu les retrouves dans l'onglet Questions, pour les envoyer à ton enseignant.</p>` : `<p class="note-ok" role="status">C'est noté dans tes <a href="#questions">questions</a>, pour ton enseignant.</p>`;
     } else if (a === 'note-non') {
       if (!noteEnCours) return;
       noteEnCours.zone.innerHTML = noteEnCours.orig;
@@ -11657,14 +12002,14 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
     } else if (a === 'note-suppr') {
       P.retirerNote(el.dataset.id);
       P.sauver();
-      vueAVoir();
+      vueQuestions();
     } else if (a === 'notes-copier') copierTexte(notesTexte(), $('#copie'), $('#copie-msg'), 'Liste copiée. Tu peux la coller dans un message.');
     else if (a === 'notes-vider') $('#zone-vider').innerHTML = `<p class="petit" style="margin:10px 0 6px">Toute la liste sera retirée. Fais-le une fois que vous l'avez reprise ensemble.</p><div class="actions"><button class="btn-2" data-a="notes-garder">Garder</button><button class="btn-2" style="color:var(--faux)" data-a="notes-vider-oui">Tout retirer</button></div>`;
-    else if (a === 'notes-garder') vueAVoir();
+    else if (a === 'notes-garder') vueQuestions();
     else if (a === 'notes-vider-oui') {
       P.E.notes = [];
       P.sauver();
-      vueAVoir();
+      vueQuestions();
     }
     /* code de sauvegarde */
     else if (a === 'code-copier') copierCode();
@@ -11754,6 +12099,25 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
   document.addEventListener('focusout', (ev) => {
     if (ev.target.id === 'br-txt') $('#serie').classList.remove('br-focus');
   });
+  document.addEventListener('change', (ev) => {
+    if (ev.target.id !== 'q-c') return;
+    P.E.qbr = Object.assign({}, P.E.qbr, { c: ev.target.value });
+    P.sauver();
+  });
+  document.addEventListener(
+    'toggle',
+    (ev) => {
+      const d = ev.target;
+      if (P.presentation || !d.open || !d.matches || !d.matches('details[data-fiche]')) return;
+      const f = (CL.fichesProf || []).find((x) => P.cleFiche(x) === d.dataset.fiche);
+      if (!f || !P.lireFiche(f)) return;
+      P.sauver();
+      const e = $('.f-nouv', d);
+      if (e) e.remove();
+      majPastille();
+    },
+    true
+  );
   document.addEventListener('input', (ev) => {
     const c = ev.target;
     if (c.id === 'cherche') {
@@ -11763,6 +12127,11 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
     if (c.id === 'br-txt') {
       if (S) S.brouillon = c.value.slice(0, 3000);
       return apercu($('#br-ap'), c.value);
+    }
+    if (c.id === 'q-txt') {
+      P.E.qbr = Object.assign({}, P.E.qbr, { txt: c.value.slice(0, 1500) });
+      sauverPlusTard();
+      return apercu($('#q-ap'), c.value);
     }
     if (c.classList && c.classList.contains('rep-t')) {
       const { c: ch } = CHAP[c.dataset.c],
@@ -12855,7 +13224,7 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
       derniere = [...fil.tours].reverse().find((t) => t.role === 'assistant');
     CL.P.ajouterNote({ type: 'aide', b: fil.b, chap: fil.chap, q: `Question à Claude (${fil.titre}) : ${premiere ? premiere.content : ''}`.slice(0, 400), ia: derniere ? derniere.content.slice(0, 1200) : '' });
     CL.P.sauver();
-    $('#ia-garder').innerHTML = `<p class="note-ok" role="status">C'est dans ta liste « À voir en séance ».</p>`;
+    $('#ia-garder').innerHTML = `<p class="note-ok" role="status">C'est dans tes questions, dans l'onglet Questions.</p>`;
   }
 
   if (typeof document !== 'undefined') {
