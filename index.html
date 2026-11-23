@@ -247,6 +247,9 @@ html.lc-ouvert,html.lc-ouvert body{overflow:hidden}
 .lecon>summary::after{content:"Afficher";font:400 14px var(--f-texte);color:var(--encre-2)}
 .lecon[open]>summary::after{content:"Masquer"}
 .lecon-corps{padding:0 16px 16px;border-top:1px solid var(--trait)}
+.l-sol{margin:14px 0 4px;border:1.5px dashed var(--trait);border-radius:var(--r-petit);padding:10px 12px;background:var(--papier)}
+.l-sol summary{cursor:pointer;font-weight:700;color:var(--accent);min-height:28px}
+.l-sol-c>p:first-child{margin-top:8px}
 .lecon-corps>h3:first-child{margin-top:16px}
 .lecon-corps>p:first-child,.lecon-corps>.regle:first-child,.lecon-corps>.table-defile:first-child{margin-top:16px}
 .regle{padding:10px 12px;margin:10px 0;background:var(--accent-doux);border-radius:var(--r-petit)}
@@ -3951,6 +3954,18 @@ html.pres .balise::after{display:none}
     ['Elles se sont ___ hier soir.', 'téléphoné', 0, 'On téléphone à quelqu\'un : « se » est un complément indirect, pas d\'accord.'],
     ['Marie s\'est ___ à l\'heure au rendez-vous.', 'présenté', 1, '« Se » est COD (elle a présenté qui ? elle-même) et il est placé avant : accord.'],
     ['Ils se sont ___ compte de leur erreur.', 'rendu', 0, 'Dans « se rendre compte », le COD est « compte », placé après : le participe reste invariable.'],
+    ['Les chats se sont ___ par la fenêtre.', 'enfui', 2, "« S'enfuir » n'existe pas sans « se » : accord avec le sujet, masculin pluriel."],
+    ['Elles se sont ___ de leur voisin.', 'moqué', 3, "« Se moquer de » n'existe qu'avec « se » : accord avec le sujet, féminin pluriel."],
+    ['Les deux sœurs se sont ___ dès le premier jour.', 'plu', 0, "Elles ont plu à qui ? l'une à l'autre : « se » est un complément indirect, pas d'accord."],
+    ['Les présidents se sont ___ à la tête du club.', 'succédé', 0, "On succède à quelqu'un : « se » est un complément indirect, pas d'accord."],
+    ["Les lettres qu'elle s'est ___ étaient très longues.", 'écrit', 3, 'Le COD « que » (les lettres) est placé avant : accord avec « lettres », féminin pluriel.'],
+    ["Elle s'est ___ couper les cheveux.", 'fait', 0, "« Se faire » suivi d'un infinitif : le participe « fait » reste invariable."],
+    ['Ces maisons se sont ___ en une semaine.', 'vendu', 3, 'Sens passif (elles ont été vendues) : accord avec le sujet.'],
+    ['Elles se sont ___ de leur erreur trop tard.', 'aperçu', 3, "« S'apercevoir de » n'a pas le sens d'« apercevoir » : accord avec le sujet."],
+    ['Les élèves se sont ___ quand la directrice est entrée.', 'tu', 2, '« Se taire » : accord avec le sujet, masculin pluriel.'],
+    ['Ils se sont ___ dans la cour.', 'souri', 0, "On sourit à quelqu'un : « se » est un complément indirect, pas d'accord."],
+    ["Les photos qu'ils se sont ___ sont floues.", 'envoyé', 3, 'Le COD « que » (les photos) est placé avant : accord avec « photos », féminin pluriel.'],
+    ['Elles se sont ___ beaucoup de questions.', 'posé', 0, "Le COD est « beaucoup de questions », placé après : pas d'accord."],
   ];
   const genPP = (liste) => () => {
     const [phrase, f, bon, expl] = choix(liste),
@@ -4508,6 +4523,11 @@ html.pres .balise::after{display:none}
     ['What will you do if your friends ___ late?', ['are', 'will be'], 0, "Partie avec if : present simple, même si on parle du futur."],
     ['If the town builds a cycle lane, more people ___ by bike.', ['will travel', 'travelled'], 0, "First conditional."],
     ['Ice ___ if the temperature goes above zero.', ['melts', 'would melt'], 0, "Fait scientifique : zero conditional."],
+    ['When I ___ home, I will text you.', ['get', 'will get'], 0, "Après when, comme après if, present simple pour parler du futur."],
+    ["___ you revise, you won't pass the test.", ['Unless', 'If'], 0, "Unless = if not : « si tu ne révises pas »."],
+    ['If you see Tom, ___ him to call me.', ['tell', 'will tell'], 0, "Dans l'autre partie, on peut aussi mettre un impératif."],
+    ['If it ___ sunny, we might go to the lake.', ['is', 'will be'], 0, "Partie avec if : present simple. Might = peut-être."],
+    ['If I drink coffee in the evening, I ___ well.', ["don't sleep", "won't sleep"], 0, "Une habitude, vraie à chaque fois : zero conditional."],
   ];
   const VOC3 = [
     ['Comment dit-on « une inondation » en anglais ?', 'flood|a flood', 'The river burst its banks and there was a flood.'],
@@ -9036,6 +9056,139 @@ html.pres .balise::after{display:none}
   CL.prof = (chap, doc) => (CL.docsProf[chap] = CL.docsProf[chap] || []).push(doc);
 })();
 </script>
+<script>/* fiches.js */
+'use strict';
+/* Cap Lycée — fiches demandées par l'enseignant, rangées dans leur chapitre (« De ton enseignant », voir CL.prof dans liens.js).
+   Écrites pour l'appli, avec les mêmes préfixes qu'une leçon ; { sol: { titre, lignes } } : un corrigé caché, à déplier. */
+(function () {
+  /* ================= Français : le participe passé des verbes pronominaux ================= */
+  CL.prof('f-participe', {
+    titre: 'Fiche : le participe passé des verbes pronominaux',
+    date: '23 novembre 2026',
+    lecon: [
+      '# Ce qu\'il faut savoir d\'abord',
+      "Aux temps composés, un verbe pronominal se conjugue toujours avec être : elle s'est levée, ils se sont parlé. Mais malgré « être », le participe ne s'accorde pas toujours avec le sujet.",
+      '> Pour choisir, on se pose deux questions, dans l\'ordre.',
+      '# Question 1 : le verbe existe-t-il sans « se » ?',
+      "> Non : c'est un verbe essentiellement pronominal. Le participe s'accorde avec le sujet.",
+      '= Elles se sont souvenu<b>es</b> de cette journée. (« souvenir » seul n\'est pas un verbe)',
+      '= Les chats se sont enfui<b>s</b>. Elle s\'est moqué<b>e</b> de moi.',
+      "Autres verbes de ce type : s'absenter, s'écrier, s'efforcer, s'emparer, s'enfuir, se méfier, se moquer, se repentir, se souvenir.",
+      "> Même règle quand « se » change le sens du verbe (s'apercevoir de, se douter, se plaindre, se taire) et quand le sens est passif : accord avec le sujet.",
+      '= Ils se sont aperçu<b>s</b> de leur erreur. Les élèves se sont tu<b>s</b>. Ces maisons se sont vendu<b>es</b> en une semaine.',
+      '# Question 2 : sinon, « se » est-il COD ?',
+      '> On remplace être par avoir, puis on pose la question « qui ? » ou « quoi ? » après le verbe, comme avec avoir.',
+      '@ Cas 1',
+      "= « se » est COD (on fait l'action sur soi, ou l'un sur l'autre) : <b>accord avec le sujet</b>.",
+      '= Elles se sont lavé<b>es</b>. (elles ont lavé qui ? elles-mêmes)',
+      '@ Cas 2',
+      "= « se » veut dire « à soi » ou « l'un à l'autre », c'est un COI : <b>pas d'accord</b>.",
+      "= Ils se sont parlé. (on parle à quelqu'un)",
+      '@ Cas 3',
+      "= Le COD est placé après le verbe : <b>pas d'accord</b>.",
+      "= Elle s'est lavé les mains. Ils se sont envoyé des messages.",
+      '@ Cas 4',
+      '= Le COD est placé avant le verbe (que, la, les…) : <b>accord avec ce COD</b>.',
+      "= Les mains qu'elle s'est lavé<b>es</b>. Les messages qu'ils se sont envoyé<b>s</b>.",
+      "! Ces verbes se construisent avec « à » : « se » n'y est jamais COD, le participe reste invariable. Se parler, se téléphoner, se sourire, se plaire, se succéder, se mentir, se ressembler, s'écrire, se dire, se demander.",
+      '= Elles se sont souri. Les rois se sont succédé. Elles se sont plu tout de suite.',
+      '# Deux pièges',
+      '! Se rendre compte : le COD est « compte », toujours placé après. Le participe reste invariable : elles se sont rendu compte de leur erreur.',
+      "! Se faire suivi d'un infinitif : « fait » reste invariable. Elle s'est fait couper les cheveux.",
+      '# La méthode sur un exemple',
+      '@ Elles se sont ___ (téléphoner).',
+      '= 1. « Téléphoner » existe sans « se » : on passe à la question 2.',
+      "= 2. Elles ont téléphoné à qui ? l'une à l'autre : « se » est un COI, et il n'y a pas de COD.",
+      '= Donc : elles se sont téléphoné, sans accord.',
+      '# À toi',
+      'Accorde le participe passé si c\'est nécessaire.',
+      '1. Les filles se sont (réveiller) très tôt.',
+      "2. Ma sœur s'est (couper) une tranche de pain.",
+      "3. Ils se sont (écrire) pendant tout l'été.",
+      "4. Elles se sont (souvenir) de leur premier jour d'école.",
+      "5. Les lettres qu'ils se sont (écrire) sont dans une boîte.",
+      '6. Lisa et moi, nous nous sommes (rendre) compte du problème.',
+      '7. Les deux équipes se sont (affronter) en finale.',
+      "8. Elle s'est (faire) offrir un livre.",
+      {
+        sol: {
+          lignes: [
+            '1. réveillé<b>es</b> : elles ont réveillé qui ? elles-mêmes. « Se » est COD, placé avant : accord.',
+            '2. coupé : le COD est « une tranche de pain », placé après : pas d\'accord.',
+            "3. écrit : on écrit à quelqu'un, « se » est un COI : pas d'accord.",
+            "4. souvenu<b>es</b> : « se souvenir » n'existe qu'avec « se » : accord avec le sujet.",
+            '5. écrit<b>es</b> : le COD « que » (les lettres) est placé avant : accord avec « lettres ».',
+            '6. rendu : dans « se rendre compte », le COD est « compte » : invariable.',
+            "7. affronté<b>es</b> : elles ont affronté qui ? l'une l'autre. « Se » est COD : accord.",
+            "8. fait : « se faire » suivi d'un infinitif : invariable.",
+          ],
+        },
+      },
+      'Pour t\'entraîner encore : la série « Avec un verbe pronominal », plus bas dans ce chapitre.',
+    ],
+  });
+
+  /* ================= Anglais : zero conditional et first conditional ================= */
+  CL.prof('e-u3', {
+    titre: 'Fiche : zero conditional et first conditional',
+    date: '23 novembre 2026',
+    lecon: [
+      '# À quoi ça sert ?',
+      "> Une phrase avec if (si) parle d'une condition et de sa conséquence. Le temps des verbes dépend de ce qu'on veut dire.",
+      '@ Zero conditional',
+      '= <b>If + present simple, present simple</b>',
+      '= Pour dire ce qui est toujours vrai : des faits, des règles, des habitudes.',
+      '@ First conditional',
+      "= <b>If + present simple, will / won't + base verbale</b>",
+      '= Pour dire ce qui arrivera sans doute, si la condition se réalise.',
+      '# Zero conditional : toujours vrai',
+      '= If you heat ice, it melts.',
+      "= If I drink coffee in the evening, I don't sleep well.",
+      "= Plants die if they don't get water.",
+      "Astuce : on peut remplacer if par when (« chaque fois que ») sans changer le sens : When you heat ice, it melts.",
+      '# First conditional : une situation précise, dans le futur',
+      '= If it rains tomorrow, we will stay at home.',
+      "= If you don't hurry, you'll miss the bus.",
+      "= She won't pass the test if she doesn't revise.",
+      "> À la place de will, on peut aussi mettre may ou might (peut-être), can, ou un impératif.",
+      "= If it's sunny, we might go to the lake. If you see Tom, tell him to call me.",
+      '# Les règles à ne pas oublier',
+      "! Jamais will dans la partie avec if, même quand on parle du futur : If it rains tomorrow… (et non « if it will rain »).",
+      "> Les deux parties peuvent changer de place. On met une virgule seulement quand if est en tête : If it rains, we will stay at home. / We will stay at home if it rains.",
+      "> Unless = if not (« à moins que »). Après unless, le verbe reste affirmatif : Unless you hurry, you'll miss the bus. (= If you don't hurry…)",
+      "> If ou when, pour le futur : when, c'est sûr ; if, c'est seulement possible. When I see her, I'll tell her (je vais la voir). If I see her, I'll tell her (peut-être).",
+      '# Zero ou first ? La question à se poser',
+      '= Est-ce vrai à chaque fois ? Zero conditional : If you mix red and white, you get pink.',
+      '= Est-ce une situation particulière, plus tard ? First conditional : If you mix the paint now, it will be dry tonight.',
+      '# À toi',
+      'Mets les verbes entre parenthèses à la bonne forme.',
+      '1. If you (heat) butter, it (melt).',
+      '2. If it (snow) tomorrow, we (go) sledging.',
+      '3. I (call) you if I (have) time this evening.',
+      '4. Water (freeze) if the temperature (drop) below zero.',
+      '5. Unless you (leave) now, you (be) late.',
+      '6. If my cat (be) hungry, it always (miaow) loudly.',
+      '7. She (not come) to the party if her brother (not drive) her.',
+      '8. When I (finish) this book, I (lend) it to you.',
+      {
+        sol: {
+          lignes: [
+            '1. heat, melts : toujours vrai, donc zero conditional (present + present).',
+            '2. snows, will go : une situation précise, demain, donc first conditional.',
+            '3. will call, have : jamais will après if.',
+            '4. freezes, drops : un fait scientifique, donc zero conditional.',
+            '5. leave, will be : unless veut dire if not ; le verbe qui le suit reste affirmatif.',
+            '6. is, miaows : une habitude (always), donc zero conditional.',
+            "7. won't come, doesn't drive : first conditional, aux deux formes négatives.",
+            '8. finish, will lend : après when, comme après if, le present simple pour parler du futur.',
+          ],
+        },
+      },
+      'Pour t\'entraîner encore : la série « Zero et first conditional », plus bas dans ce chapitre.',
+    ],
+  });
+})();
+</script>
 <script>/* classe.js */
 'use strict';
 /* Cap Lycée — ce que la classe travaille en ce moment, d'après les réponses des enseignants.
@@ -10559,6 +10712,8 @@ CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-rel
         fermer();
         if (l.fig) h += `<div class="l-fig">${l.fig}</div>`;
         if (l.table) h += `<div class="table-defile"><table><thead><tr>${l.table.tete.map((x) => `<th>${x}</th>`).join('')}</tr></thead><tbody>${l.table.lignes.map((r) => `<tr>${r.map((x) => `<td>${x}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+        /* un corrigé caché, à déplier après avoir fait l'exercice : { sol: { titre, lignes } } */
+        if (l.sol) h += `<details class="l-sol"><summary>${l.sol.titre || 'Voir le corrigé'}</summary><div class="l-sol-c">${leconHTML(l.sol.lignes)}</div></details>`;
         continue;
       }
       const c = l[1] === ' ' ? l[0] : '',
