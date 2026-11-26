@@ -296,6 +296,16 @@ td:last-child{color:var(--encre-2);white-space:normal;min-width:9em}
 .f-txt{fill:var(--encre);font:15px var(--f-math)}
 .f-gr{fill:var(--encre-2);font:13px var(--f-math)}
 .f-it{font-style:italic}
+/* repère de l'espace : x orange, y vert, z bleu */
+.fig-3d{max-width:340px}
+.f-cache{fill:none;stroke:var(--encre);stroke-width:1.3;stroke-dasharray:5 4}
+.f-guide{fill:none;stroke:var(--encre-2);stroke-width:1.1;stroke-dasharray:3 3}
+.f-axe-p{fill:var(--encre)}
+.f-x{fill:none;stroke:var(--flamme);stroke-width:3;stroke-linecap:round}
+.f-y{fill:none;stroke:var(--juste);stroke-width:3;stroke-linecap:round}
+.f-z{fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round}
+.f-cx{fill:var(--flamme)} .f-cy{fill:var(--juste)} .f-cz{fill:var(--accent)}
+.f-fx{fill:var(--flamme);fill-opacity:.14} .f-fy{fill:var(--juste);fill-opacity:.14} .f-fz{fill:var(--accent);fill-opacity:.14}
 
 /* ---------- série d'exercices ---------- */
 #serie{padding-block:max(10px,env(safe-area-inset-top,0px)) 0}
@@ -9364,6 +9374,153 @@ html.pres .balise::after{display:none}
         },
       },
       'Pour t\'entraîner encore : la série « Zero et first conditional », plus bas dans ce chapitre.',
+    ],
+  });
+
+  /* ================= Maths : le repère de l'espace (sa question sur l'ES62, Fichier p. 137) ================= */
+  /* Perspective cavalière comme dans le fichier : l'axe x part en biais vers le bas à gauche (30°), réduit à 0,55. */
+  const PX = 0.476,
+    PY = 0.275;
+  const proj = (o, U) => (x, y, z) => [o[0] + U * (y - PX * x), o[1] + U * (PY * x - z)];
+  const f2 = (p) => p[0].toFixed(1) + ',' + p[1].toFixed(1);
+  const seg = (cls, ...ps) => `<path class="${cls}" d="M${ps.map(f2).join(' L')}"/>`;
+  const poly = (cls, ...ps) => `<path class="${cls}" d="M${ps.map(f2).join(' L')} Z"/>`;
+  const txt = (cls, x, y, s, ancre) => `<text class="${cls}" x="${x}" y="${y}"${ancre ? ` text-anchor="${ancre}"` : ''}>${s}</text>`;
+  const rond = (p) => `<circle class="f-pt" cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="4.5"/>`;
+  function fleche(a, b) {
+    const dx = b[0] - a[0],
+      dy = b[1] - a[1],
+      L = Math.hypot(dx, dy),
+      ux = dx / L,
+      uy = dy / L,
+      base = [b[0] - ux * 9, b[1] - uy * 9];
+    return seg('f-axe', a, [b[0] - ux * 6, b[1] - uy * 6]) + poly('f-axe-p', b, [base[0] - uy * 4.2, base[1] + ux * 4.2], [base[0] + uy * 4.2, base[1] - ux * 4.2]);
+  }
+  /* les trois axes et le chemin de O jusqu'à M (2 ; 4 ; 3) */
+  function figRepere() {
+    const P = proj([105, 182], 30),
+      O = P(0, 0, 0);
+    let h =
+      '<svg class="fig fig-3d" viewBox="0 0 320 244" role="img" aria-label="Repère de l\'espace. L\'axe x vient vers toi, l\'axe y va vers la droite, l\'axe z monte. Pour aller au point M (2 ; 4 ; 3), on avance de 2 sur l\'axe x, puis de 4 dans la direction de y, puis on monte de 3.">';
+    h += seg('f-guide', P(2, 4, 0), P(0, 4, 0));
+    h += fleche(O, P(5.4, 0, 0)) + fleche(O, P(0, 6.4, 0)) + fleche(O, P(0, 0, 5.3));
+    for (let i = 1; i <= 6; i++) {
+      const y = P(0, i, 0);
+      h += seg('f-axe', [y[0], y[1] - 4], [y[0], y[1] + 4]);
+      if (i > 5) continue;
+      const x = P(i, 0, 0),
+        z = P(0, 0, i);
+      h += seg('f-axe', [x[0] - 2, x[1] - 3.5], [x[0] + 2, x[1] + 3.5]) + seg('f-axe', [z[0] - 4, z[1]], [z[0] + 4, z[1]]);
+    }
+    const A1 = P(2, 0, 0),
+      A2 = P(2, 4, 0),
+      M = P(2, 4, 3);
+    h += seg('f-x', O, A1) + seg('f-y', A1, A2) + seg('f-z', A2, M) + rond(M);
+    h += txt('f-nom f-it f-cx', 16, 240, 'x') + txt('f-nom f-it f-cy', 303, 187, 'y') + txt('f-nom f-it f-cz', 113, 22, 'z') + txt('f-nom', 111, 176, 'O');
+    h += txt('f-nom f-cx', 84, 186, '2', 'end') + txt('f-nom f-cy', 136.4, 216, '4', 'middle') + txt('f-nom f-cz', 204, 158, '3');
+    h += `<text class="f-nom" x="205" y="106">M <tspan class="f-txt">(2 ; 4 ; 3)</tspan></text>`;
+    return h + '</svg>';
+  }
+  /* le cube de l'ES62 : E à l'origine, C (4 ; 4 ; 4). faces = la figure de méthode (faces colorées) ; sinon les réponses */
+  function figCube(faces) {
+    const P = proj([115, 228], 40),
+      S = { A: P(0, 0, 4), B: P(0, 4, 4), C: P(4, 4, 4), D: P(4, 0, 4), E: P(0, 0, 0), F: P(0, 4, 0), G: P(4, 4, 0), H: P(4, 0, 0) };
+    let h = `<svg class="fig fig-3d" viewBox="0 0 352 306" role="img" aria-label="${
+      faces
+        ? "Le cube de l'ES62. Les axes se croisent en E. Face de devant DCGH : x = 4. Face de droite CBFG : y = 4. Face du dessus ABCD : z = 4."
+        : "Les réponses de l'ES62 sur le cube : a au sommet B, b au milieu de l'arête CD, c au centre de la face CBFG, d au centre du cube, P au centre de la face ABCD."
+    }">`;
+    if (faces) h += poly('f-fx', S.D, S.C, S.G, S.H) + poly('f-fy', S.C, S.B, S.F, S.G) + poly('f-fz', S.A, S.B, S.C, S.D);
+    h += seg('f-cache', S.A, S.E) + seg('f-cache', S.E, S.F) + seg('f-cache', S.E, S.H);
+    h += fleche(S.H, P(5.6, 0, 0)) + fleche(S.F, P(0, 5.5, 0)) + fleche(S.A, P(0, 0, 5.4));
+    if (!faces) h += seg('f-guide', S.A, S.C) + seg('f-guide', S.B, S.D) + seg('f-guide', S.C, S.F) + seg('f-guide', S.B, S.G) + seg('f-guide', S.E, S.C);
+    h += seg('f-trait', S.A, S.B, S.C, S.D, S.A) + seg('f-trait', S.D, S.H, S.G, S.C) + seg('f-trait', S.B, S.F, S.G);
+    h += txt('f-nom f-it', 6, 303, 'x') + txt('f-nom f-it', 341, 233, 'y') + txt('f-nom f-it', 123, 16, 'z');
+    h += txt('f-nom', 108, 62, 'A', 'end') + txt('f-nom', 282, 63, 'B') + txt('f-nom', 191, 106, 'C', 'end') + txt('f-nom', 31, 108, 'D', 'end');
+    h += txt('f-nom', 108, 223, 'E', 'end') + txt('f-nom', 281, 222, 'F') + txt('f-nom', 204, 288, 'G') + txt('f-nom', 31, 268, 'H', 'end');
+    if (faces) h += txt('f-nom f-cx', 157, 190, 'x = 4', 'middle') + txt('f-nom f-cy', 236.9, 175, 'y = 4', 'middle') + txt('f-nom f-cz', 156.9, 95, 'z = 4', 'middle');
+    else {
+      h += rond(S.B) + rond(P(4, 2, 4)) + rond(P(2, 4, 2)) + rond(P(2, 2, 2)) + rond(P(2, 2, 4));
+      h += txt('f-nom f-cz', 125, 128, 'b') + txt('f-nom f-cz', 246, 168, 'c') + txt('f-nom f-cz', 149, 152, 'd', 'end') + txt('f-nom f-cz', 163, 82, 'P');
+    }
+    return h + '</svg>';
+  }
+
+  CL.prof('m-solides', {
+    titre: "Fiche : le repère de l'espace (ES62)",
+    date: '26 novembre 2026',
+    lecon: [
+      "# D'abord sur une feuille : deux axes",
+      "Dans le plan, un point se repère avec deux nombres, ses coordonnées $(x ; y)$ : on avance de $x$ le long de l'axe horizontal, puis on monte de $y$. Dans l'espace, il faut un nombre de plus.",
+      "# Dans l'espace : trois axes",
+      "> Un repère de l'espace a trois axes, $x$, $y$ et $z$. Ils partent du même point, l'origine O, et sont perpendiculaires deux à deux. Pense au coin d'une pièce : deux arêtes au sol, une qui monte le long du mur.",
+      "> Un point a trois coordonnées, toujours dans cet ordre : $(x ; y ; z)$. L'origine O, c'est $(0 ; 0 ; 0)$.",
+      { fig: figRepere() },
+      '@ Pour aller au point M $(2 ; 4 ; 3)$, on part de O et on fait trois pas :',
+      "= 1. on avance de <b>2</b> le long de l'axe $x$ (en orange ; sur le dessin, il vient vers toi) ;",
+      "= 2. puis de <b>4</b> dans la direction de l'axe $y$ (en vert, vers la droite) ;",
+      "= 3. puis on monte de <b>3</b>, dans la direction de l'axe $z$ (en bleu).",
+      "! L'ordre compte : $(2 ; 4 ; 3)$ et $(4 ; 2 ; 3)$ sont deux points différents.",
+      "! L'axe $x$ est dessiné en biais et plus court, pour donner l'impression de profondeur. Sur le dessin, une unité sur $x$ paraît plus petite, mais en vrai elle vaut autant que sur $y$ et sur $z$.",
+      "# Les sommets du cube de l'ES62",
+      "Dans l'ES62, les trois axes se croisent au sommet E : c'est l'origine, E $(0 ; 0 ; 0)$. Le sommet C est $(4 ; 4 ; 4)$, donc l'arête du cube mesure 4.",
+      { fig: figCube(true) },
+      "> Chaque coordonnée d'un sommet vaut 0 ou 4. Pour la trouver, on regarde de quel côté du cube se trouve le sommet.",
+      '@ Les trois questions à se poser',
+      '= $x$ : devant (face orange, $x = 4$) ou derrière ($x = 0$) ?',
+      '= $y$ : à droite (face verte, $y = 4$) ou à gauche ($y = 0$) ?',
+      '= $z$ : en haut (face bleue, $z = 4$) ou en bas ($z = 0$) ?',
+      '@ Exemple : le sommet G',
+      '= G est devant, donc $x = 4$ ; à droite, donc $y = 4$ ; en bas, donc $z = 0$.',
+      '= G $(4 ; 4 ; 0)$',
+      '# Un milieu, un centre : la moyenne',
+      "> Le milieu d'un segment : pour chaque coordonnée, on additionne celles des deux bouts et on divise par 2.",
+      "@ Exemple : le milieu de l'arête GH",
+      '= G $(4 ; 4 ; 0)$ et H $(4 ; 0 ; 0)$',
+      '= $x$ : $(4 + 4) : 2 = 4$ ; $y$ : $(4 + 0) : 2 = 2$ ; $z$ : $(0 + 0) : 2 = 0$',
+      '= Le milieu de GH est $(4 ; 2 ; 0)$.',
+      "> Le centre d'une face carrée est le milieu d'une de ses diagonales, qui relie deux sommets opposés de cette face. Le centre du cube est le milieu d'une grande diagonale, qui traverse le cube d'un sommet au sommet opposé.",
+      '@ Exemple : le centre de la face du dessous, EFGH',
+      '= Sa diagonale va de E $(0 ; 0 ; 0)$ à G $(4 ; 4 ; 0)$ : le centre est $(2 ; 2 ; 0)$.',
+      '# Placer un point',
+      "> On refait le chemin depuis l'origine : $x$, puis $y$, puis $z$. Une coordonnée qui vaut 4 met le point sur la face de devant, de droite ou du dessus ; une coordonnée qui vaut 0, sur la face opposée.",
+      "# À toi : l'ES62 (Fichier p. 137)",
+      '@ Une aide pour chaque question',
+      '= a) B : pose-toi les trois questions. Devant ou derrière ? À droite ou à gauche ? En haut ou en bas ?',
+      "= b) Cherche d'abord les coordonnées de C et de D, puis fais la moyenne.",
+      '= c) Le centre de la face CBFG est le milieu de sa diagonale CF (ou BG).',
+      '= d) Le centre du cube est le milieu de la grande diagonale EC.',
+      '= e) Fais le chemin depuis E : 2, puis 2, puis 4. Sur quelle face arrives-tu, et à quel endroit ?',
+      "! Sur le dessin du fichier, le milieu de CD tombe juste devant l'arête cachée AE. C'est un effet de la perspective : en vrai, ce point est sur l'arête du dessus, à l'avant du cube, loin de AE.",
+      {
+        sol: {
+          lignes: [
+            'a) B $(0 ; 4 ; 4)$ : derrière ($x = 0$), à droite ($y = 4$), en haut ($z = 4$).',
+            'b) C $(4 ; 4 ; 4)$ et D $(4 ; 0 ; 4)$ : le milieu de CD est $(4 ; 2 ; 4)$.',
+            'c) C $(4 ; 4 ; 4)$ et F $(0 ; 4 ; 0)$ : le centre de CBFG est $(2 ; 4 ; 2)$. Tous les points de cette face ont $y = 4$.',
+            'd) E $(0 ; 0 ; 0)$ et C $(4 ; 4 ; 4)$ : le centre du cube est $(2 ; 2 ; 2)$.',
+            "e) $z = 4$, donc P est sur la face du dessus, ABCD. $x = 2$ et $y = 2$, c'est la moitié de l'arête dans les deux directions : P est au centre de la face ABCD.",
+            { fig: figCube(false) },
+            'Sur le dessin : a est le sommet B, puis les points b, c, d et P.',
+          ],
+        },
+      },
+      "# Pour t'entraîner encore",
+      "Toujours avec le cube de l'ES62 :",
+      '1. Donne les coordonnées des sommets A, D, F et H.',
+      "2. Quelles sont les coordonnées du milieu de l'arête AB ?",
+      '3. Quelles sont les coordonnées du centre de la face de devant, DCGH ?',
+      '4. Où se trouve le point $(4 ; 0 ; 2)$ ? Et le point $(2 ; 0 ; 0)$ ?',
+      {
+        sol: {
+          lignes: [
+            '1. A $(0 ; 0 ; 4)$ : derrière, à gauche, en haut. D $(4 ; 0 ; 4)$, F $(0 ; 4 ; 0)$, H $(4 ; 0 ; 0)$.',
+            '2. A $(0 ; 0 ; 4)$ et B $(0 ; 4 ; 4)$ : le milieu de AB est $(0 ; 2 ; 4)$.',
+            '3. Sa diagonale va de D $(4 ; 0 ; 4)$ à G $(4 ; 4 ; 0)$ : le centre est $(4 ; 2 ; 2)$.',
+            "4. $(4 ; 0 ; 2)$ : devant, à gauche, à mi-hauteur. C'est le milieu de l'arête DH. $(2 ; 0 ; 0)$ : à gauche, en bas, à mi-chemin entre derrière et devant. C'est le milieu de l'arête EH.",
+          ],
+        },
+      },
     ],
   });
 })();
