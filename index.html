@@ -773,7 +773,51 @@ html.pres .balise::after{display:none}
 .cv-pouls .bloc{text-align:left;margin-top:10px;background:var(--papier)}
 .cv-pouls input{width:84px;min-height:42px;font-size:17px;padding:4px 8px;border:1.5px solid var(--trait);border-radius:var(--r-petit);background:var(--feuille);color:var(--encre)}
 .cv-chrono{font-family:var(--f-titre);font-size:26px;font-weight:700;color:var(--accent)}
+/* ---------- cartes (flashcards) ---------- */
+.fc-lien{margin-top:12px}
+.fc-ic{flex:none;width:40px;height:40px;border-radius:10px;background:var(--accent-doux);position:relative}
+.fc-ic::before,.fc-ic::after{content:"";position:absolute;width:17px;height:22px;border:2px solid var(--accent);border-radius:4px;background:var(--feuille);left:10px;top:9px}
+.fc-ic::before{transform:rotate(14deg) translate(4px,-2px);opacity:.6}
+.fc-dus{margin-top:18px}
+.fc-sens{display:flex;align-items:center;gap:10px;margin:16px 0 0;font-size:15px;cursor:pointer}
+.fc-sens input{width:22px;height:22px;accent-color:var(--accent);flex:none}
+.fc-fini{margin-top:16px}
+.fc-liste summary{cursor:pointer;font-weight:600;padding:10px 0;color:var(--accent)}
+.fc-liste dl{margin:4px 0 0;background:var(--feuille);border:1px solid var(--trait);border-radius:var(--r-carte);overflow:hidden}
+.fc-liste dl>div{padding:10px 14px;border-top:1px solid var(--trait)}
+.fc-liste dl>div:first-child{border-top:0}
+.fc-liste dt{font-weight:600}
+.fc-liste dd{margin:2px 0 0;color:var(--encre-2)}
+.fc-liste dd small{display:block;font-size:13px;margin-top:2px}
+.fc-mien{align-items:flex-start}
+.fc-mien .l-corps b,.fc-mien .l-corps small{font-size:15px}
+.fc-oui-non{display:flex;flex-direction:column;gap:6px}
+.fc-oui-non .btn-2{min-height:38px;padding:4px 12px;font-size:14px}
+.fc-form{margin-top:10px}
+.fc-jeu{max-width:560px;margin:0 auto;padding-top:4px}
+.fc-haut{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.fc-arret{background:none;border:0;padding:6px 4px 6px 0;color:var(--encre-2);font:inherit;font-size:15px;cursor:pointer;flex:none}
+.fc-titre{flex:1;min-width:0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
+.fc-n{flex:none;font-variant-numeric:tabular-nums;color:var(--encre-2);font-size:15px}
+.fc-jauge{margin-bottom:14px}
+.fc-carte{display:flex;flex-direction:column;justify-content:center;gap:14px;min-height:min(56vh,420px);padding:22px 20px 20px;border-radius:22px;background:var(--feuille);border:1.5px solid var(--trait);box-shadow:0 6px 0 var(--s,var(--trait));cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent;user-select:none}
+.fc-carte:focus-visible{outline:2.5px solid var(--accent);outline-offset:3px}
+.fc-ch{font-size:13px;color:var(--encre-2);letter-spacing:.02em}
+.fc-recto{font:600 23px/1.35 var(--f-texte);text-wrap:balance}
+.fc-carte.vu .fc-recto{font-size:17px;color:var(--encre-2);font-weight:500}
+.fc-verso{font:700 24px/1.35 var(--f-texte);padding-top:14px;border-top:2px dashed var(--trait);text-wrap:balance}
+.fc-recto.ec,.fc-verso.ec{font-family:var(--f-math)}
+.fc-note{margin:0;font-size:15px;color:var(--encre-2);line-height:1.45}
+.fc-aide{font-size:14px;color:var(--encre-2)}
+.fc-carte.tourne{animation:fc-tourne .28s ease-out}
+@keyframes fc-tourne{from{transform:perspective(900px) rotateY(80deg);opacity:.4}to{transform:none;opacity:1}}
+.fc-choix{display:flex;gap:10px;margin-top:18px}
+.fc-choix .btn,.fc-choix .btn-2{flex:1}
+.fc-bilan{text-align:center;padding:24px 18px}
+.fc-bilan h1{font-size:26px;margin:0 0 8px}
+.fc-bilan .actions{justify-content:center}
 @media (prefers-reduced-motion: reduce){
+  .fc-carte.tourne{animation:none}
   .cv-bat path{animation:none}
   .secoue,.combo.pop,.retour.ok{animation:none}
   .xp-pop,.confettis{display:none}
@@ -4027,6 +4071,9 @@ html.pres .balise::after{display:none}
   };
 
   /* ================= structure ================= */
+  /* les verbes servent aussi aux cartes (cartes-langues.js) */
+  CL.verbes = { de: DE, en: EN };
+
   CL.branches.push({
     id: 'francais',
     nom: 'Français',
@@ -4843,6 +4890,9 @@ html.pres .balise::after{display:none}
   ];
 
   /* ================= structure ================= */
+  /* le vocabulaire sert aussi aux cartes (cartes-langues.js) */
+  CL.vocabs = Object.assign(CL.vocabs || {}, { 'e-u1': VOC1, 'e-u2': VOC2, 'e-u3': VOC3, 'e-u5': VOC5, 'e-u8': VOC8 });
+
   const anglais = CL.branches.find((b) => b.id === 'anglais');
   anglais.intro = "Les verbes irréguliers, puis les huit unités de ton manuel English in Mind 11e, dans l'ordre : la grammaire et le vocabulaire de chaque unité.";
   const u = (n, nom) => `Unit ${n} · ${nom}`;
@@ -5548,6 +5598,9 @@ html.pres .balise::after{display:none}
   ];
 
   /* ================= structure ================= */
+  /* le vocabulaire sert aussi aux cartes (cartes-langues.js) */
+  CL.vocabs = Object.assign(CL.vocabs || {}, { 'd2-k1': VOC1, 'd2-k2': VOC2, 'd2-k3': VOC3, 'd2-k4': VOC4, 'd2-k5': VOC5, 'd2-k6': VOC6, 'd2-k7': VOC7, 'd2-k8': VOC8 });
+
   const allemand = CL.branches.find((b) => b.id === 'allemand');
   allemand.intro =
     "Les verbes forts et trois chapitres de grammaire de base, puis les huit Kapitel de ton livre geni@l klick (10./11. Klasse, Band 2), dans l'ordre : la grammaire et le vocabulaire de chaque Kapitel.";
@@ -6509,9 +6562,10 @@ html.pres .balise::after{display:none}
 </script>
 <script>/* sciences.js */
 'use strict';
-/* Cap Lycée — sciences de la nature : notions de physique et de chimie du cycle 3 qui se prêtent à l'entraînement
-   (électricité, forces et énergie, matière). Le manuel de sciences n'étant pas consultable sur le portail,
-   le choix des chapitres est le mien, d'après le plan d'études : à ajuster avec l'enseignant. */
+/* Cap Lycée — sciences de la nature, physique et chimie. Calé sur le plan d'études jurassien de 11e (reçu le 26 novembre 2026) :
+   séquence 7 (énergie) et séquence 8 (circuit électrique) d'après les livrets de la classe SQ7 et SQ8, fin de la séquence 6
+   (pression, poussée d'Archimède : pas dans le livret SQ6, écrite d'après le plan d'études). « Masse, poids et forces » et
+   « La matière » sont des rappels de 9e et 10e. La biologie (séquence 11) est dans sciences-cv.js. */
 (function () {
   const { banque, choix, rnd, N } = CL.o;
   const arr = (x) => Math.round(x * 1000) / 1000;
@@ -6583,6 +6637,102 @@ html.pres .balise::after{display:none}
     ["Quelle est l'unité d'énergie du Système international ?", ["Le joule (J)", "Le watt (W)", "Le newton (N)", "Le volt (V)"], "Le watt est l'unité de puissance : 1 W = 1 J par seconde."],
   ];
 
+  /* une boucle (série) ou deux boucles (dérivation) : les règles de répartition de la séquence 8 */
+  function elBoucles() {
+    const k = rnd(0, 3);
+    if (k === 0) {
+      const UG = choix([4.5, 6, 9, 12]),
+        U1 = arr(choix([0.3, 0.4, 0.5, 0.6, 0.7]) * UG),
+        U2 = arr(UG - U1);
+      return { type: 'num', enonce: `Deux lampes L1 et L2 sont montées sur une seule boucle. La tension aux bornes du générateur vaut ${N(UG)} V et celle aux bornes de L1 vaut ${N(U1)} V. Quelle est la tension aux bornes de L2 ?`, rep: U2, unite: 'V', sol: ['Sur une boucle, la tension du générateur se répartit entre les lampes : UG = U1 + U2.', `U2 = ${N(UG)} − ${N(U1)} = ${N(U2)} V`] };
+    }
+    if (k === 1) {
+      const IG = choix([0.2, 0.3, 0.4, 0.5, 0.8]);
+      return { type: 'num', enonce: `Deux lampes L1 et L2 sont montées sur une seule boucle. L'ampèremètre placé à la sortie du générateur indique ${N(IG)} A. Quelle est l'intensité du courant qui traverse L2 ?`, rep: IG, unite: 'A', sol: ['Sur une boucle, le courant est le même partout : IG = I1 = I2.', `I2 = ${N(IG)} A`] };
+    }
+    if (k === 2) {
+      const I1 = choix([0.2, 0.25, 0.3, 0.4]),
+        I2 = choix([0.1, 0.15, 0.2, 0.5]),
+        IG = arr(I1 + I2);
+      return { type: 'num', enonce: `Deux lampes L1 et L2 sont montées chacune sur sa propre boucle. Le générateur débite ${N(IG)} A et L1 est traversée par ${N(I1)} A. Quelle est l'intensité du courant qui traverse L2 ?`, rep: I2, unite: 'A', sol: ['Sur deux boucles, le courant du générateur se partage : IG = I1 + I2.', `I2 = ${N(IG)} − ${N(I1)} = ${N(I2)} A`] };
+    }
+    const UG = choix([4.5, 6, 9, 12]);
+    return { type: 'num', enonce: `Deux lampes L1 et L2 sont montées chacune sur sa propre boucle. La tension aux bornes du générateur vaut ${N(UG)} V. Quelle est la tension aux bornes de L2 ?`, rep: UG, unite: 'V', sol: ['Sur deux boucles, la tension est la même partout : UG = U1 = U2.', `U2 = ${N(UG)} V`] };
+  }
+
+  /* ================= Énergie : séquence 7 ================= */
+  const EN_TR = [
+    ["Une hélice se met à tourner sous l'effet du vent. Quel est le mode de transfert de l'énergie ?", ['Mécanique (TRméca)', 'Électrique (TRélec)', 'Thermique (TRtherm)', 'Par rayonnement (TRray)'], "Un mouvement dû aux forces d'un composant sur l'autre : transfert mécanique."],
+    ['Une pile fait fonctionner un moteur. Quel est le mode de transfert entre la pile et le moteur ?', ['Électrique (TRélec)', 'Mécanique (TRméca)', 'Thermique (TRtherm)', 'Par rayonnement (TRray)'], "On observe les effets d'un courant électrique : transfert électrique."],
+    ['Une cuillère plongée dans un thé chaud devient chaude. Quel est le mode de transfert ?', ['Thermique (TRtherm)', 'Électrique (TRélec)', 'Mécanique (TRméca)', 'Par rayonnement (TRray)'], 'La température monte par contact direct : transfert thermique.'],
+    ["Un écran d'ordinateur émet de la lumière. Quel est le mode de transfert vers ce qui l'entoure ?", ['Par rayonnement (TRray)', 'Thermique (TRtherm)', 'Électrique (TRélec)', 'Mécanique (TRméca)'], 'Une manifestation lumineuse : transfert par rayonnement.'],
+    ["Le manche d'une cuillère devient chaud quand elle trempe dans l'eau chaude. Comment la chaleur passe-t-elle ?", ['Par conduction', 'Par convection', 'Par rayonnement', 'Par un courant électrique'], "Conduction : l'agitation des molécules se propage de proche en proche."],
+    ["L'air chaud monte au-dessus d'un radiateur. Comment la chaleur se propage-t-elle dans la pièce ?", ['Par convection', 'Par conduction', 'Par rayonnement', 'Par un courant électrique'], 'Convection : un fluide se déplace entre une région chaude et une région froide.'],
+    ['Le Soleil chauffe la Terre à travers le vide de l\'espace. Comment ?', ['Par rayonnement', 'Par conduction', 'Par convection', 'Par un courant électrique'], "Le rayonnement n'a besoin d'aucune matière pour passer."],
+    ["Dans un diagramme de fonctionnement, quel verbe correspond à un transfert électrique ?", ['alimente', 'éclaire', 'chauffe', 'fait tourner'], 'Fait tourner, entraîne : TRméca. Chauffe : TRtherm. Éclaire : TRray.'],
+    ["Dans un diagramme d'énergie, comment interprète-t-on les « fuites » vers le milieu environnant ?", ['Ce sont des transferts inutiles', 'Ce sont des transferts utiles', "C'est de l'énergie détruite", 'Ce sont des réservoirs'], "Le plus souvent sous forme de chaleur. L'énergie n'est jamais perdue : elle part dans le milieu environnant."],
+    ["Un gaz qui brûle fournit de l'énergie à une centrale. Quel rôle joue-t-il dans le diagramme d'énergie ?", ['Un réservoir', 'Un relais', 'Un transfert', 'Un récepteur'], "Un réservoir stocke ou déstocke de l'énergie. Un relais, comme une turbine, cède au fur et à mesure toute l'énergie qu'il reçoit."],
+    ["Dans une centrale thermique, que fait la turbine pour l'alternateur ?", ["Elle l'entraîne (TRméca)", "Elle l'alimente (TRélec)", 'Elle le chauffe (TRtherm)', "Elle l'éclaire (TRray)"], 'Gaz qui brûle, eau et vapeur, turbine, alternateur, lampe.'],
+    ["Que dit le principe de conservation de l'énergie ?", ["L'énergie n'est ni créée ni détruite : elle est transférée ou change de forme", "L'énergie s'use avec le temps", "L'énergie est créée dans les centrales", "L'énergie disparaît sous forme de chaleur"], 'Énergie reçue = énergie utile + énergie inutile.'],
+  ];
+  const EN_FO = [
+    ["L'eau d'un barrage, en hauteur, contient de l'énergie sous quelle forme ?", ['Potentielle de gravitation (Epotg)', 'Cinétique (Ecin)', 'Chimique (Echim)', 'De déformation (Edéf)'], "Elle augmente avec l'altitude et avec la masse."],
+    ['Une roue qui tourne vite contient de l\'énergie sous quelle forme ?', ['Cinétique (Ecin)', 'Potentielle de gravitation (Epotg)', 'Thermique (Etherm)', 'Électrique (Eél)'], 'Elle augmente avec la vitesse et avec la masse.'],
+    ["Une pile contient de l'énergie sous quelle forme ?", ['Chimique (Echim)', 'Cinétique (Ecin)', 'Thermique (Etherm)', 'De déformation (Edéf)'], 'Elle se libère quand la pile se transforme chimiquement. Les combustibles aussi contiennent de l\'énergie chimique.'],
+    ["Un ressort tendu contient de l'énergie sous quelle forme ?", ['De déformation (Edéf)', 'Chimique (Echim)', 'Thermique (Etherm)', 'Électrique (Eél)'], "Plus il est déformé, plus il en contient."],
+    ["De l'eau chaude contient de l'énergie sous quelle forme ?", ['Thermique (Etherm)', 'Cinétique (Ecin)', 'Chimique (Echim)', 'Potentielle de gravitation (Epotg)'], "Plus elle est chaude et abondante, plus elle en contient."],
+    ['Laquelle de ces sources d\'énergie est renouvelable ?', ['Le vent', 'Le pétrole', 'Le gaz naturel', "L'uranium"], "Renouvelable : elle se renouvelle à l'échelle d'une vie humaine."],
+    ["Laquelle de ces sources d'énergie n'est pas renouvelable ?", ['Le combustible nucléaire', 'La biomasse', 'Le rayonnement solaire', "L'énergie hydraulique"], "L'uranium s'est formé avant la Terre : il ne se renouvelle pas."],
+    ["D'où vient l'énergie du vent ?", ['Du rayonnement solaire, qui met les masses d\'air en mouvement', 'De la rotation des éoliennes', 'De la chaleur du sous-sol', 'Des marées'], "Le Soleil est aussi à l'origine du cycle de l'eau, donc de l'énergie hydraulique."],
+    ['Qu\'est-ce que la biomasse ?', ['De la matière végétale ou animale qui sert de combustible', 'Une forme de pétrole', "Un gaz de l'atmosphère", 'Un minerai radioactif'], 'Bois, pellets, éthanol : elle se forme grâce à la photosynthèse.'],
+    ['Pourquoi les combustibles fossiles ne sont-ils pas renouvelables ?', ["Ils se forment en plusieurs millions d'années", 'Ils sont trop chers', 'Ils ne brûlent pas bien', "Ils viennent de l'espace"], "Pétrole, gaz, charbon : des restes d'organismes enfouis, transformés très lentement."],
+    ['Que fait un panneau photovoltaïque ?', ["Il produit de l'électricité avec le rayonnement solaire", "Il chauffe l'eau de la maison", 'Il stocke la chaleur du soleil', "Il produit du vent"], "C'est le capteur solaire thermique qui chauffe l'eau."],
+    ["D'où vient la chaleur exploitée par la géothermie ?", ["De la radioactivité d'éléments de la croûte terrestre", 'Directement du Soleil', 'Des volcans seulement', "De l'air chaud"], 'Uranium, thorium, potassium : ils chauffent la Terre pour des milliards d\'années.'],
+  ];
+  /* E = P · t, les unités (J, kWh) */
+  function enPuissance() {
+    const k = rnd(0, 2);
+    if (k === 0) {
+      const P = choix([20, 60, 100, 500, 1000, 2000]),
+        t = choix([10, 30, 60, 120, 300]);
+      return { type: 'num', enonce: `Un appareil de ${N(P)} W fonctionne pendant ${t} secondes. Quelle énergie reçoit-il, en joules ?`, rep: P * t, unite: 'J', sol: ['Énergie = puissance · durée (en secondes)', `${N(P)} · ${t} = ${N(P * t)} J`] };
+    }
+    if (k === 1) {
+      const n = choix([2, 3, 5, 10]);
+      return { type: 'num', enonce: `Combien de joules y a-t-il dans ${n} kWh ?`, rep: n * 3600000, unite: 'J', sol: ['1 kWh = 1000 W pendant 3600 s = 3 600 000 J', `${n} · 3 600 000 = ${N(n * 3600000)} J`] };
+    }
+    const P = choix([500, 800, 1000, 1200, 2000]),
+      t = choix([60, 120, 180, 300]);
+    return { type: 'num', enonce: `Une bouilloire reçoit ${N(P * t)} J en ${t} secondes. Quelle est sa puissance ?`, rep: P, unite: 'W', sol: ['Puissance = énergie : durée', `${N(P * t)} : ${t} = ${N(P)} W`] };
+  }
+
+  /* ================= Pression et poussée d'Archimède : fin de la séquence 6 ================= */
+  const PR = [
+    ["Quelle est l'unité de pression ?", ['Le pascal (Pa)', 'Le newton (N)', 'Le joule (J)', 'Le watt (W)'], '1 Pa = 1 N par m². On emploie aussi le bar : 1 bar = 100 000 Pa.'],
+    ['Comment calcule-t-on une pression entre solides ?', ['Force : surface', 'Force · surface', 'Surface : force', 'Masse · surface'], 'Avec la même force, plus la surface est petite, plus la pression est grande.'],
+    ["Pourquoi s'enfonce-t-on moins dans la neige avec des raquettes ?", ['Le poids est réparti sur une plus grande surface', 'On devient plus léger', 'La neige devient plus dure', 'Les raquettes diminuent le poids'], 'Même force, surface plus grande : pression plus petite.'],
+    ['Pourquoi un couteau aiguisé coupe-t-il mieux ?', ['Sa surface de contact est très petite : la pression est grande', 'Il est plus lourd', 'Il diminue la force', 'Il est plus froid'], 'Même force, surface plus petite : pression plus grande.'],
+    ['Comment varie la pression dans un liquide quand on descend ?', ['Elle augmente avec la profondeur', 'Elle diminue', 'Elle reste la même', "Elle s'annule"], "Dans l'eau, elle augmente d'environ 1 bar tous les 10 m."],
+    ['Pourquoi un barrage est-il plus épais en bas ?', ["La pression de l'eau est plus grande en profondeur", "L'eau est plus chaude en bas", 'Pour que les poissons passent', 'Le béton est moins cher en bas'], 'La pression augmente avec la profondeur.'],
+    ['Que vaut à peu près la pression atmosphérique au niveau de la mer ?', ['1 bar (environ 1013 hPa)', '10 bar', '0 bar', '100 bar'], "Elle diminue quand on monte en altitude : il y a moins d'air au-dessus de nous."],
+    ['Avec quel instrument mesure-t-on la pression atmosphérique ?', ['Un baromètre', 'Un thermomètre', 'Un dynamomètre', 'Un ampèremètre'], 'Un dynamomètre mesure une force.'],
+    ["Qu'est-ce que la poussée d'Archimède ?", ['Une force vers le haut exercée par un liquide sur un objet immergé', "Le poids de l'objet dans l'eau", "La pression de l'air", 'Une force vers le bas'], 'Elle agit aussi dans les gaz : une montgolfière en profite.'],
+    ["Que vaut la poussée d'Archimède ?", ["Le poids du liquide déplacé par l'objet", "Le poids de l'objet", "La masse de l'objet", 'La pression au fond du récipient'], "Un objet qui déplace 2 litres d'eau subit une poussée d'environ 20 N."],
+    ['Un objet a une masse volumique de 0,8 g/cm³. Que fait-il dans l\'eau ?', ['Il flotte', 'Il coule', 'Il reste au fond', 'Il se dissout'], "L'eau a une masse volumique de 1 g/cm³ : un objet moins dense qu'elle flotte."],
+    ['Pourquoi un bateau en acier flotte-t-il ?', ["Sa coque creuse déplace beaucoup d'eau : la poussée équilibre son poids", "L'acier est plus léger que l'eau", "L'eau de mer est plus dure", 'Le moteur le soulève'], "Un bloc d'acier plein, lui, coule."],
+  ];
+  function prCalcul() {
+    if (Math.random() < 0.55) {
+      const F = choix([400, 500, 600, 700, 800]),
+        S = choix([0.02, 0.04, 0.05, 0.1, 0.2]),
+        p = arr(F / S);
+      return { type: 'num', enonce: `Une personne de ${F} N se tient debout ; ses chaussures touchent le sol sur ${N(S)} m² en tout. Quelle pression exerce-t-elle sur le sol ?`, rep: p, unite: 'Pa', sol: ['Pression = force : surface', `${F} : ${N(S)} = ${N(p)} Pa`] };
+    }
+    const V = choix([0.5, 1, 2, 3, 5, 8]),
+      A = arr(V * 10);
+    return { type: 'num', enonce: `Un objet de ${N(V)} litre${V > 1 ? 's' : ''} est complètement plongé dans l'eau. Quelle est la poussée d'Archimède ? (1 litre d'eau pèse environ 10 N.)`, rep: A, unite: 'N', sol: ["La poussée est égale au poids de l'eau déplacée.", `${N(V)} · 10 = ${N(A)} N`] };
+  }
+
   /* ================= Matière ================= */
   const EL_NOM = { H: "d'hydrogène", O: "d'oxygène", C: 'de carbone', N: "d'azote" };
   const MOL = [
@@ -6625,51 +6775,121 @@ html.pres .balise::after{display:none}
     id: 'sciences',
     nom: 'Sciences',
     glyphe: 'O₂',
-    intro: "Physique et chimie : électricité, forces et énergie, matière. Le choix des chapitres sera ajusté avec ton enseignant de sciences.",
+    intro: "Calé sur le programme de 11e : le système cardiovasculaire (séquence 11), la pression et la poussée d'Archimède (fin de la séquence 6), l'énergie (séquence 7) et le circuit électrique (séquence 8), avec les fiches de ta classe. Masse, poids et forces, et la matière : des rappels de 9e et 10e.",
     parties: [
       {
         titre: 'Physique',
         chapitres: [
           {
-            id: 's-electricite',
-            titre: 'Électricité',
-            resume: 'Circuits en série et en dérivation, puissance, énergie consommée.',
-            lecon: [
-              { table: { tete: ['Grandeur', 'Unité', 'Se mesure avec'], lignes: [['Tension U', 'volt (V)', 'un voltmètre, en dérivation'], ['Intensité I', 'ampère (A)', 'un ampèremètre, en série'], ['Puissance P', 'watt (W)', ''], ['Énergie E', 'joule (J) ou kilowattheure (kWh)', 'un compteur']] } },
-              '# Série et dérivation',
-              "> En série, il n'y a qu'un seul chemin : l'intensité est la même partout et les tensions s'additionnent.",
-              "> En dérivation, chaque appareil a sa propre boucle : la tension est la même pour chaque branche et les intensités s'additionnent.",
-              '# Puissance et énergie',
-              '> Puissance = tension · intensité. Énergie = puissance · durée.',
-              '@ Un radiateur de 2000 W qui fonctionne 3 heures :',
-              '= 2000 W = 2 kW',
-              '= 2 kW · 3 h = 6 kWh',
-              "! Pour obtenir des kWh, la puissance doit être en kilowatts et la durée en heures.",
-            ],
-            savoirs: [
-              { id: 'el-notions', titre: 'Circuits et grandeurs', gen: banque(EL) },
-              { id: 'el-puissance', titre: 'Puissance, tension, intensité', gen: elPuissance },
-              { id: 'el-energie', titre: 'Énergie consommée et coût', gen: elEnergie },
-            ],
-          },
-          {
             id: 's-forces',
-            titre: 'Forces et énergie',
-            resume: 'Masse et poids, forces qui se compensent, transformations d\'énergie, rendement.',
+            titre: 'Masse, poids et forces',
+            resume: 'Rappels de 10e (séquence 6) : masse et poids, forces qui se compensent.',
             lecon: [
               '# Masse et poids',
               "> La masse est une quantité de matière, en kilogrammes : elle ne dépend pas du lieu. Le poids est la force avec laquelle un astre attire l'objet, en newtons : il dépend du lieu.",
               '> Poids = masse · intensité de la pesanteur. Sur Terre : environ 10 N par kilogramme (9,8 exactement).',
               '# Les forces',
               "Une force se représente par une flèche : direction, sens, intensité. Quand les forces se compensent, l'objet reste immobile ou garde la même vitesse.",
-              '# L\'énergie',
-              "> L'énergie ne se crée pas et ne disparaît pas : elle passe d'une forme à une autre (mouvement, position, chaleur, électricité, lumière, énergie chimique).",
-              '> Rendement = énergie utile : énergie reçue. Il est toujours inférieur à 100 %.',
+              "# L'énergie",
+              "> L'énergie ne se crée pas et ne disparaît pas : elle passe d'une forme à une autre (mouvement, position, chaleur, électricité, lumière, énergie chimique). Voir le chapitre « L'énergie ».",
             ],
             savoirs: [
               { id: 'fo-notions', titre: 'Forces et énergie : les notions', gen: banque(FO) },
               { id: 'fo-poids', titre: 'Calculer un poids ou une masse', gen: foPoids },
+            ],
+          },
+          {
+            id: 's-pression',
+            titre: "Pression et poussée d'Archimède",
+            resume: "Séquence 6, la partie de 11e : pression entre solides, dans les liquides, pression atmosphérique, poussée d'Archimède.",
+            lecon: [
+              "Cette partie de la séquence 6 n'est pas dans ton livret SQ6 (la vitesse et les forces y sont du programme de 10e). Cette leçon suit le plan d'études : complète-la avec les fiches de ton enseignant.",
+              '# La pression entre solides',
+              '> Pression = force : surface. Elle se mesure en pascals (Pa) : 1 Pa = 1 N par m².',
+              "Avec la même force, plus la surface est petite, plus la pression est grande : un couteau aiguisé coupe bien, et des raquettes empêchent de s'enfoncer dans la neige.",
+              '@ Une personne de 600 N debout, ses chaussures touchent le sol sur 0,04 m² :',
+              '= 600 : 0,04 = 15 000 Pa',
+              '# La pression dans un liquide',
+              '> Dans un liquide au repos, la pression augmente avec la profondeur. À une même profondeur, elle est la même dans toutes les directions.',
+              "Dans l'eau, elle augmente d'environ 1 bar tous les 10 m (1 bar = 100 000 Pa). C'est pourquoi un barrage est plus épais en bas.",
+              '# La pression atmosphérique',
+              "> L'air a un poids lui aussi : au niveau de la mer, il exerce une pression d'environ 1 bar (1013 hPa). Elle diminue quand on monte en altitude. On la mesure avec un baromètre.",
+              "# La poussée d'Archimède",
+              "> Un objet plongé dans un liquide subit une force verticale, vers le haut : la poussée d'Archimède. Elle est égale au poids du liquide déplacé.",
+              "= 1 litre d'eau pèse environ 10 N : un objet de 3 litres complètement plongé dans l'eau subit une poussée de 30 N.",
+              "> Un objet flotte quand sa masse volumique est plus petite que celle du liquide (eau : 1 g/cm³) : la poussée peut alors équilibrer son poids.",
+              "! Un bateau en acier flotte parce que sa coque creuse déplace beaucoup d'eau, pas parce que l'acier serait léger.",
+            ],
+            savoirs: [
+              { id: 'pr-notions', titre: "Pression et poussée d'Archimède : les notions", gen: banque(PR) },
+              { id: 'pr-calcul', titre: 'Calculer une pression ou une poussée', gen: prCalcul },
+            ],
+          },
+          {
+            id: 's-energie',
+            titre: "L'énergie",
+            resume: 'Séquence 7 : transferts, formes et sources d’énergie, puissance, rendement.',
+            lecon: [
+              "> L'énergie n'est ni créée ni détruite : elle passe d'un objet à un autre (transfert) ou change de forme. Elle peut être stockée et elle se mesure.",
+              '# Quatre modes de transfert',
+              { table: { tete: ['Transfert', "Ce qu'on observe"], lignes: [['TRméca', 'mécanique : un mouvement (une hélice qui tourne)'], ['TRélec', 'électrique : un courant (un moteur qui marche)'], ['TRtherm', 'thermique : une température qui monte (une cuillère dans le thé)'], ['TRray', 'par rayonnement : de la lumière (un écran allumé)']] } },
+              'Chauffer peut se faire par conduction (de proche en proche, dans un corps ou entre deux corps en contact), par convection (un fluide chaud se déplace) ou par rayonnement (sans contact, comme le Soleil).',
+              '# Modéliser un dispositif',
+              "> Dans un diagramme d'énergie, chaque composant est un cercle, relié au suivant par une flèche qui porte le nom du transfert. Les « fuites » vers le milieu environnant, surtout de la chaleur, sont des transferts inutiles.",
+              "Un réservoir stocke ou déstocke de l'énergie (un gaz qui brûle). Un relais cède au fur et à mesure toute l'énergie qu'il reçoit (une turbine, un alternateur).",
+              '= Centrale thermique : gaz qui brûle, eau et vapeur (TRtherm), turbine (TRméca), alternateur (TRméca), lampe (TRélec), lumière (TRray), et de la chaleur perdue à chaque étape.',
+              "# Les formes d'énergie stockée",
+              { table: { tete: ['Forme', 'Ce que c’est'], lignes: [['Epotg', "potentielle de gravitation : l'eau d'un barrage"], ['Ecin', 'cinétique : une roue qui tourne'], ['Echim', 'chimique : une pile, un combustible'], ['Etherm', "thermique : de l'eau chaude"], ['Edéf', 'de déformation : un ressort tendu'], ['Eél', 'électrique : un condensateur chargé']] } },
+              "# Les sources d'énergie",
+              "> Renouvelables, car elles se renouvellent à l'échelle d'une vie humaine : le rayonnement solaire, le vent, l'eau (énergie hydraulique), la biomasse, la géothermie. Non renouvelables : les combustibles fossiles (pétrole, gaz, charbon) et le combustible nucléaire (uranium).",
+              '# Puissance et unités',
+              "> La puissance est l'énergie transférée chaque seconde : P = E : t, en watts (1 W = 1 J par seconde). Donc E = P · t.",
+              '= 1 kWh = 3 600 000 J : un appareil de 1000 W pendant une heure.',
+              "= 1 calorie = 4,18 J : de quoi chauffer 1 g d'eau de 1 °C.",
+              "> Deux corps en contact finissent par avoir la même température : l'énergie thermique passe du plus chaud au plus froid.",
+              '# Le rendement',
+              '> Rendement = énergie utile : énergie reçue. Il est toujours plus petit que 100 %, à cause des fuites vers le milieu environnant.',
+              '= Une ancienne lampe à filament : environ 3 %. Le reste chauffe la pièce.',
+              "! L'énergie thermique est une énergie dégradée : plus sa température est basse, moins on peut en tirer de travail utile.",
+            ],
+            savoirs: [
+              { id: 'en7-transferts', titre: "Transferts d'énergie et diagrammes", gen: banque(EN_TR) },
+              { id: 'en7-formes', titre: "Formes et sources d'énergie", gen: banque(EN_FO) },
+              { id: 'en7-puissance', titre: 'Puissance, énergie, joules et kWh', gen: enPuissance },
               { id: 'en-rendement', titre: 'Calculer un rendement', gen: enRendement },
+            ],
+          },
+          {
+            id: 's-electricite',
+            titre: 'Le circuit électrique',
+            resume: 'Séquence 8 : circuits à une et deux boucles, courant, tension, puissance, sécurité.',
+            lecon: [
+              "> Un circuit relie un générateur (la pile) à des récepteurs (les lampes) par des fils. Pour qu'une lampe brille, une de ses bornes doit être reliée à la borne + et l'autre à la borne −, sans coupure.",
+              'Sur un schéma, chaque composant a son symbole, dessiné horizontalement ou verticalement, jamais de biais.',
+              '# Conducteurs et isolants',
+              'Tous les composants freinent le courant : c’est leur résistance, en ohms (Ω). Les conducteurs (métaux, carbone) le laissent passer ; les isolants (verre, plastique, nylon) le bloquent.',
+              '# Le courant',
+              "> Le courant est une circulation de particules électriques. Elles remplissent tout le circuit et circulent toutes dans le même sens, de la borne + vers la borne − à l'extérieur du générateur : soit il y a du courant partout, soit il n'y en a pas du tout.",
+              { table: { tete: ['Grandeur', 'Unité · appareil'], lignes: [['Intensité I', 'ampère (A) · ampèremètre, dans la boucle'], ['Tension U', 'volt (V) · voltmètre, aux bornes'], ['Puissance P', 'watt (W) · P = U · I'], ['Énergie E', 'joule (J) ou kWh · E = P · t']] } },
+              '# Une boucle ou deux boucles',
+              { table: { tete: ['Circuit', 'Les règles'], lignes: [['Une boucle', 'IG = I1 = I2 et UG = U1 + U2'], ['Deux boucles', 'IG = I1 + I2 et UG = U1 = U2']] } },
+              "Sur une boucle (en série), si on dévisse une lampe, l'autre s'éteint. Sur deux boucles (en dérivation), chaque lampe a son propre chemin : c'est le montage des maisons.",
+              "> L'analogie des wagonnets : le générateur est la station de pousseurs, les fils sont les rails, la lampe une zone de frottements. L'intensité, c'est le nombre de wagonnets qui passent chaque seconde ; la tension, le charbon que chaque wagonnet dépose.",
+              '# Puissance et énergie',
+              "> P = U · I. L'énergie cédée par le générateur est égale à la somme des énergies reçues par les récepteurs.",
+              '@ Un radiateur de 2000 W qui fonctionne 3 heures :',
+              '= 2000 W = 2 kW',
+              '= 2 kW · 3 h = 6 kWh',
+              '! Pour obtenir des kWh, la puissance doit être en kilowatts et la durée en heures.',
+              '# La sécurité',
+              "> Un court-circuit du générateur, c'est une boucle sans récepteur : le courant devient très grand et le circuit chauffe dangereusement. Le fusible ou le disjoncteur coupe alors le courant pour protéger l'installation.",
+              "Seul l'interrupteur à courant de défaut (FI) protège les personnes : il coupe dès qu'un peu de courant s'échappe du circuit. Le corps conduit le courant : on ne touche jamais un fil abîmé, et on n'utilise pas d'appareil électrique près de l'eau.",
+            ],
+            savoirs: [
+              { id: 'el-notions', titre: 'Circuits et grandeurs', gen: banque(EL) },
+              { id: 'el-boucles', titre: 'Une boucle ou deux boucles : I et U', gen: elBoucles },
+              { id: 'el-puissance', titre: 'Puissance, tension, intensité', gen: elPuissance },
+              { id: 'el-energie', titre: 'Énergie consommée et coût', gen: elEnergie },
             ],
           },
         ],
@@ -7516,7 +7736,7 @@ html.pres .balise::after{display:none}
   /* ================= le chapitre ================= */
   const sciences = CL.branches.find((b) => b.id === 'sciences');
   sciences.intro =
-    "D'abord la biologie de ta classe : le système cardiovasculaire, avec ses schémas à explorer. Puis physique et chimie : électricité, forces et énergie, matière.";
+    "Calé sur le programme de 11e et les fiches de ta classe : le système cardiovasculaire (séquence 11), avec ses schémas à explorer ; la pression et la poussée d'Archimède (fin de la séquence 6) ; l'énergie (séquence 7) ; le circuit électrique (séquence 8). Masse, poids et forces, et la matière : des rappels de 9e et 10e.";
   sciences.parties.unshift({
     titre: 'Biologie',
     chapitres: [
@@ -9020,6 +9240,38 @@ html.pres .balise::after{display:none}
       ],
       'Les fiches de travail sont dans ton classeur : fais-les sur papier, puis ouvre « Corrigé » pour te corriger.',
     ],
+    /* ================= Sciences : séquences 7 (énergie) et 8 (circuit électrique), livrets de la classe SQ7 et SQ8 =================
+       Fiches de travail du livret (avec leur corrigé) et fiches de synthèse. Leurs PDF ne sont que sur la page GitHub. */
+    's-energie': [
+      'Séquence 7 : fiches de travail S7-3 à S7-20, fiches de synthèse S7-21 à S7-39.',
+      [
+        ['Fiches de synthèse S7-21–23', "L'énergie et sa conservation, les modes de transfert, modéliser un dispositif"],
+        ['Fiches de synthèse S7-24–26', 'La centrale thermique, réservoirs et relais'],
+        ['Fiches de synthèse S7-27–33', "Les sources d'énergie : soleil, nucléaire, vent, fossiles, biomasse, eau, géothermie"],
+        ['Fiches de synthèse S7-34–37', "Les formes d'énergie, la puissance et les unités, les transferts thermiques"],
+        ['Fiches de synthèse S7-38–39', "Qualité de l'énergie, rendement, prix et environnement"],
+        ['Fiches de travail S7-3–6', "Activité 1 : transferts et transformations de l'énergie, avec ses exercices"],
+        ['Fiches de travail S7-7–12', "Activité 2 : le rayonnement thermique et l'effet de serre, avec ses exercices"],
+        ['Fiches de travail S7-13–16', "Activité 3 : les sources d'énergie, avec ses exercices"],
+        ['Fiches de travail S7-17–20', "Activité 4 : conservation de l'énergie et rendement, avec ses exercices"],
+      ],
+      'Le corrigé de chaque fiche de travail est sous « Corrigé ».',
+    ],
+    's-electricite': [
+      'Séquence 8 : fiches de travail S8-3 à S8-24, fiches de synthèse S8-25 à S8-45.',
+      [
+        ['Fiches de synthèse S8-25–28', 'La lampe de poche, les schémas, les composants et leurs symboles'],
+        ['Fiches de synthèse S8-29–30', 'Conducteurs, isolants et résistance ; un peu d’histoire'],
+        ['Fiches de synthèse S8-31–35', 'Le courant et son intensité, le fusible, le court-circuit'],
+        ['Fiches de synthèse S8-36–38', 'La tension et sa répartition'],
+        ['Fiches de synthèse S8-39–43', "Puissance, énergie, conservation ; l'analogie des wagonnets"],
+        ['Fiches de synthèse S8-44–45', "Les dangers de l'électricité"],
+        ['Fiches de travail S8-3–8', 'Activité 1 : le circuit électrique, avec ses exercices'],
+        ['Fiches de travail S8-9–20', 'Activité 2 : courant, tension, puissance et énergie, avec ses exercices'],
+        ['Fiches de travail S8-21–24', "Activité 3 : les dangers de l'électricité, avec ses exercices"],
+      ],
+      'Le corrigé de chaque fiche de travail est sous « Corrigé ».',
+    ],
     /* ================= Allemand : geni@l klick, Deutsch für die Romandie, 10./11. Klasse, Band 2 ================= */
     'd-verbes': ['Arbeitsbuch p. 86–87 : la liste des verbes irréguliers.', [['Arbeitsbuch p. 86–87', 'Unregelmässige Verben : la liste du livre']], ''],
     'd-satzbau': ['Kursbuch, Grammatiküberblick : les phrases.', [['Kursbuch p. 83–84', 'Grammatiküberblick : subordonnées, deshalb, entweder … oder, zu + infinitif']], ''],
@@ -9121,7 +9373,7 @@ html.pres .balise::after{display:none}
       'en-u1-present', 'en-comp', 'en-u2-past', 'en-u3-cond', 'en-u4-modals', 'en-u4-future',
       'en-u5-pastcont', 'en-passive', 'en-pastperf', 'en-u7-tags', 'en-cond', 'en-u8-forsince',
     ],
-    sciences: ['sc-cv-coeur', 'sc-cv-circulation', 'sc-cv-sang', 'el-notions', 'el-puissance', 'el-energie', 'fo-notions', 'fo-poids', 'en-rendement', 'ma-notions', 'ma-atomes'],
+    sciences: ['sc-cv-coeur', 'sc-cv-circulation', 'sc-cv-sang', 'pr-notions', 'en7-transferts', 'en7-formes', 'el-notions', 'el-boucles', 'el-puissance', 'el-energie', 'fo-notions', 'fo-poids', 'en-rendement', 'ma-notions', 'ma-atomes'],
     geographie: [
       'gi-suisse', 'g1-ressource', 'ga-souterraines', 'g1-usages', 'gb-virtuelle', 'g1-cours', 'g2-mers', 'g2-gestion', 'ge-potable', 'gf-fm',
       'g3-sources', 'g3-choix', 'g4-reseaux', 'g4-enjeux', 'gk-cartes', 'g-echelle', 'g-lexique',
@@ -9144,6 +9396,1111 @@ html.pres .balise::after{display:none}
     if (n && !b.point) b.point = { titre: 'Faire le point ' + (EN[b.id] || 'en ' + b.nom.toLowerCase()), texte: TEXTE };
   }
   CL.pointCles = CLES; /* pour les essais */
+})();
+</script>
+<script>/* cartes-maths.js */
+'use strict';
+/* Cap Lycée — cartes de maths : [recto, verso, note]. Maths entre $…$ (même écriture que les leçons : {a/b}, ^, sqrt( ), * pour ·). */
+(function () {
+  CL.CARTES = CL.CARTES || {};
+  const C = (chap, l) => (CL.CARTES[chap] = (CL.CARTES[chap] || []).concat(l));
+
+  C('m-relatifs', [
+    ['Soustraire un nombre négatif : $a - (-b)$ = ?', '$a + b$', 'Soustraire, c’est ajouter l’opposé.'],
+    ['Additionner deux nombres de même signe ?', 'On additionne les distances à zéro et on garde le signe.', '$-4 + (-3) = -7$'],
+    ['Additionner deux nombres de signes contraires ?', 'On soustrait les distances à zéro et on garde le signe du plus éloigné de zéro.', '$-7 + 3 = -4$'],
+    ['Signe d’un produit ou d’un quotient de deux nombres de même signe ?', 'Positif.', '$(-4) * (-6) = 24$'],
+    ['Signe d’un produit ou d’un quotient de deux nombres de signes contraires ?', 'Négatif.', '$(-36) : 9 = -4$'],
+    ['L’ordre des priorités ?', 'Parenthèses, puissances, multiplications et divisions, puis additions et soustractions, de gauche à droite.'],
+    ['$3 + 4 * (-2)$ = ?', '$-5$', 'La multiplication d’abord : $3 + (-8)$.'],
+    ['$-7 + 3 - (-5)$ = ?', '$1$', '$-7 + 3 + 5$'],
+    ['$(-2)^3$ = ?', '$-8$', 'Trois facteurs négatifs : le produit est négatif.'],
+  ]);
+  C('m-fractions', [
+    ['Simplifier une fraction ?', 'Diviser le numérateur et le dénominateur par un même nombre.', '${18/24} = {3/4}$ (on divise par 6).'],
+    ['Quand une fraction est-elle irréductible ?', 'Quand le seul diviseur commun du numérateur et du dénominateur est 1.'],
+    ['Additionner deux fractions ?', 'Les mettre au même dénominateur, puis additionner les numérateurs.', '${2/3} + {1/4} = {8/12} + {3/12} = {11/12}$'],
+    ['${1/2} + {1/3}$ = ?', '${5/6}$', 'Jamais ${2/5}$ : on n’additionne pas les dénominateurs.'],
+    ['Multiplier deux fractions ?', '${a/b} * {c/d} = {a * c/b * d}$'],
+    ['Diviser par une fraction ?', 'Multiplier par son inverse : ${a/b} : {c/d} = {a/b} * {d/c}$'],
+    ['${3/4} : {5/2}$ = ?', '${3/10}$', '${3/4} * {2/5} = {6/20}$'],
+    ['L’inverse de ${2/7}$ ?', '${7/2}$'],
+    ['${2/3}$ de 30 = ?', '20', '$30 : 3 * 2$'],
+  ]);
+  C('m-puissances', [
+    ['$a^n$, c’est quoi ?', 'Le produit de $n$ facteurs égaux à $a$.', '$2^5 = 2 * 2 * 2 * 2 * 2 = 32$'],
+    ['$a^0$ = ? et $a^1$ = ?', '$a^0 = 1$ et $a^1 = a$'],
+    ['$a^m * a^n$ = ?', '$a^{m + n}$', '$3^4 * 3^5 = 3^9$'],
+    ['$a^m : a^n$ = ?', '$a^{m - n}$'],
+    ['$(a^m)^n$ = ?', '$a^{m * n}$', '$(2^3)^4 = 2^{12}$'],
+    ['$a^n * b^n$ = ?', '$(a * b)^n$'],
+    ['$a^{-n}$ = ?', '${1/a^n}$', '$2^{-3} = {1/8}$'],
+    ['$10^{-2}$ = ?', '$0,01$'],
+    ['$(-3)^2$ et $-3^2$ ?', '$(-3)^2 = 9$ mais $-3^2 = -9$', 'Sans parenthèses, la puissance ne porte que sur 3.'],
+  ]);
+  C('m-notation', [
+    ['La notation scientifique ?', '$a * 10^n$, avec $a$ entre 1 et 10 (10 exclu) et $n$ entier.'],
+    ['$45 000$ en notation scientifique ?', '$4,5 * 10^4$'],
+    ['$0,00032$ en notation scientifique ?', '$3,2 * 10^{-4}$', 'Un nombre plus petit que 1 a un exposant négatif.'],
+    ['$24 * 10^8$ est-il en notation scientifique ?', 'Non : 24 dépasse 10. On écrit $2,4 * 10^9$.'],
+    ['$(3 * 10^4) * (2 * 10^3)$ = ?', '$6 * 10^7$', 'Les nombres entre eux, les puissances de 10 entre elles.'],
+    ['$7 * 10^{-3}$ en écriture décimale ?', '$0,007$'],
+    ['$1,2 * 10^5$ en écriture décimale ?', '$120 000$'],
+  ]);
+  C('m-racines', [
+    ['$sqrt(a)$, c’est quoi ?', 'Le nombre positif dont le carré vaut $a$.', '$sqrt(49) = 7$ car $7^2 = 49$.'],
+    ['$11^2$, $12^2$, $13^2$ ?', '121, 144, 169'],
+    ['$14^2$ et $15^2$ ?', '196 et 225'],
+    ['Encadrer $sqrt(50)$ entre deux entiers ?', '$7 < sqrt(50) < 8$', 'Car $49 < 50 < 64$.'],
+    ['$sqrt(a * b)$ = ?', '$sqrt(a) * sqrt(b)$'],
+    ['Simplifier $sqrt(72)$ ?', '$6sqrt(2)$', '$sqrt(36 * 2)$ : on cherche le plus grand carré qui divise 72.'],
+    ['$sqrt(9 + 16)$ = ?', '$5$', 'Pas $3 + 4$ : la racine d’une somme n’est pas la somme des racines.'],
+    ['$sqrt(144)$ = ?', '$12$'],
+  ]);
+  C('m-proportion', [
+    ['Deux grandeurs proportionnelles ?', 'On passe de l’une à l’autre en multipliant toujours par le même nombre.'],
+    ['4 personnes : 300 g. Et pour 6 personnes ?', '450 g', '$300 : 4 = 75$ g par personne, puis $6 * 75$.'],
+    ['Prendre $p$ % d’un nombre ?', 'Le multiplier par ${p/100}$.', '15 % de 240 : $0,15 * 240 = 36$'],
+    ['Augmenter de 20 % ?', 'Multiplier par 1,2.'],
+    ['Baisser de 20 % ?', 'Multiplier par 0,8.'],
+    ['Retrouver le prix avant une baisse de 20 % ?', 'Diviser par 0,8.', 'Ajouter 20 % ne redonne pas le prix de départ.'],
+    ['Échelle 1:25 000 : que vaut 1 cm sur la carte ?', '25 000 cm, soit 250 m.'],
+    ['25 % d’un nombre, c’est quelle fraction ?', 'Le quart.'],
+  ]);
+  C('m-litteral', [
+    ['Réduire une expression ?', 'Regrouper les termes de même nature : les $x^2$, les $x$, les nombres.', '$3x + 5 - 7x + 2 = -4x + 7$'],
+    ['$a(b + c)$ = ?', '$ab + ac$'],
+    ['$-3(2x - 5)$ = ?', '$-6x + 15$'],
+    ['$(a + b)(c + d)$ = ?', '$ac + ad + bc + bd$'],
+    ['$(x + 3)(2x - 1)$ = ?', '$2x^2 + 5x - 3$'],
+    ['$-(x - 4)$ = ?', '$-x + 4$', 'Le moins devant la parenthèse change tous les signes.'],
+    ['$3x^2 - x$ pour $x = -2$ ?', '$14$', 'Le nombre négatif entre parenthèses : $3 * (-2)^2 - (-2) = 12 + 2$.'],
+    ['$x * x$ = ? et $x + x$ = ?', '$x^2$ et $2x$'],
+  ]);
+  C('m-equations', [
+    ['Résoudre une équation ?', 'Trouver la valeur de $x$ qui rend l’égalité vraie.'],
+    ['Ce qu’on a le droit de faire des deux côtés ?', 'Ajouter, soustraire, multiplier ou diviser par un même nombre (non nul).'],
+    ['$5x - 3 = 2x + 9$', '$x = 4$', '$3x = 12$'],
+    ['$x + 7 = 2$', '$x = -5$', 'Le terme qui change de côté change de signe.'],
+    ['Équation avec des fractions : premier geste ?', 'Multiplier les deux côtés par un dénominateur commun.', '${x/2} + {x/3} = 5$ devient $3x + 2x = 30$.'],
+    ['${x/2} + {x/3} = 5$', '$x = 6$'],
+    ['Mettre un problème en équation : les étapes ?', 'Choisir l’inconnue, traduire l’énoncé par une égalité, résoudre, répondre par une phrase.'],
+    ['Comment vérifier une solution ?', 'La remplacer dans l’équation de départ : les deux côtés doivent être égaux.'],
+  ]);
+  C('m-pythagore', [
+    ['Le théorème de Pythagore (ABC rectangle en A) ?', '$BC^2 = AB^2 + AC^2$'],
+    ['L’hypoténuse, c’est quel côté ?', 'Le côté opposé à l’angle droit. C’est toujours le plus long.'],
+    ['AB = 6 cm, AC = 8 cm, rectangle en A : BC = ?', '10 cm', '$BC^2 = 36 + 64 = 100$'],
+    ['Calculer un côté de l’angle droit ?', 'On soustrait : $AC^2 = BC^2 - AB^2$'],
+    ['La réciproque de Pythagore ?', 'Si le carré du plus long côté est égal à la somme des carrés des deux autres, le triangle est rectangle.'],
+    ['Côtés 3, 4 et 5 : triangle rectangle ?', 'Oui : $3^2 + 4^2 = 25 = 5^2$.'],
+    ['Hypoténuse 13, un côté 5 : l’autre côté ?', '12', '$169 - 25 = 144$'],
+    ['Diagonale d’un carré de côté 1 ?', '$sqrt(2)$', '$1^2 + 1^2 = 2$'],
+  ]);
+  C('m-identites', [
+    ['$(a + b)^2$ = ?', '$a^2 + 2ab + b^2$'],
+    ['$(a - b)^2$ = ?', '$a^2 - 2ab + b^2$'],
+    ['$(a + b)(a - b)$ = ?', '$a^2 - b^2$'],
+    ['$(x + 3)^2$ = ?', '$x^2 + 6x + 9$', 'N’oublie pas le double produit $6x$.'],
+    ['$(2x - 3)^2$ = ?', '$4x^2 - 12x + 9$'],
+    ['$(x + 5)(x - 5)$ = ?', '$x^2 - 25$'],
+    ['$31^2$ de tête ?', '961', '$(30 + 1)^2 = 900 + 60 + 1$'],
+    ['$49 * 51$ de tête ?', '2499', '$(50 - 1)(50 + 1) = 2500 - 1$'],
+  ]);
+  C('m-factorisation', [
+    ['Factoriser, c’est quoi ?', 'Écrire une somme sous forme de produit : le chemin inverse du développement.'],
+    ['$6x^2 + 9x$ factorisé ?', '$3x(2x + 3)$', 'Mise en évidence du plus grand facteur commun.'],
+    ['$x^2 + 6x + 9$ factorisé ?', '$(x + 3)^2$'],
+    ['$4x^2 - 25$ factorisé ?', '$(2x + 5)(2x - 5)$', 'Différence de deux carrés.'],
+    ['$x^2 + sx + p$ : que cherche-t-on ?', 'Deux nombres dont la somme vaut $s$ et le produit vaut $p$.'],
+    ['$x^2 + 5x + 6$ factorisé ?', '$(x + 2)(x + 3)$', '$2 + 3 = 5$ et $2 * 3 = 6$'],
+    ['$x^2 - 9$ factorisé ?', '$(x + 3)(x - 3)$'],
+    ['Comment vérifier une factorisation ?', 'Redévelopper : on doit retrouver l’expression de départ.'],
+  ]);
+  C('m-equations2', [
+    ['La règle du produit nul ?', 'Un produit est nul si et seulement si l’un de ses facteurs est nul.'],
+    ['$(x - 3)(2x + 1) = 0$', '$x = 3$ ou $x = -{1/2}$'],
+    ['$x^2 = 49$', '$x = 7$ ou $x = -7$'],
+    ['$x^2 = -4$', 'Aucune solution.', 'Un carré n’est jamais négatif.'],
+    ['Résoudre une équation du second degré par factorisation ?', 'Tout ramener du même côté (= 0), factoriser, puis appliquer le produit nul.'],
+    ['$x^2 + 5x + 6 = 0$', '$x = -2$ ou $x = -3$'],
+    ['$x^2 = 4x$', '$x = 0$ ou $x = 4$', 'On ne divise jamais par $x$ : $x(x - 4) = 0$.'],
+  ]);
+  C('m-systemes', [
+    ['Résoudre un système ?', 'Trouver le couple $(x ; y)$ qui vérifie les deux équations en même temps.'],
+    ['La méthode par substitution ?', 'Isoler une inconnue dans une équation et la remplacer dans l’autre.'],
+    ['La méthode par combinaison ?', 'Multiplier les équations pour qu’une inconnue disparaisse en les additionnant ou en les soustrayant.'],
+    ['$y = 2x + 1$ et $3x + y = 11$', '$x = 2$ et $y = 5$'],
+    ['$2x + 3y = 12$ et $2x - y = 4$', '$x = 3$ et $y = 2$', 'On soustrait : $4y = 8$.'],
+    ['Comment vérifier ?', 'Remplacer le couple dans les deux équations, pas seulement dans une.'],
+    ['Graphiquement, la solution d’un système ?', 'Le point où les deux droites se coupent.'],
+  ]);
+  C('m-fonctions', [
+    ['Une fonction affine s’écrit ?', '$f(x) = mx + p$'],
+    ['Dans $f(x) = mx + p$, que sont $m$ et $p$ ?', '$m$ : la pente. $p$ : l’ordonnée à l’origine.'],
+    ['Une fonction linéaire ?', 'Une fonction affine avec $p = 0$ : sa droite passe par l’origine.', 'Elle traduit une situation de proportionnalité.'],
+    ['$f(x) = 2x - 3$ : image de 4 ?', '$5$', '$2 * 4 - 3$'],
+    ['$f(x) = 2x - 3$ : antécédent de 7 ?', '$5$', '$2x - 3 = 7$'],
+    ['La pente entre deux points ?', 'Différence des $y$ divisée par la différence des $x$.', 'De $(1 ; 2)$ à $(3 ; 8)$ : ${6/2} = 3$'],
+    ['Le zéro d’une fonction ?', 'La valeur de $x$ pour laquelle $f(x) = 0$ : là où la droite coupe l’axe des $x$.'],
+    ['Où lit-on l’ordonnée à l’origine ?', 'Sur l’axe vertical, là où $x = 0$.'],
+    ['Pente positive, négative ou égale à zéro ?', 'La droite monte, descend, ou reste horizontale.'],
+  ]);
+  C('m-thales', [
+    ['Le théorème de Thalès (D sur [AB], E sur [AC], (DE) ∥ (BC)) ?', '${AD/AB} = {AE/AC} = {DE/BC}$'],
+    ['AD = 4, AB = 10, AE = 6 : AC = ?', '15', '$AC = {6 * 10/4}$'],
+    ['Longueurs multipliées par $k$ : les aires ?', 'Multipliées par $k^2$.'],
+    ['Longueurs multipliées par $k$ : les volumes ?', 'Multipliés par $k^3$.'],
+    ['Dans les rapports de Thalès, quels côtés compare-t-on ?', 'Ceux du petit triangle (AD, AE, DE) à ceux du grand (AB, AC, BC).', 'DB et EC ne sont pas des côtés du petit triangle.'],
+    ['Deux triangles semblables ?', 'Mêmes angles, et des côtés proportionnels.'],
+    ['Maquette à l’échelle 1:10 : le volume réel ?', '1000 fois plus grand.', '$10^3$'],
+  ]);
+  C('m-proba', [
+    ['Probabilité (cas équiprobables) ?', 'Nombre de cas favorables : nombre de cas possibles.'],
+    ['Entre quelles valeurs est une probabilité ?', 'Entre 0 (impossible) et 1 (certain).'],
+    ['3 billes rouges, 5 bleues : P(rouge) ?', '${3/8}$'],
+    ['L’événement contraire ?', '$1 -$ la probabilité de l’événement.', '$1 - {3/8} = {5/8}$'],
+    ['Deux tirages de suite ?', 'On multiplie les probabilités de chaque étape.'],
+    ['3 rouges sur 8 : deux rouges de suite, avec remise ?', '${9/64}$', '${3/8} * {3/8}$'],
+    ['3 rouges sur 8 : deux rouges de suite, sans remise ?', '${3/28}$', '${3/8} * {2/7}$'],
+    ['La fréquence ?', 'Nombre de fois où le résultat sort : nombre d’essais.', 'Plus on répète, plus elle s’approche de la probabilité.'],
+    ['Probabilité de faire 6 avec un dé ?', '${1/6}$'],
+  ]);
+  C('m-diagrammes', [
+    ['Diagramme circulaire : 1 % = combien de degrés ?', '3,6°', 'Le disque entier, 360°, vaut 100 %.'],
+    ['25 % : quel angle ?', '90°', '$25 * 3,6$'],
+    ['Un effectif $k$ sur $n$ : quel angle ?', '$(k : n) * 360°$'],
+    ['Un angle de 72° : quel pourcentage ?', '20 %', '$72 : 3,6$'],
+    ['La moyenne ?', 'Somme des valeurs : nombre de valeurs.'],
+    ['Barres ou circulaire ?', 'Barres : comparer des catégories. Circulaire : montrer les parts d’un tout.'],
+    ['Notes 4, 5 et 4,5 : quelle note pour 5 de moyenne sur 4 notes ?', '6,5', '$5 * 4 = 20$, puis $20 - 13,5$.'],
+  ]);
+  C('m-angles', [
+    ['Deux angles opposés par le sommet ?', 'Ils sont égaux.'],
+    ['Deux angles côte à côte sur une même droite ?', 'Ensemble, ils valent 180°.'],
+    ['Parallèles coupées par une sécante : angles correspondants ?', 'Égaux.'],
+    ['Parallèles coupées par une sécante : angles alternes-internes ?', 'Égaux.'],
+    ['Somme des angles d’un triangle ?', '180°'],
+    ['Triangle isocèle : ses angles ?', 'Les deux angles à la base sont égaux.'],
+    ['Le cercle de Thalès ?', 'Si C est sur le cercle de diamètre [AB], le triangle ABC est rectangle en C.'],
+    ['La tangente à un cercle ?', 'Perpendiculaire au rayon qui aboutit au point de contact.'],
+    ['Angle inscrit et angle au centre (même arc) ?', 'L’angle inscrit mesure la moitié de l’angle au centre.'],
+    ['Angle au centre de 100° : l’angle inscrit sur le même arc ?', '50°'],
+  ]);
+  C('m-transfo', [
+    ['Une isométrie ?', 'Une transformation qui conserve les longueurs, les angles et les aires.', 'Symétries, translations, rotations.'],
+    ['Image de $(x ; y)$ par la symétrie d’axe horizontal ?', '$(x ; -y)$'],
+    ['Image de $(x ; y)$ par la symétrie d’axe vertical ?', '$(-x ; y)$'],
+    ['Image de $(x ; y)$ par la symétrie centrale de centre O ?', '$(-x ; -y)$'],
+    ['Image de $(x ; y)$ par une translation de $a$ en $x$ et $b$ en $y$ ?', '$(x + a ; y + b)$'],
+    ['Une homothétie de rapport $k$ ?', 'Elle agrandit ($k$ > 1) ou réduit ($k$ entre 0 et 1) : $OA’ = k * OA$.'],
+    ['Homothétie de rapport $k$ : longueurs, aires, volumes ?', 'Multipliés par $k$, $k^2$, $k^3$.', 'Les angles ne changent pas.'],
+    ['Homothétie de rapport −1 ?', 'C’est la symétrie centrale.'],
+  ]);
+  C('m-aires', [
+    ['Aire du parallélogramme ?', 'base · hauteur'],
+    ['Aire du trapèze ?', '$(B + b) * h : 2$'],
+    ['Aire du losange ?', '$D * d : 2$', 'Les deux diagonales.'],
+    ['Aire du disque ?', '$π * r^2$'],
+    ['Périmètre du cercle ?', '$2 * π * r$'],
+    ['Aire d’un secteur d’angle α ?', '$(α : 360) * π * r^2$'],
+    ['Longueur d’un arc d’angle α ?', '$(α : 360) * 2 * π * r$'],
+    ['Arc de rayon 6 cm et d’angle 60° ?', '$2π$ cm', '${1/6}$ de $12π$'],
+    ['La hauteur d’un trapèze ?', 'Perpendiculaire à la base, pas le côté oblique.'],
+  ]);
+  C('m-solides', [
+    ['Volume d’un prisme droit ou d’un cylindre ?', 'aire de la base · hauteur'],
+    ['Volume d’une pyramide ou d’un cône ?', 'aire de la base · hauteur : 3'],
+    ['Volume d’une boule ?', '${4/3} * π * r^3$'],
+    ['Aire de la base d’un cylindre ?', '$π * r^2$'],
+    ['Cylindre de rayon 3 cm, hauteur 5 cm : volume ?', '$45π$ cm³', 'environ 141 cm³'],
+    ['Un cône par rapport au cylindre de même base et même hauteur ?', 'Il en occupe le tiers.'],
+    ['L’énoncé donne le diamètre : premier geste ?', 'Le diviser par 2 pour avoir le rayon.'],
+    ['Coordonnées dans l’espace : dans quel ordre ?', '$(x ; y ; z)$', 'Voir la fiche « le repère de l’espace ».'],
+    ['Le milieu d’un segment dans l’espace ?', 'La moyenne de chaque coordonnée des deux bouts.'],
+  ]);
+  C('m-grandeurs', [
+    ['Vitesse = ?', 'distance : durée'],
+    ['Distance = ?', 'vitesse · durée'],
+    ['Durée = ?', 'distance : vitesse'],
+    ['Masse volumique = ?', 'masse : volume', 'en g/cm³ ou kg/m³'],
+    ['Débit = ?', 'volume : durée', 'en litres par minute ou m³/s'],
+    ['1 h 30 min en heures ?', '1,5 h', 'Pas 1,3 h : on divise les minutes par 60.'],
+    ['Des m/s aux km/h ?', 'Multiplier par 3,6.', '10 m/s = 36 km/h'],
+    ['Des km/h aux m/s ?', 'Diviser par 3,6.', '72 km/h = 20 m/s'],
+    ['45 min en heures ?', '0,75 h'],
+  ]);
+})();
+</script>
+<script>/* cartes-francais.js */
+'use strict';
+/* Cap Lycée — cartes de français : [recto, verso, note]. */
+(function () {
+  CL.CARTES = CL.CARTES || {};
+  const C = (chap, l) => (CL.CARTES[chap] = (CL.CARTES[chap] || []).concat(l));
+
+  C('f-classes', [
+    ['La classe d’un mot ?', 'Sa nature : nom, verbe, adjectif… Elle ne change pas d’une phrase à l’autre.'],
+    ['Les mots variables ?', 'nom, déterminant, adjectif, pronom, verbe'],
+    ['Les mots invariables ?', 'adverbe, préposition, conjonction, interjection'],
+    ['Déterminant ou pronom ?', 'Le déterminant accompagne un nom (leurs parents). Le pronom remplace un nom (je leur parle).'],
+    ['le mien, la tienne, les leurs : quels pronoms ?', 'possessifs'],
+    ['celui, celle, ceci, cela : quels pronoms ?', 'démonstratifs'],
+    ['qui, que, dont, où, lequel (qui reprennent un nom) ?', 'pronoms relatifs'],
+    ['quelqu’un, personne, rien, chacun : quels pronoms ?', 'indéfinis'],
+    ['« Que » : pronom relatif ou conjonction ?', 'Relatif s’il reprend un nom (le livre que je lis), conjonction sinon (je sais que tu viens).'],
+    ['mais, car, que, quand : quelle classe ?', 'conjonctions'],
+  ]);
+  C('f-fonctions', [
+    ['Trouver le sujet ?', 'L’encadrer par « c’est … qui ». Il commande l’accord du verbe.'],
+    ['Le complément du verbe direct (CVD) ?', 'Il complète le verbe sans préposition ; on ne peut ni le déplacer ni le supprimer.'],
+    ['Le complément du verbe indirect (CVI) ?', 'Comme le CVD, mais introduit par une préposition (à, de…).'],
+    ['Le complément de phrase ?', 'On peut le déplacer et le supprimer.'],
+    ['L’attribut du sujet ?', 'Il suit un verbe attributif (être, paraître, devenir, sembler…) et qualifie le sujet.'],
+    ['« Hier, mon frère a prêté son vélo à Léa. » Fonction de « à Léa » ?', 'CVI', 'Hier : complément de phrase. Mon frère : sujet. Son vélo : CVD.'],
+    ['« Hier, mon frère a prêté son vélo à Léa. » Fonction de « hier » ?', 'complément de phrase'],
+  ]);
+  C('f-complements', [
+    ['Ce que peut ajouter un complément de phrase ?', 'Une nuance de sens : temps, cause, conséquence, but, condition, opposition.'],
+    ['parce que, comme, puisque, grâce à : quel sens ?', 'la cause'],
+    ['si bien que, tellement … que : quel sens ?', 'la conséquence'],
+    ['pour que, afin que, pour, afin de : quel sens ?', 'le but', 'Pour que et afin que demandent le subjonctif.'],
+    ['bien que, même si, malgré : quel sens ?', 'l’opposition (la concession)', 'Bien que + subjonctif.'],
+    ['si, à condition que, en cas de : quel sens ?', 'la condition'],
+    ['quand, lorsque, dès que, pendant : quel sens ?', 'le temps', 'Avant que + subjonctif.'],
+    ['Cause ou but ?', 'La cause vient avant, le but est un résultat qu’on cherche à atteindre.'],
+  ]);
+  C('f-subordonnees', [
+    ['Une phrase complexe ?', 'Une phrase avec plusieurs verbes conjugués.'],
+    ['Des phrases juxtaposées ?', 'Reliées par une virgule, un point-virgule ou deux-points.', 'Il pleut, je reste.'],
+    ['Des phrases coordonnées ?', 'Reliées par mais, ou, et, donc, or, ni, car.', 'Il pleut, donc je reste.'],
+    ['Une subordonnée ?', 'Introduite par un mot subordonnant : que, qui, quand, parce que, si…'],
+    ['La subordonnée relative commence par ?', 'qui, que, dont, où, lequel', 'Le chien que j’ai adopté.'],
+    ['« Je sais que tu viens » : quelle subordonnée ?', 'conjonctive introduite par que'],
+    ['« Dis-moi où tu habites » : quelle subordonnée ?', 'interrogative indirecte'],
+    ['Qui ou que ?', 'Qui est sujet ; que est complément direct.'],
+    ['Quand emploie-t-on dont ?', 'Pour remplacer un complément introduit par « de ».', 'Le livre dont je parle (parler de).'],
+    ['« La ville ___ nous visitons »', 'que', 'On visite une ville, sans préposition : pas « où ».'],
+  ]);
+  C('f-phrases', [
+    ['Les quatre types de phrase ?', 'déclarative, interrogative, injonctive, exclamative', 'Une phrase n’a qu’un type.'],
+    ['Les formes de phrase ?', 'négative, passive, emphatique, impersonnelle', 'Elles peuvent se combiner.'],
+    ['« Ne touchez pas ! » : type et forme ?', 'type injonctif, forme négative'],
+    ['La forme passive : que devient le CVD de l’actif ?', 'Le sujet.', 'Le sujet devient complément d’agent (par…).'],
+    ['« Le chat a attrapé la souris » au passif ?', 'La souris a été attrapée par le chat.', 'Être prend le temps du verbe actif.'],
+    ['Le participe passé du passif s’accorde avec ?', 'le sujet', 'La souris est attrapée.'],
+    ['« C’est moi qui l’ai fait » : quelle forme ?', 'emphatique', 'On met un élément en relief.'],
+    ['« Il pleut » : quelle forme ?', 'impersonnelle'],
+  ]);
+  C('f-accords', [
+    ['Trouver le sujet pour accorder le verbe ?', 'Poser « qui est-ce qui ? » devant le verbe, ou encadrer par « c’est … qui ».'],
+    ['Trois pièges de l’accord sujet-verbe ?', 'Sujet après le verbe, sujet loin du verbe, pronom complément devant le verbe.', 'Où habitent tes parents ? Je les vois.'],
+    ['C’est toi qui (avoir) raison.', 'C’est toi qui as raison.', '« Qui » reprend son antécédent : toi.'],
+    ['Toi et moi = ? Toi et lui = ?', 'nous ; vous'],
+    ['« La plupart des élèves » : singulier ou pluriel ?', 'pluriel'],
+    ['« Chacun » : singulier ou pluriel ?', 'singulier'],
+    ['Des chaussures (marron) ?', 'marron, invariable', 'Un nom employé comme couleur reste invariable.'],
+    ['Des yeux (bleu clair) ?', 'bleu clair, invariable', 'Une couleur en deux mots est invariable.'],
+    ['Les couleurs-noms qui s’accordent quand même ?', 'rose, mauve, pourpre, écarlate, fauve'],
+    ['Une (demi)-heure ? Une heure et (demi) ?', 'une demi-heure ; une heure et demie'],
+  ]);
+  C('f-participe', [
+    ['Participe passé avec être ?', 'Il s’accorde avec le sujet.', 'Mes cousines sont arrivées.'],
+    ['Participe passé avec avoir ?', 'Jamais avec le sujet ; avec le COD s’il est placé avant le verbe.'],
+    ['Trouver le COD ?', 'sujet + verbe + « qui ? » ou « quoi ? »'],
+    ['J’ai (écrire) trois lettres.', 'écrit', 'Le COD est après : pas d’accord.'],
+    ['Les lettres que j’ai (écrire).', 'écrites', 'Le COD « que » (les lettres) est avant : accord.'],
+    ['Elles se sont (lever).', 'levées', '« Se » est COD : elles ont levé qui ? elles-mêmes.'],
+    ['Ils se sont (parler).', 'parlé', 'On parle à quelqu’un : « se » n’est pas COD.'],
+    ['Elle s’est (laver) les mains.', 'lavé', 'Le COD « les mains » est après le verbe.'],
+    ['Elles se sont (rendre) compte.', 'rendu', 'Le COD est « compte », placé après.'],
+  ]);
+  C('f-homophones', [
+    ['a ou à ?', 'On remplace par « avait » : si ça marche, c’est a.'],
+    ['ont ou on ?', 'On remplace par « avaient » : si ça marche, c’est ont.'],
+    ['sont ou son ?', 'On remplace par « étaient » : si ça marche, c’est sont.'],
+    ['est ou et ?', 'On remplace par « était » : si ça marche, c’est est.'],
+    ['où ou ou ?', 'On remplace par « ou bien » : si ça marche, c’est ou.'],
+    ['se ou ce ?', '« Se » est devant un verbe (elle se demande) ; « ce » devant un nom ou devant être (ce matin, ce sont).'],
+    ['Je (leur) parle : leur ou leurs ?', 'leur', 'Devant un verbe, leur ne prend jamais de s.'],
+    ['(leur) gants : leur ou leurs ?', 'leurs', 'Devant un nom au pluriel, il s’accorde.'],
+    ['ces ou ses ?', 'ses : à lui ou à elle (ses livres) ; ces : ceux-là (ces livres-là).'],
+  ]);
+  C('f-confusions', [
+    ['-é ou -er ?', 'On remplace par vendre ou prendre : vendu → -é ; vendre → -er.'],
+    ['Il a (terminer).', 'terminé', 'Il a vendu.'],
+    ['Il doit (terminer).', 'terminer', 'Il doit vendre.'],
+    ['Vous (terminer).', 'terminez'],
+    ['Après à, de, pour, sans : quelle forme ?', 'l’infinitif', 'Sans parler.'],
+    ['Après il faut, je vais, j’entends : quelle forme ?', 'l’infinitif', 'Je vais manger.'],
+    ['Imparfait : je, tu → ? il, elle → ?', 'je / tu : -ais ; il / elle : -ait'],
+  ]);
+  C('f-recit', [
+    ['Imparfait ou passé simple : le décor, ce qui dure ?', 'l’imparfait', 'Il faisait nuit.'],
+    ['Imparfait ou passé simple : les actions qui font avancer l’histoire ?', 'le passé simple', 'Soudain, la porte s’ouvrit.'],
+    ['Mots qui annoncent le passé simple ?', 'soudain, tout à coup, puis, le lendemain, à cet instant'],
+    ['Mots qui annoncent l’imparfait ?', 'souvent, chaque jour, autrefois, d’habitude'],
+    ['Chanter au passé simple : je, il, ils ?', 'je chantai, il chanta, ils chantèrent'],
+    ['Finir au passé simple : je, il, ils ?', 'je finis, il finit, ils finirent'],
+    ['Prendre au passé simple : il, ils ?', 'il prit, ils prirent'],
+    ['Être et avoir au passé simple (il, ils) ?', 'il fut, ils furent ; il eut, ils eurent'],
+    ['Faire, venir, écrire au passé simple (il) ?', 'il fit, il vint, il écrivit'],
+    ['Nous et vous au passé simple ?', 'Un accent circonflexe : nous chantâmes, vous finîtes.'],
+  ]);
+  C('f-temps-composes', [
+    ['Un temps composé ?', 'avoir ou être conjugué + participe passé'],
+    ['Plus-que-parfait : l’auxiliaire est à quel temps ?', 'l’imparfait', 'j’avais fini, elle était partie'],
+    ['Futur antérieur : l’auxiliaire est à quel temps ?', 'le futur', 'j’aurai fini, elle sera partie'],
+    ['Conditionnel passé : l’auxiliaire est à quel temps ?', 'le conditionnel présent', 'j’aurais fini, elle serait partie'],
+    ['« Quand tu arriveras, j’aurai fini » : quel temps et pourquoi ?', 'Futur antérieur : une action finie avant une autre action future.'],
+    ['« Si j’avais su, je serais venu » : quels temps ?', 'Plus-que-parfait après si, conditionnel passé ensuite.'],
+    ['Elles seront (rentrer).', 'rentrées', 'Avec être, accord avec le sujet.'],
+  ]);
+  C('f-modes', [
+    ['Futur ou conditionnel à la 1re personne ?', 'Futur : -rai. Conditionnel : -rais.', 'On remplace je par nous : nous passerons / nous passerions.'],
+    ['Si tu viens, je (faire) un gâteau.', 'ferai', 'si + présent → futur'],
+    ['Si tu venais, je (faire) un gâteau.', 'ferais', 'si + imparfait → conditionnel'],
+    ['Après si : futur ou conditionnel ?', 'Ni l’un ni l’autre : si j’avais (et non si j’aurais).'],
+    ['Quand emploie-t-on le subjonctif ?', 'Après il faut que, un verbe de souhait, de doute ou de sentiment, bien que, pour que, avant que.'],
+    ['Terminaisons du subjonctif présent ?', '-e, -es, -e, -ions, -iez, -ent'],
+    ['Être au subjonctif : que je, que nous ?', 'que je sois, que nous soyons'],
+    ['Avoir au subjonctif : que je, que nous ?', 'que j’aie, que nous ayons'],
+    ['Aller et faire au subjonctif (que je) ?', 'que j’aille, que je fasse'],
+    ['Pouvoir et savoir au subjonctif (que je) ?', 'que je puisse, que je sache'],
+  ]);
+  C('f-enonciation', [
+    ['La situation d’énonciation ?', 'Qui parle, à qui, où et quand.'],
+    ['Texte ancré dans la situation : quels repères ?', 'je, ici, maintenant, demain'],
+    ['Récit coupé de la situation : quels repères ?', 'il, là, ce jour-là, le lendemain'],
+    ['« Il dit : « Je pars demain. » » : quel discours ?', 'direct'],
+    ['« Il dit qu’il part le lendemain. » : quel discours ?', 'indirect'],
+    ['Discours indirect avec un verbe au passé : le présent devient ?', 'l’imparfait'],
+    ['Discours indirect avec un verbe au passé : le futur devient ?', 'le conditionnel'],
+    ['Discours indirect avec un verbe au passé : le passé composé devient ?', 'le plus-que-parfait'],
+    ['Discours indirect : demain, hier, ici deviennent ?', 'le lendemain, la veille, là'],
+  ]);
+  C('f-argumenter', [
+    ['Argumenter ?', 'Défendre une thèse avec des arguments, appuyés par des exemples.'],
+    ['La thèse ?', 'L’opinion qu’on défend.'],
+    ['Concéder ?', 'Reconnaître qu’une idée adverse est en partie vraie (certes…, mais…).'],
+    ['Réfuter ?', 'Montrer qu’un argument adverse est faux.'],
+    ['Connecteurs pour ajouter ?', 'de plus, en outre, par ailleurs, d’abord, ensuite, enfin'],
+    ['Connecteurs pour opposer ?', 'mais, pourtant, cependant, néanmoins, toutefois'],
+    ['Connecteurs pour conclure ?', 'donc, ainsi, par conséquent, en conclusion'],
+    ['Convaincre ou persuader ?', 'Convaincre s’adresse à la raison, persuader aux émotions.'],
+    ['Un apologue ?', 'Une histoire qui fait passer une leçon : la fable, le conte philosophique.'],
+  ]);
+  C('f-mots', [
+    ['Radical, préfixe, suffixe ?', 'Le radical porte le sens ; le préfixe est devant, le suffixe derrière.', 'dé-charg-ement'],
+    ['in-, im-, dé- : quel sens ?', 'le contraire', 'invisible, impossible, défaire'],
+    ['re- : quel sens ?', 'de nouveau', 'relire'],
+    ['pré- : quel sens ?', 'avant', 'prévoir'],
+    ['-able : quel sens ?', 'qu’on peut', 'lavable'],
+    ['-logie : quel sens ?', 'l’étude de', 'biologie'],
+    ['Synonymes ? antonymes ?', 'Sens proche ; sens contraire.'],
+    ['Homophones ?', 'Même son, sens différent : ver, verre, vert.'],
+    ['Paronymes ?', 'Mots qui se ressemblent : éruption, irruption.'],
+    ['Un hyperonyme ?', 'Un mot qui en englobe d’autres : fruit pour pomme, poire.'],
+    ['Sens propre ou sens figuré ?', 'Propre : le sens premier. Figuré : un sens imagé (un cœur de pierre).'],
+  ]);
+  C('f-figures', [
+    ['La comparaison ?', 'Rapproche deux éléments avec un outil (comme, tel, pareil à).', 'Ses yeux brillent comme des étoiles.'],
+    ['La métaphore ?', 'Rapproche deux éléments sans outil.', 'Cette fille est un ange.'],
+    ['La personnification ?', 'Donne des traits humains à une chose ou un animal.', 'Le vent hurle.'],
+    ['L’hyperbole ?', 'Une exagération.', 'Je meurs de faim.'],
+    ['L’antithèse ?', 'Rapproche deux idées opposées.', 'Le jour et la nuit.'],
+    ['L’anaphore ?', 'Répète un mot en début de vers ou de phrase.'],
+    ['L’énumération ?', 'Une suite de mots de même nature.'],
+    ['Analyser une figure ?', 'La nommer, puis dire l’effet qu’elle produit.'],
+  ]);
+  C('f-recits', [
+    ['Les étapes du schéma narratif ?', 'situation initiale, élément déclencheur, péripéties, dénouement, situation finale'],
+    ['La nouvelle ?', 'Un récit court, souvent terminé par une chute.'],
+    ['Le récit fantastique ?', 'Il fait hésiter entre une explication naturelle et une explication surnaturelle.'],
+    ['Le pacte autobiographique ?', 'L’auteur raconte sa propre vie et s’engage à dire la vérité.'],
+    ['Point de vue omniscient ?', 'Le narrateur sait tout, même les pensées de tous les personnages.'],
+    ['Point de vue interne ?', 'Le narrateur ne sait que ce que perçoit un personnage.'],
+    ['Point de vue externe ?', 'Le narrateur décrit de l’extérieur, comme une caméra.'],
+    ['Auteur ou narrateur ?', 'L’auteur est la personne réelle ; le narrateur est la voix qui raconte.'],
+    ['Ellipse, analepse, prolepse ?', 'Saut dans le temps ; retour en arrière ; anticipation.'],
+  ]);
+  C('f-poesie', [
+    ['L’alexandrin ?', 'Un vers de 12 syllabes.'],
+    ['Le décasyllabe ? l’octosyllabe ?', '10 syllabes ; 8 syllabes'],
+    ['Le « e » muet compte-t-il ?', 'Oui devant une consonne dans le vers ; non devant une voyelle ni en fin de vers.'],
+    ['Rimes AABB ?', 'plates (suivies)'],
+    ['Rimes ABAB ?', 'croisées'],
+    ['Rimes ABBA ?', 'embrassées'],
+    ['Distique, tercet, quatrain, sizain ?', 'strophes de 2, 3, 4 et 6 vers'],
+    ['Le sonnet ?', 'Deux quatrains et deux tercets.'],
+    ['L’enjambement ?', 'La phrase continue au vers suivant.'],
+    ['La césure ?', 'La pause au milieu de l’alexandrin.'],
+  ]);
+  C('f-theatre', [
+    ['Comment se divise une pièce ?', 'En actes et en scènes.'],
+    ['Les didascalies ?', 'Les indications de décor, de gestes et de ton.'],
+    ['Une tirade ?', 'Une longue réplique.'],
+    ['Un monologue ?', 'Un personnage seul parle.'],
+    ['Un aparté ?', 'Des paroles que les autres personnages ne sont pas censés entendre.'],
+    ['Un quiproquo ?', 'Un malentendu : un personnage est pris pour un autre.'],
+    ['L’exposition ?', 'Les premières scènes, qui présentent la situation.'],
+    ['La double énonciation ?', 'Les personnages se parlent, et l’auteur s’adresse en même temps au public.'],
+    ['Comédie ou tragédie ?', 'La comédie finit bien ; la tragédie montre des personnages nobles écrasés par leur destin.'],
+  ]);
+  C('f-presse', [
+    ['Les questions d’un article d’information ?', 'qui, quoi, où, quand, comment, pourquoi'],
+    ['La pyramide inversée ?', 'L’essentiel d’abord, les détails ensuite.'],
+    ['Une brève ?', 'Une information très courte, sans commentaire.'],
+    ['Une dépêche ?', 'Une information envoyée par une agence de presse.'],
+    ['Un reportage ?', 'Le journaliste raconte ce qu’il a vu sur place.'],
+    ['Un éditorial ?', 'L’opinion du journal.'],
+    ['Le chapeau ?', 'Le résumé en gras sous le titre.'],
+    ['« Le ministre aurait démissionné » : pourquoi le conditionnel ?', 'L’information n’est pas confirmée.'],
+  ]);
+})();
+</script>
+<script>/* cartes-langues.js */
+'use strict';
+/* Cap Lycée — cartes d'allemand et d'anglais : [recto, verso, note]. Le vocabulaire des Kapitel et des Units est repris
+   des séries (CL.vocabs) et les verbes irréguliers de leurs tableaux (CL.verbes) ; la grammaire est écrite ici. */
+(function () {
+  CL.CARTES = CL.CARTES || {};
+  const C = (chap, l) => (CL.CARTES[chap] = (CL.CARTES[chap] || []).concat(l));
+  const premier = (r) => String(r).split('|')[0];
+
+  /* une question de vocabulaire devient une carte : « Comment dit-on « courageux » en allemand ? » → courageux / mutig */
+  function versCarte([q, r, e]) {
+    if (Array.isArray(r)) return [q.replace(/\s*:\s*$/, ''), r[0], e || ''];
+    let m = /^(Avec get : )?[Cc]omment dit-on « (.+?) »(.*)$/.exec(q);
+    if (m) {
+      let reste = m[3]
+        .replace(/\s*\?\s*$/, '')
+        .replace(/ en (allemand|anglais)( britannique| américain)?(, avec son article \(der, die ou das\))?/, (x, l, v) => (v ? ` (${l}${v})` : ''))
+        .trim();
+      if (m[1]) reste = (reste + ' (avec get)').trim();
+      return [m[2] + (reste ? ' ' + reste : ''), premier(r), e || ''];
+    }
+    m = /^Que veut dire « (.+?) »/.exec(q);
+    if (m) return [m[1], premier(r), e || ''];
+    return [q, premier(r), e || ''];
+  }
+  /* la note ne répète pas le verso : « Das Taschengeld. » disparaît, « Mutig. Le courage : der Mut. » devient « Le courage : der Mut. » */
+  const net = (s) => String(s).toLowerCase().replace(/[.!?…\s]+$/, '').trim();
+  function sansRepetition([r, v, n]) {
+    if (!n) return [r, v];
+    if (net(n) === net(v)) return [r, v];
+    const d = n.toLowerCase().indexOf(v.toLowerCase());
+    if (d === 0 && /^[.:,;]/.test(n.slice(v.length))) n = n.slice(v.length + 1).trim();
+    return n ? [r, v, n] : [r, v];
+  }
+  for (const [chap, liste] of Object.entries(CL.vocabs || {})) C(chap, liste.map(versCarte).map(sansRepetition));
+
+  /* les verbes irréguliers : recto l'infinitif et le sens, verso les formes */
+  if (CL.verbes) {
+    C('d-verbes', CL.verbes.de.flatMap(([, l]) => l.map(([inf, pret, perf, fr]) => [`${inf} (${fr})`, `${premier(pret)} · ${premier(perf)}`, 'Präteritum · Perfekt'])));
+    C('e-verbes', CL.verbes.en.flatMap(([, l]) => l.map(([base, past, pp, fr]) => [`${base} (${fr})`, `${premier(past)} · ${premier(pp)}`, 'Prétérit · participe passé'])));
+  }
+
+  /* ================= Allemand : grammaire ================= */
+  C('d-satzbau', [
+    ['Dans une phrase principale, où va le verbe conjugué ?', 'En 2e position.', 'Heute gehe ich ins Kino : si la phrase commence par autre chose que le sujet, le sujet passe après le verbe.'],
+    ['Dans une subordonnée (weil, dass, wenn, ob, als), où va le verbe conjugué ?', 'Tout à la fin.', 'Ich bleibe hier, weil ich müde bin.'],
+    ['Remets dans l’ordre : heute · ich · ins Kino · gehe', 'Heute gehe ich ins Kino.', 'Le verbe reste en 2e position, le sujet passe derrière.'],
+    ['Wenn es regnet, … (wir bleiben hier). Comment continuer ?', 'Wenn es regnet, bleiben wir hier.', 'La subordonnée occupe la 1re place : le verbe de la principale suit la virgule.'],
+    ['Denn, und, aber, oder changent-ils l’ordre des mots ?', 'Non.', '…, denn ich habe keine Zeit.'],
+    ['Weil ou denn : « …, ___ ich habe keine Zeit » ?', 'denn', 'Avec weil, le verbe irait à la fin : …, weil ich keine Zeit habe.'],
+    ['Où vont le participe, l’infinitif et la particule séparable ?', 'À la fin de la phrase principale.', 'Ich stehe um sieben Uhr auf. Ich habe gut geschlafen.'],
+  ]);
+  C('d-kasus', [
+    ['Article masculin : nominatif, accusatif, datif ?', 'der, den, dem'],
+    ['Article féminin : nominatif, accusatif, datif ?', 'die, die, der'],
+    ['Article neutre : nominatif, accusatif, datif ?', 'das, das, dem'],
+    ['Article pluriel : nominatif, accusatif, datif ?', 'die, die, den', 'Au datif pluriel, le nom prend aussi un -n : mit den Kindern.'],
+    ['Les prépositions toujours suivies du datif ?', 'aus, bei, mit, nach, seit, von, zu'],
+    ['Les prépositions toujours suivies de l’accusatif ?', 'durch, für, gegen, ohne, um'],
+    ['In, an, auf, über, unter, vor, hinter, neben, zwischen : accusatif ou datif ?', 'Accusatif s’il y a un déplacement vers le lieu (wohin ?), datif si on y est déjà (wo ?).', 'Ich gehe ins Kino. Ich bin im Kino.'],
+    ['Quatre verbes suivis du datif ?', 'helfen, danken, gefallen, gehören', 'Ich helfe dir. Das gehört mir.'],
+  ]);
+  C('d-perfekt', [
+    ['Comment se forme le Perfekt ?', 'haben ou sein conjugué en 2e position + participe passé à la fin.', 'Wir haben einen Film gesehen.'],
+    ['Quels verbes prennent sein au Perfekt ?', 'Les verbes de déplacement et de changement d’état, plus sein et bleiben.', 'gehen, fahren, kommen, fliegen ; aufstehen, einschlafen, werden.'],
+    ['Er ___ nach Bern gefahren.', 'ist', 'Fahren : un déplacement, donc sein.'],
+    ['Wir ___ zu Hause geblieben.', 'sind', 'Bleiben prend sein.'],
+    ['Ich ___ gut geschlafen.', 'habe', 'Schlafen : ni déplacement, ni changement d’état.'],
+    ['Er ___ sofort eingeschlafen.', 'ist', 'Einschlafen (s’endormir) est un changement d’état.'],
+  ]);
+  C('d2-k1', [
+    ['Le pronom relatif au nominatif : masculin, neutre, féminin, pluriel ?', 'der, das, die, die', 'Il ressemble à l’article défini.'],
+    ['Quel pronom relatif change à l’accusatif ?', 'Seul le masculin : der → den.'],
+    ['Dans une relative, où va le verbe conjugué ?', 'À la fin.', 'Der Film, der jetzt im Kino läuft, ist toll.'],
+    ['Der Sänger, ___ ich bewundere, kommt aus Bern.', 'den', 'Le pronom est complément de bewundere : accusatif.'],
+    ['Der Film, ___ jetzt läuft, ist toll.', 'der', 'Le pronom est sujet de läuft : nominatif.'],
+    ['Es macht Spass, Gitarre … (spielen).', 'Es macht Spass, Gitarre zu spielen.', 'Zu + infinitif, tout à la fin.'],
+    ['Zu + infinitif avec un verbe à particule (anrufen) ?', 'anzurufen', 'Zu se glisse entre la particule et le verbe : mitzukommen, aufzustehen.'],
+    ['Après un verbe de modalité (können, müssen…), zu ou pas ?', 'Pas de zu.', 'Ich kann kommen.'],
+    ['Que veut dire deshalb (ou deswegen) ?', 'c’est pourquoi', 'Le verbe conjugué vient juste après : …, deshalb spricht sie gut Portugiesisch.'],
+    ['Weil ou deshalb : où va le verbe ?', 'Weil : à la fin. Deshalb : juste après.', '…, weil sie Portugiesisch spricht / …, deshalb spricht sie Portugiesisch.'],
+  ]);
+  C('d2-k2', [
+    ['Comment se forme le passif au présent ?', 'werden conjugué + participe passé à la fin.', 'Tim leert den Papierkorb → Der Papierkorb wird geleert.'],
+    ['Werden : ich, du, er ?', 'ich werde, du wirst, er wird'],
+    ['Werden : wir, ihr, sie ?', 'wir werden, ihr werdet, sie werden'],
+    ['Au passif, comment dire qui fait l’action ?', 'von + datif', 'Das Video wird von vielen Leuten geteilt.'],
+    ['Die Fotos ___ ins Netz gestellt.', 'werden'],
+    ['Comment reconnaître le prétérit d’un verbe régulier ?', 'Radical + -te.', 'Sie spielte, wir chatteten.'],
+    ['kam ?', 'kommen (prétérit)', 'Sie kam spät nach Hause.'],
+    ['gab ?', 'geben (prétérit)', 'Es gab viel zu tun.'],
+    ['fand ?', 'finden (prétérit)'],
+    ['sah ?', 'sehen (prétérit)'],
+    ['ging ?', 'gehen (prétérit)'],
+    ['Que veut dire (an)statt … zu ?', 'au lieu de', 'Ich habe das Foto gelöscht, anstatt es zu speichern.'],
+  ]);
+  C('d2-k3', [
+    ['Um … zu : à quoi ça sert ?', 'À dire le but : pour, afin de.', 'Die Klassen haben sich getroffen, um Müll zu sammeln.'],
+    ['Um Energie …, fahre ich mit dem Velo. (sparen)', 'Um Energie zu sparen', 'Zu juste devant l’infinitif.'],
+    ['Um … zu ou damit ?', 'Um … zu si le sujet est le même ; damit s’il change.', 'Wir starten eine Aktion, damit die Schule weniger Papier verbraucht.'],
+    ['Génitif de der Klimawandel ?', 'des Klimawandels'],
+    ['Génitif de das Jahrhundert ?', 'des Jahrhunderts'],
+    ['Génitif de die Erde ?', 'der Erde'],
+    ['Génitif masculin et neutre : article et terminaison ?', 'des, et le nom prend -s ou -es.'],
+    ['Génitif féminin et pluriel ?', 'der, sans terminaison au nom.', 'Die Temperatur der Erde. Die Ergebnisse der Forscher.'],
+    ['La veste de Fiona ?', 'Fionas Jacke', 'Avec un prénom : -s, sans apostrophe.'],
+  ]);
+  C('d2-k4', [
+    ['Le même, la même, le même (neutre), les mêmes ?', 'derselbe, dieselbe, dasselbe, dieselben'],
+    ['Derselbe à l’accusatif masculin ?', 'denselben'],
+    ['Avec le même bus ?', 'mit demselben Bus', 'Au datif : demselben (der et das), derselben (die), denselben (pluriel).'],
+    ['Seitdem (seit) : où va le verbe ?', 'À la fin.', 'Ich habe bessere Noten, seitdem ich mit Timo lerne.'],
+    ['Que veut dire etwas machen lassen ?', 'faire faire quelque chose', 'Steffi lässt ihr Velo reparieren.'],
+    ['Lassen : du, er ?', 'du lässt, er lässt'],
+    ['Je me fais couper les cheveux.', 'Ich lasse mir die Haare schneiden.'],
+    ['Quatre façons de faire une supposition ?', 'Vielleicht… Wahrscheinlich… Er ist bestimmt… Ich vermute, dass…'],
+  ]);
+  C('d2-k5', [
+    ['La personne et la chose : quel cas ?', 'La personne (à qui ?) au datif, la chose (quoi ?) à l’accusatif.'],
+    ['Ich gebe … (deinem Onkel · das Geschenk)', 'Ich gebe deinem Onkel das Geschenk.', 'Deux noms : le datif d’abord.'],
+    ['Ich gebe … (es · ihm)', 'Ich gebe es ihm.', 'Un pronom à l’accusatif passe devant.'],
+    ['Que veut dire obwohl ? Où va le verbe ?', 'bien que ; le verbe va à la fin.', '…, obwohl Online-Shopping praktisch ist.'],
+    ['Obwohl ou trotzdem ?', 'Obwohl ouvre une subordonnée (verbe à la fin). Trotzdem (quand même) est suivi du verbe.', 'Trotzdem kaufe ich lieber im Geschäft.'],
+    ['Konjunktiv II de haben (ich) ?', 'ich hätte'],
+    ['Konjunktiv II de sein (ich) ?', 'ich wäre'],
+    ['Konjunktiv II de werden (ich) ?', 'ich würde'],
+    ['Konjunktiv II de können (ich) ?', 'ich könnte'],
+    ['Si j’avais plus de temps, je pourrais…', 'Wenn ich mehr Zeit hätte, könnte ich…'],
+    ['Comment aimerais-tu vivre ?', 'Wie würdest du gern leben?'],
+  ]);
+  C('d2-k6', [
+    ['jemand, niemand, nichts ?', 'quelqu’un, personne, rien'],
+    ['Hast du einen Stift? – Nein, ich habe ___.', 'keinen'],
+    ['Gibt es noch Kekse? – Ja, da sind noch ___.', 'welche'],
+    ['Dies- : der, den, dem → ?', 'dieser, diesen, diesem', 'Il prend les terminaisons de l’article défini.'],
+    ['In ___ Verein engagiere ich mich.', 'diesem', 'In + datif (wo ?), der Verein.'],
+    ['n-Deklination : quels noms ?', 'Quelques masculins : der Junge, der Kollege, der Nachbar, der Name, der Herr, der Student, der Praktikant, der Bär.', 'Ils prennent -n ou -en partout sauf au nominatif singulier.'],
+    ['Ich spiele mit dem ___. (der Junge)', 'Jungen'],
+    ['attendre quelqu’un ?', 'warten auf + accusatif'],
+    ['s’intéresser à ?', 'sich interessieren für'],
+    ['s’occuper de ?', 'sich kümmern um'],
+    ['s’énerver à cause de ?', 'sich ärgern über'],
+    ['participer à ?', 'teilnehmen an'],
+    ['penser à ?', 'denken an'],
+    ['rêver de ?', 'träumen von'],
+    ['sich freuen auf ou über ?', 'auf : ce qui va venir ; über : ce qu’on a déjà.'],
+  ]);
+  C('d2-k7', [
+    ['Prétérit de sein : ich, du, wir ?', 'ich war, du warst, wir waren'],
+    ['Prétérit de haben : ich, du, wir ?', 'ich hatte, du hattest, wir hatten'],
+    ['« Il y avait » ?', 'es gab', 'Früher gab es kein Internet.'],
+    ['Prétérit de denken, wissen, nehmen ?', 'dachte, wusste, nahm'],
+    ['Prétérit de können, müssen, wollen ?', 'konnte, musste, wollte'],
+    ['Au prétérit, ich et er ont-ils la même forme ?', 'Oui.', 'ich war, er war ; ich kam, er kam.'],
+    ['Als, wenn ou wann : un moment unique du passé ?', 'als', 'Als ich vier war, war ich zum ersten Mal im Ausland.'],
+    ['Als, wenn ou wann : ce qui se répète ?', 'wenn', 'Immer wenn es regnete, blieben wir zu Hause.'],
+    ['Als, wenn ou wann : une question ?', 'wann', 'Weisst du, wann der Film beginnt?'],
+  ]);
+  C('d2-k8', [
+    ['Worüber ou über wen ?', 'worüber pour une chose, über wen pour une personne.'],
+    ['___ freust du dich? – Auf die Ferien.', 'Worauf'],
+    ['___ wartest du? – Auf meinen Bruder.', 'Auf wen'],
+    ['Ich freue mich auf die Party. – ___ freue ich mich auch.', 'Darauf', 'Da + préposition reprend une chose déjà nommée.'],
+    ['Pourquoi un r dans worauf, darauf ?', 'Devant une voyelle, on ajoute r.', 'woran, darüber, daran.'],
+    ['Comment se forme le futur ?', 'werden en 2e place + infinitif à la fin.', 'Wir werden Ferien auf dem Mars machen.'],
+    ['Que veut dire entweder … oder ?', 'soit… soit', 'Entweder ich mache ein Praktikum oder ich suche einen Ferienjob.'],
+  ]);
+
+  /* ================= Anglais : grammaire ================= */
+  C('e-u1', [
+    ['Donner un conseil ?', 'should + base verbale', 'You should take a map.'],
+    ['Déconseiller ?', 'shouldn’t + base verbale', 'You shouldn’t walk alone at night.'],
+    ['Present simple : quand ?', 'Habitude, vérité générale, horaire.', 'always, usually, often, every day, never'],
+    ['Present continuous : quand ?', 'Action en cours, situation temporaire.', 'now, right now, at the moment, Look!'],
+    ['Quels verbes ne vont presque jamais au continuous ?', 'like, love, hate, want, know, understand', 'I like it, et non I’m liking it.'],
+    ['Comment est l’hôtel ?', 'What is the hotel like?'],
+    ['across', 'en traversant, d’un côté à l’autre'],
+    ['along', 'le long de'],
+    ['through', 'à travers'],
+    ['past', 'devant (en passant)'],
+    ['over', 'par-dessus'],
+    ['into / out of', 'dans / hors de'],
+  ]);
+  C('e-u2', [
+    ['Comparatif et superlatif de fast ?', 'faster than, the fastest'],
+    ['Comparatif et superlatif de easy ?', 'easier than, the easiest'],
+    ['Comparatif et superlatif de difficult ?', 'more difficult than, the most difficult'],
+    ['Comparatif et superlatif de good ?', 'better than, the best'],
+    ['Comparatif et superlatif de bad ?', 'worse than, the worst'],
+    ['Aussi rapide que sa sœur ?', 'as fast as her sister', 'Not as … as : moins … que.'],
+    ['Adverbe de slow ? de easy ?', 'slowly, easily'],
+    ['Adverbe de good ?', 'well'],
+    ['Adverbe de fast, hard, late, early ?', 'fast, hard, late, early', 'Ils ne changent pas.'],
+    ['Past simple : la négation et la question ?', 'didn’t / did + base verbale', 'She didn’t win. Did she win?'],
+  ]);
+  C('e-u3', [
+    ['Prédire ce qu’on pense qui va arriver ?', 'will / won’t + base verbale', 'I think it will be sunny.'],
+    ['Ce qui va peut-être arriver ?', 'may / might + base verbale', 'It might rain later.'],
+    ['Où se place probably ?', 'Après will.', 'It will probably rain.'],
+    ['Zero conditional : la forme ?', 'If + present simple, present simple', 'If you heat ice, it melts.'],
+    ['Zero conditional : le sens ?', 'Ce qui est toujours vrai.'],
+    ['First conditional : la forme ?', 'If + present simple, will + base verbale', 'If we recycle more, there will be less rubbish.'],
+    ['First conditional : le sens ?', 'Une situation possible dans le futur.'],
+    ['Will dans la partie avec if ?', 'Jamais.', 'If it rains tomorrow… (et non if it will rain).'],
+    ['Que veut dire unless ?', 'if not (à moins que)', 'Unless you hurry, you’ll miss the bus.'],
+  ]);
+  C('e-u4', [
+    ['L’obligation ?', 'must, have to (has to)'],
+    ['L’interdiction ?', 'mustn’t, can’t, not be allowed to'],
+    ['Ce qui n’est pas nécessaire ?', 'don’t have to (doesn’t have to)'],
+    ['La permission ?', 'can, be allowed to'],
+    ['« Tu n’es pas obligé » : mustn’t ou don’t have to ?', 'You don’t have to.', 'Mustn’t veut dire « c’est interdit ».'],
+    ['Must au passé ?', 'had to'],
+    ['Un conseil fort ?', 'had better (’d better) + base verbale', 'You’d better hurry.'],
+    ['Going to ou will : un projet déjà décidé ?', 'going to', 'I’m going to study medicine.'],
+    ['Going to ou will : une décision prise sur le moment ?', 'will', 'The phone is ringing. – I’ll get it!'],
+    ['bored ou boring : ce que la personne ressent ?', 'bored', 'I’m bored.'],
+    ['bored ou boring : ce qui produit l’effet ?', 'boring', 'The film is boring.'],
+  ]);
+  C('e-u5', [
+    ['La question au past simple ?', 'Did + sujet + base verbale', 'Did you see it? Where did she go?'],
+    ['Avec be, une question au passé ?', 'Pas de did : Were you at home?'],
+    ['Quand who est le sujet, did ou pas ?', 'Pas de did : Who invented the phone?'],
+    ['Comment se forme le past continuous ?', 'was / were + verbe en -ing', 'I was watching TV.'],
+    ['Past continuous ou past simple : l’action longue ? l’action courte qui l’interrompt ?', 'Longue : past continuous (while). Courte : past simple (when).', 'I was watching TV when the phone rang.'],
+    ['Comment se forme le passif ?', 'be conjugué + participe passé', 'It is made in Japan. It was invented in 1876.'],
+    ['Au passif, qui fait l’action ?', 'by + la personne', 'The telephone was invented by Bell.'],
+  ]);
+  C('e-u6', [
+    ['Comment se forme le present perfect ?', 'have / has + participe passé', 'I’ve never been there.'],
+    ['Present perfect : pour quoi ?', 'Des expériences de vie, sans dire quand ; un résultat qui compte maintenant.', 'Have you ever been to London?'],
+    ['Avec yesterday, last year, ago : quel temps ?', 'past simple', 'Jamais de present perfect avec une date ou ago.'],
+    ['make + … ?', 'an effort, money, a mistake'],
+    ['do + … ?', 'your best, your homework'],
+    ['take + … ?', 'a look, a risk, part in'],
+    ['give + … ?', 'a hand, a presentation'],
+    ['have + … ?', 'an argument, an accident'],
+    ['tell + … ?', 'the truth, a story'],
+  ]);
+  C('e-u7', [
+    ['Question tag d’une phrase affirmative ?', 'Un tag négatif.', 'You’re Canadian, aren’t you?'],
+    ['Question tag d’une phrase négative ?', 'Un tag affirmatif.', 'She doesn’t eat meat, does she?'],
+    ['They left, ___?', 'didn’t they'],
+    ['Just et already : où ?', 'Entre have et le participe.', 'I’ve just finished. She’s already left.'],
+    ['Yet : où et quel sens ?', 'En fin de question (déjà ?) ou de phrase négative (pas encore).', 'Have you finished yet? Not yet.'],
+    ['Second conditional : la forme ?', 'If + past simple, would + base verbale', 'If I had a million, I would travel.'],
+    ['Second conditional : le sens ?', 'Une situation imaginaire.', 'If I were you, I would…'],
+    ['Comment se forme le past perfect ?', 'had + participe passé', 'When we arrived, the film had started.'],
+  ]);
+  C('e-u8', [
+    ['Verbes suivis de -ing ?', 'enjoy, finish, mind, imagine, can’t stand, miss, practise, go on'],
+    ['Verbes suivis de to + base verbale ?', 'want, decide, hope, promise, refuse, offer, learn'],
+    ['Like, love, hate, prefer : -ing ou to ?', 'Les deux.', 'I like reading, I like to read.'],
+    ['For ou since : une durée ?', 'for', 'for two years'],
+    ['For ou since : un point de départ ?', 'since', 'since 2015, since Monday'],
+    ['J’habite ici depuis 2015.', 'I have lived here since 2015.'],
+    ['Present perfect continuous ?', 'have been + verbe en -ing', 'I have been waiting for an hour.'],
+    ['Used to : quel sens ?', 'Une habitude du passé qui n’existe plus.', 'I used to play the piano.'],
+    ['Used to : la question et la négation ?', 'Did you use to…? I didn’t use to…'],
+  ]);
+})();
+</script>
+<script>/* cartes-sciences.js */
+'use strict';
+/* Cap Lycée — cartes de sciences : [recto, verso, note]. Séquence 11 (cardiovasculaire), fin de la 6 (pression),
+   7 (énergie) et 8 (circuit électrique), d'après les fiches de la classe ; plus les rappels de 9e et 10e. */
+(function () {
+  CL.CARTES = CL.CARTES || {};
+  const C = (chap, l) => (CL.CARTES[chap] = (CL.CARTES[chap] || []).concat(l));
+
+  C('s-cardio', [
+    ['Les quatre cavités du cœur ?', 'oreillette droite, ventricule droit, oreillette gauche, ventricule gauche'],
+    ['Quel côté du cœur reçoit le sang pauvre en O₂ ?', 'Le côté droit.', 'Il l’envoie aux poumons.'],
+    ['Quel ventricule a la paroi la plus épaisse ? Pourquoi ?', 'Le gauche : il envoie le sang dans tout le corps.'],
+    ['La petite circulation ?', 'Cœur droit → artère pulmonaire → poumons → veines pulmonaires → cœur gauche.', 'Le sang s’y charge en O₂ et rejette le CO₂.'],
+    ['La grande circulation ?', 'Cœur gauche → aorte → organes → veines caves → cœur droit.'],
+    ['Artère ou veine ?', 'L’artère part du cœur ; la veine revient au cœur.'],
+    ['Les capillaires ?', 'Des vaisseaux très fins où se font les échanges avec les cellules.'],
+    ['Le rôle des valvules ?', 'Empêcher le sang de refluer : il ne circule que dans un sens.'],
+    ['Les globules rouges ?', 'Ils transportent l’O₂ (grâce à l’hémoglobine).'],
+    ['Les globules blancs ?', 'Ils défendent l’organisme.'],
+    ['Les plaquettes ?', 'Elles font coaguler le sang.'],
+    ['Le plasma ?', 'La partie liquide du sang : il transporte les nutriments, les déchets, le CO₂.'],
+    ['Le rôle des reins ?', 'Filtrer le sang et en retirer les déchets, qui partent dans l’urine.'],
+    ['Fréquence cardiaque maximale ?', 'environ 220 − l’âge'],
+    ['Prendre son pouls sur 15 s, puis ?', 'Multiplier par 4 pour avoir les battements par minute.'],
+    ['Pourquoi le cœur bat-il plus vite pendant un effort ?', 'Les muscles ont besoin de plus d’O₂ et de nutriments.'],
+  ]);
+  C('s-pression', [
+    ['Pression = ?', 'force : surface', 'en pascals (Pa) : 1 Pa = 1 N par m²'],
+    ['Même force, surface plus petite : la pression ?', 'Plus grande.', 'Un couteau aiguisé coupe mieux.'],
+    ['Pourquoi des raquettes dans la neige ?', 'Le poids est réparti sur une plus grande surface : la pression diminue.'],
+    ['600 N sur 0,04 m² : quelle pression ?', '15 000 Pa'],
+    ['La pression dans un liquide quand on descend ?', 'Elle augmente avec la profondeur.', 'Dans l’eau : environ 1 bar de plus tous les 10 m.'],
+    ['1 bar = ? Pa', '100 000 Pa'],
+    ['La pression atmosphérique au niveau de la mer ?', 'environ 1 bar (1013 hPa)', 'Elle diminue en altitude.'],
+    ['L’instrument qui mesure la pression de l’air ?', 'le baromètre'],
+    ['La poussée d’Archimède ?', 'Une force vers le haut, égale au poids du liquide déplacé.'],
+    ['Un objet de 3 L plongé dans l’eau : la poussée ?', 'environ 30 N', '1 L d’eau pèse environ 10 N.'],
+    ['Quand un objet flotte-t-il dans l’eau ?', 'Quand sa masse volumique est plus petite que celle de l’eau (1 g/cm³).'],
+    ['Pourquoi un bateau en acier flotte-t-il ?', 'Sa coque creuse déplace beaucoup d’eau : la poussée équilibre son poids.'],
+  ]);
+  C('s-energie', [
+    ['Le principe de conservation de l’énergie ?', 'L’énergie n’est ni créée ni détruite : elle est transférée ou change de forme.'],
+    ['Les quatre modes de transfert ?', 'mécanique (TRméca), électrique (TRélec), thermique (TRtherm), par rayonnement (TRray)'],
+    ['Une hélice tourne sous l’effet du vent : quel transfert ?', 'mécanique (TRméca)'],
+    ['Une cuillère chauffée par un thé : quel transfert ?', 'thermique (TRtherm)'],
+    ['Un écran émet de la lumière : quel transfert ?', 'par rayonnement (TRray)'],
+    ['Conduction, convection, rayonnement ?', 'De proche en proche ; par un fluide qui se déplace ; sans contact (comme le Soleil).'],
+    ['Dans un diagramme : « alimente » = ? « chauffe » = ? « éclaire » = ?', 'TRélec ; TRtherm ; TRray', 'fait tourner, entraîne : TRméca'],
+    ['Les « fuites » d’un dispositif ?', 'Des transferts inutiles vers le milieu environnant, surtout de la chaleur.'],
+    ['Réservoir ou relais ?', 'Le réservoir stocke ou déstocke de l’énergie ; le relais cède au fur et à mesure tout ce qu’il reçoit.'],
+    ['Epotg ?', 'Énergie potentielle de gravitation : un objet en hauteur, l’eau d’un barrage.'],
+    ['Ecin ?', 'Énergie cinétique : un objet en mouvement.'],
+    ['Echim ?', 'Énergie chimique : une pile, un combustible.'],
+    ['Edéf ?', 'Énergie de déformation : un ressort tendu.'],
+    ['Les sources renouvelables ?', 'soleil, vent, eau, biomasse, géothermie'],
+    ['Les sources non renouvelables ?', 'combustibles fossiles (pétrole, gaz, charbon), combustible nucléaire (uranium)'],
+    ['D’où vient l’énergie du vent ?', 'Du rayonnement solaire, qui met l’air en mouvement.'],
+    ['Panneau photovoltaïque ou capteur thermique ?', 'Le photovoltaïque produit de l’électricité ; le capteur thermique chauffe l’eau.'],
+    ['La puissance ?', 'L’énergie transférée chaque seconde : P = E : t, en watts.'],
+    ['E = ?', 'P · t'],
+    ['1 kWh = combien de joules ?', '3 600 000 J'],
+    ['1 calorie = ?', '4,18 J', 'De quoi chauffer 1 g d’eau de 1 °C.'],
+    ['Deux corps en contact à des températures différentes ?', 'Leurs températures s’égalisent : l’énergie passe du plus chaud au plus froid.'],
+    ['Le rendement ?', 'énergie utile : énergie reçue', 'Toujours plus petit que 100 %.'],
+    ['Rendement d’une lampe à filament ?', 'environ 3 %', 'Le reste chauffe la pièce.'],
+    ['Pourquoi dit-on que l’énergie thermique est dégradée ?', 'On en tire peu de travail utile, d’autant moins que sa température est basse.'],
+  ]);
+  C('s-electricite', [
+    ['Pour qu’une lampe brille ?', 'Une borne reliée au + et l’autre au − du générateur, sans coupure, interrupteur fermé.'],
+    ['Un schéma électrique : quelles règles ?', 'Un symbole par composant, dessiné horizontalement ou verticalement, jamais de biais.'],
+    ['Conducteur ou isolant ?', 'Le conducteur laisse passer le courant (métaux, carbone) ; l’isolant le bloque (verre, plastique).'],
+    ['La résistance d’un composant ?', 'Son pouvoir de freiner le courant, en ohms (Ω).'],
+    ['Le modèle circulatoire du courant ?', 'Les particules remplissent tout le circuit et circulent toutes dans le même sens : soit il y a du courant partout, soit il n’y en a pas du tout.'],
+    ['Sens du courant à l’extérieur du générateur ?', 'De la borne + vers la borne −.'],
+    ['L’intensité : unité et appareil ?', 'ampère (A), ampèremètre branché dans la boucle'],
+    ['La tension : unité et appareil ?', 'volt (V), voltmètre branché aux bornes'],
+    ['Une boucle : les intensités ?', 'IG = I1 = I2', 'Le courant est le même partout.'],
+    ['Une boucle : les tensions ?', 'UG = U1 + U2', 'La tension du générateur se répartit.'],
+    ['Deux boucles : les intensités ?', 'IG = I1 + I2', 'Le courant se partage.'],
+    ['Deux boucles : les tensions ?', 'UG = U1 = U2'],
+    ['Une boucle : on dévisse une lampe ?', 'L’autre s’éteint.'],
+    ['Deux boucles : on dévisse une lampe ?', 'L’autre reste allumée.', 'C’est le montage des maisons.'],
+    ['P = ?', 'U · I', 'en watts (W)'],
+    ['Un radiateur de 2000 W pendant 3 h ?', '6 kWh', '2 kW · 3 h'],
+    ['Les wagonnets : que représentent le générateur, la lampe, les rails ?', 'la station de pousseurs, une zone de frottements, les fils'],
+    ['Les wagonnets : l’intensité ? la tension ?', 'Le nombre de wagonnets par seconde ; le charbon que chaque wagonnet dépose.'],
+    ['Un court-circuit du générateur ?', 'Une boucle sans récepteur : le courant devient très grand, le circuit chauffe dangereusement.'],
+    ['Le fusible ou le disjoncteur ?', 'Il coupe le courant quand il devient trop grand : il protège l’installation.'],
+    ['Qu’est-ce qui protège les personnes ?', 'L’interrupteur à courant de défaut (FI).', 'Il coupe dès qu’un peu de courant s’échappe du circuit.'],
+    ['Tension du réseau domestique en Suisse ?', '230 V'],
+  ]);
+  C('s-forces', [
+    ['Masse ou poids ?', 'La masse : quantité de matière, en kg. Le poids : une force, en newtons, qui dépend du lieu.'],
+    ['Poids = ?', 'masse · intensité de la pesanteur', 'Sur Terre, environ 10 N par kg.'],
+    ['Poids d’un objet de 5 kg sur Terre ?', 'environ 50 N'],
+    ['Sur la Lune, la masse d’un astronaute ?', 'Elle ne change pas ; son poids est environ six fois plus petit.'],
+    ['L’instrument qui mesure une force ?', 'le dynamomètre'],
+    ['Comment représente-t-on une force ?', 'Par une flèche : direction, sens, intensité.'],
+    ['Des forces qui se compensent ?', 'L’objet reste immobile ou garde la même vitesse.'],
+    ['L’unité de force ? d’énergie ?', 'le newton (N) ; le joule (J)'],
+  ]);
+  C('s-matiere', [
+    ['Le noyau d’un atome ?', 'Des protons et des neutrons ; les électrons tournent autour.'],
+    ['La charge du proton ? de l’électron ? du neutron ?', 'positive ; négative ; aucune'],
+    ['Une molécule ?', 'Un assemblage d’atomes liés entre eux.'],
+    ['Que dit H₂O ?', 'Deux atomes d’hydrogène et un atome d’oxygène.'],
+    ['Solide → liquide ?', 'la fusion'],
+    ['Liquide → solide ?', 'la solidification'],
+    ['Liquide → gaz ?', 'la vaporisation'],
+    ['Gaz → liquide ?', 'la liquéfaction (condensation)'],
+    ['Un changement d’état change-t-il la masse ?', 'Non : la masse se conserve.'],
+    ['Transformation chimique ?', 'Les atomes se réarrangent : de nouvelles substances apparaissent.', 'Du bois qui brûle.'],
+    ['Séparer un solide non dissous d’un liquide ?', 'la filtration'],
+  ]);
+})();
+</script>
+<script>/* cartes-shs.js */
+'use strict';
+/* Cap Lycée — cartes de géographie et d'histoire : [recto, verso, note]. */
+(function () {
+  CL.CARTES = CL.CARTES || {};
+  const C = (chap, l) => (CL.CARTES[chap] = (CL.CARTES[chap] || []).concat(l));
+
+  /* ================= Géographie ================= */
+  C('g-eau-intro', [
+    ['Pourquoi dit-on que la Suisse est le château d’eau de l’Europe ?', '0,4 % du continent, mais 6 % des réserves d’eau douce de l’Europe.'],
+    ['Part de l’électricité suisse produite par l’hydraulique ?', 'environ 58 %'],
+    ['Vers quelles mers partent les eaux suisses ?', 'mer du Nord (Rhin), Méditerranée (Rhône), Adriatique (Tessin), mer Noire (Inn)'],
+    ['Pourquoi le château d’eau vacille-t-il ?', 'Les glaciers fondent, les températures montent, les précipitations baissent.'],
+    ['Lac Majeur : quel désaccord ?', 'L’Italie veut relever le niveau pour irriguer la plaine du Pô ; le Tessin refuse, par crainte des inondations.'],
+    ['Quand le partage de l’eau crée-t-il des tensions ?', 'Quand l’eau vient à manquer.'],
+    ['En cas de grave pénurie dans le Jura, quel usage passe en premier ?', 'L’eau potable de la population et la défense incendie.', 'Puis le bétail, puis l’industrie.'],
+  ]);
+  C('g-eau-ressource', [
+    ['Le moteur du cycle de l’eau ?', 'L’énergie du soleil.'],
+    ['L’hydrosphère ?', 'Toute l’eau de la Terre, liquide ou solide : environ 1,4 milliard de km³.'],
+    ['Part d’eau salée sur Terre ?', '97 %'],
+    ['Part d’eau douce exploitable ?', '0,001 %'],
+    ['Eau salée : à partir de combien de sel ?', '10 g par litre', 'Les océans : 35 g/l en moyenne ; la mer Morte : 275 g/l.'],
+    ['D’où vient le sel de la mer ?', 'Des roches : l’eau dissout leurs sels minéraux, les rivières les emportent vers la mer.'],
+    ['Les limites du dessalement ?', 'Cher, gourmand en énergie, rejette de la saumure, installations vulnérables.'],
+    ['Le stress hydrique ?', 'La demande en eau dépasse peu à peu l’eau disponible.'],
+    ['Un réservoir aquifère ?', 'Une eau souterraine exploitable, dans des roches poreuses ou fissurées.'],
+    ['La nappe phréatique ?', 'La zone du sous-sol saturée en eau.'],
+    ['Gérer durablement un aquifère ?', 'Ne pas prélever plus que ce qui se recharge, et préserver la qualité de l’eau.'],
+    ['La cryosphère ?', 'L’eau à l’état solide : inlandsis, glaciers, icebergs, pergélisol, neige.'],
+  ]);
+  C('g-eau-usages', [
+    ['Les trois grands usages de l’eau douce ?', 'domestique, industriel, agricole'],
+    ['Minimum vital d’eau domestique selon l’OMS ?', '20 litres par personne et par jour'],
+    ['Eau domestique en Suisse, par personne et par jour ?', '140 à 160 litres'],
+    ['Pourquoi ces écarts entre pays ?', 'Disponibilité de l’eau, accès à un réseau, mode de vie, prix de l’eau.'],
+    ['L’eau virtuelle ?', 'L’eau qu’il a fallu pour produire les aliments, les objets et les services qu’on consomme.', 'En Suisse : environ 97 % de l’eau consommée par une personne.'],
+    ['L’empreinte hydrique d’un pays ?', 'Toute l’eau utilisée pour produire ce que consomme sa population.'],
+    ['Pourquoi l’usage domestique pèse-t-il lourd en Suisse ?', 'Climat tempéré (peu d’irrigation) et mode de vie d’un pays riche.'],
+  ]);
+  C('g-eau-cours', [
+    ['À quoi servent cours d’eau et lacs ?', 'S’approvisionner, pêcher, transporter, produire de l’énergie, se détendre ; réservoirs de biodiversité.'],
+    ['L’étang de la Gruère : quand s’est formée sa tourbière ?', 'À la fin de la dernière glaciation, il y a plus de 10 000 ans.'],
+    ['Pourquoi l’essence monte-t-elle quand le Rhin est bas ?', 'Les péniches qui l’apportent à Bâle naviguent moins chargées : le transport coûte plus cher.'],
+    ['D’où vient la pollution des cours d’eau ?', 'Rejets industriels, anciennes décharges, eaux usées, pesticides et engrais.'],
+    ['Août 2007, la Sorne à Delémont ?', 'Une crue : plus de 24 millions de francs de dégâts.'],
+    ['Réduire le risque d’inondation ?', 'Redonner de la place aux cours d’eau (revitalisation) et construire des protections.'],
+    ['Le réseau hydrographique ?', 'Les cours d’eau, lacs et zones humides reliés, qui drainent une région.'],
+    ['Le bassin versant ?', 'L’espace dont toutes les eaux s’écoulent vers un même cours d’eau.'],
+  ]);
+  C('g-eau-mers', [
+    ['Le surtourisme ?', 'Un tourisme si intense qu’il devient négatif pour l’environnement et les habitants.'],
+    ['Les ressources halieutiques ?', 'Les espèces aquatiques exploitées par les humains.'],
+    ['Consommation de poisson par habitant, 1961 et 2023 ?', '9 kg puis 20 kg par an'],
+    ['La surpêche ?', 'Trop de prises : les stocks de poissons baissent.'],
+    ['Pourquoi l’aquaculture aggrave-t-elle la surpêche ?', 'Les poissons d’élevage mangent des farines faites de poissons sauvages.'],
+    ['Les eaux territoriales ?', 'Jusqu’à 12 milles marins (22 km) : l’État côtier y est souverain.'],
+    ['La ZEE ?', 'Zone économique exclusive, jusqu’à 200 milles marins (370 km) : l’État côtier y exploite les ressources.'],
+    ['Pourquoi un îlot peut-il valoir cher ?', 'Il permet de revendiquer une immense ZEE.'],
+    ['Biodiversité marine depuis 1970 ?', 'Elle a baissé de moitié.'],
+  ]);
+  C('g-eau-enjeux', [
+    ['Part de la population mondiale sans eau potable ?', 'environ 10 %'],
+    ['Une STEP ?', 'Une station d’épuration des eaux usées.'],
+    ['Qui paie l’eau potable en Suisse ?', 'Les usagers, par le prix de l’eau : c’est un service autofinancé.'],
+    ['L’eau en Suisse : bien public ou privé ?', 'Bien public : l’accès est un droit, l’eau potable passe en premier.'],
+    ['L’eau au Chili ?', 'Un bien privé : des « droits d’eau » s’achètent, aucun usage n’est prioritaire.'],
+    ['Sur un fleuve partagé, qui contrôle l’eau ?', 'Le pays en amont ; le pays en aval dépend de lui.'],
+    ['Tigre et Euphrate : pourquoi l’Irak manque-t-il d’eau ?', 'Les barrages en amont, en Turquie et en Syrie.'],
+    ['Pourquoi le grand barrage éthiopien inquiète-t-il l’Égypte ?', 'L’Égypte est en aval sur le Nil.'],
+    ['Comment éviter les conflits de l’eau ?', 'Se rencontrer, discuter, prévoir des façons de régler les désaccords, demander une médiation.'],
+  ]);
+  C('g-eau-fm', [
+    ['Pourquoi si peu d’eau de surface aux Franches-Montagnes ?', 'C’est un plateau karstique : la pluie s’infiltre vite dans le calcaire.'],
+    ['Un plateau karstique ?', 'Un plateau calcaire creusé par l’eau, qui dissout la roche.'],
+    ['Les emposieux ?', 'Les dolines, dans le parler des Franches-Montagnes.'],
+    ['Avant 1920, comment les fermes gardaient-elles l’eau ?', 'Grands toits à faible pente pour récolter la pluie, et citernes.'],
+    ['D’où vient l’eau des Franches-Montagnes aujourd’hui ?', 'Du vallon de Saint-Imier, pompée par le SEF.'],
+    ['Le SEF ?', 'Le syndicat qui fournit l’eau potable aux communes des Franches-Montagnes (créé en 1936).', 'Un grossiste : il remplit les réservoirs des communes.'],
+    ['Où est le centre d’exploitation du SEF ?', 'À Saignelégier.'],
+    ['Pourquoi une zone de protection à La Chaux-de-Fonds ?', 'L’eau pompée à Cormoret s’infiltre dans le sol là-bas.'],
+  ]);
+  C('g-eau-durable', [
+    ['Gérer l’eau durablement ?', 'Répondre aux besoins d’aujourd’hui sans priver les générations suivantes ni abîmer les milieux.'],
+    ['Trois moyens ?', 'Économiser (goutte-à-goutte), épurer et réutiliser, partager entre usagers.'],
+    ['Le Colorado ?', 'Si sollicité qu’il n’atteint presque plus la mer, au Mexique.'],
+    ['La mer d’Aral ?', 'Ses fleuves ont été détournés pour irriguer du coton : elle a perdu la plus grande partie de son eau.'],
+  ]);
+  C('g-energie', [
+    ['Les énergies fossiles ?', 'pétrole, gaz naturel, charbon (non renouvelables)'],
+    ['Les énergies renouvelables ?', 'eau, soleil, vent, biomasse, géothermie'],
+    ['Part des fossiles dans l’énergie consommée dans le monde ?', 'environ 80 %'],
+    ['Pourquoi viser l’indépendance énergétique ?', 'Un pays qui dépend des importations est vulnérable aux crises.'],
+    ['Le détroit d’Ormuz ?', 'Un passage stratégique pour le pétrole.'],
+    ['L’électricité est-elle une source d’énergie ?', 'Non : il faut la produire.'],
+    ['Part de l’énergie importée par la Suisse ?', 'environ 70 %'],
+    ['D’où vient l’électricité suisse ?', 'Près de 60 % de l’hydraulique, environ un tiers du nucléaire.'],
+    ['La Stratégie énergétique 2050 (acceptée en 2017) ?', 'Plus de nouvelles centrales nucléaires, plus de renouvelables, moins de consommation.'],
+    ['Sobriété ou efficacité ?', 'Sobriété : consommer moins. Efficacité : le même service avec moins d’énergie.'],
+  ]);
+  C('g-info', [
+    ['Par où passent plus de 95 % des échanges entre continents ?', 'Par des câbles sous-marins.'],
+    ['Les vecteurs d’information ?', 'écriture, imprimerie, télégraphe, radio, Internet'],
+    ['La fracture numérique ?', 'Les inégalités d’accès au numérique.', 'Environ un tiers de l’humanité n’utilise pas Internet.'],
+    ['Part du numérique dans les émissions mondiales de gaz à effet de serre ?', 'environ 3 à 4 %'],
+    ['Comment se financent les services « gratuits » ?', 'Par les données personnelles, qui servent à cibler la publicité.'],
+    ['Vérifier une information ?', 'Qui parle, quand, et que disent d’autres sources ?'],
+    ['Le val Verzasca en 2017 ?', 'Une vidéo partagée en ligne le rend célèbre : afflux de visiteurs, déchets, tensions.'],
+  ]);
+  C('g-outils', [
+    ['Une part en pour-cent ?', 'partie : total, puis multiplier par 100', '56 sur 80 : 70 %'],
+    ['1 m³ = combien de litres ?', '1000 litres'],
+    ['Au 1:25 000, 1 cm sur la carte = ?', '250 m'],
+    ['Au 1:100 000, 1 cm sur la carte = ?', '1 km'],
+    ['6 cm au 1:50 000 = ?', '3 km'],
+    ['Une valeur par habitant ?', 'Le total divisé par le nombre d’habitants.'],
+  ]);
+  C('g-cartes', [
+    ['Pourquoi une carte n’est-elle jamais neutre ?', 'Mettre une sphère à plat oblige à déformer quelque chose, et le choix dépend d’une vision du monde.'],
+    ['La projection de Mercator (1569) ?', 'Elle respecte les angles et les formes, pas les surfaces : le Nord paraît trop grand.'],
+    ['La projection de Peters (1973) ?', 'Elle respecte les surfaces, pas les formes ni les distances.'],
+    ['Equal Earth (2018) ?', 'Elle respecte les surfaces en limitant les déformations.'],
+    ['« Correct the map » ?', 'Une campagne africaine pour généraliser Equal Earth : ne plus montrer l’Afrique trop petite.'],
+    ['Nommer un lieu ?', 'C’est affirmer son pouvoir.', 'En 2025, le « golfe du Mexique » renommé « golfe d’Amérique » par le président des États-Unis.'],
+  ]);
+  C('g-mots', [
+    ['Un affluent ?', 'Un cours d’eau qui se jette dans un autre.'],
+    ['Un fleuve ?', 'Un cours d’eau qui se jette dans la mer.'],
+    ['Une crue ?', 'Une hausse forte et rapide du débit.'],
+    ['Une pénurie ?', 'La demande dépasse durablement l’eau disponible.'],
+    ['Un gisement ?', 'Une ressource exploitable dans le sous-sol.'],
+    ['Le raffinage ?', 'Transformer le pétrole brut en essence, diesel…'],
+    ['La géothermie ?', 'La chaleur du sous-sol.'],
+    ['Un algorithme ?', 'Une suite d’instructions pour une machine.'],
+  ]);
+
+  /* ================= Histoire ================= */
+  C('h-siecle', [
+    ['1914-1918 ?', 'la Première Guerre mondiale'],
+    ['Octobre 1929 ?', 'Le krach de Wall Street.', 'Puis la Grande Dépression, chômage de masse.'],
+    ['Le New Deal (1933) ?', 'Roosevelt : l’État intervient pour relancer l’économie.'],
+    ['Krach ou crise ?', 'Le krach : l’effondrement de la Bourse en quelques jours. La crise : les années difficiles qui suivent.'],
+    ['Les Trente Glorieuses ?', '1945-1973 : croissance forte, plein emploi, société de consommation.'],
+    ['L’État-providence ?', 'L’État protège contre les risques de la vie : vieillesse, chômage…'],
+    ['1973 ?', 'Premier choc pétrolier : fin des Trente Glorieuses, retour du chômage.'],
+    ['Suisse, 1918 ?', 'la grève générale'],
+    ['Suisse, 1948 ?', 'les premières rentes de l’AVS'],
+    ['Suisse, 1971 ?', 'le droit de vote des femmes au niveau fédéral'],
+    ['1979 ?', 'la naissance du canton du Jura'],
+  ]);
+  C('h-14-18', [
+    ['28 juin 1914 ?', 'L’assassinat de l’archiduc François-Ferdinand à Sarajevo.'],
+    ['La Triple-Entente ?', 'France, Royaume-Uni, Russie'],
+    ['Les Empires centraux ?', 'Allemagne, Autriche-Hongrie (puis l’Empire ottoman)'],
+    ['Les causes profondes de la guerre ?', 'Nationalismes, rivalités économiques et coloniales, course aux armements.'],
+    ['1916 ?', 'la bataille de Verdun'],
+    ['1917 ?', 'La révolution russe ; les États-Unis entrent en guerre.'],
+    ['11 novembre 1918 ?', 'l’armistice'],
+    ['1919 ?', 'Le traité de Versailles.', 'L’Allemagne perd des territoires, paie des réparations : un « Diktat » pour beaucoup d’Allemands.'],
+    ['La guerre totale ?', 'Toute la société est mobilisée, à l’arrière aussi.'],
+    ['Quatre empires disparus en 1918 ?', 'allemand, austro-hongrois, russe, ottoman'],
+    ['La Suisse en 1914-1918 ?', 'Neutre, armée mobilisée sous le général Wille ; un « fossé » entre Romands et Alémaniques.'],
+  ]);
+  C('h-dictatures', [
+    ['Italie : chef, idéologie, prise de pouvoir ?', 'Mussolini, le fascisme, 1922'],
+    ['URSS : chef et idéologie ?', 'Staline, le communisme stalinien'],
+    ['Allemagne : chef, idéologie, prise de pouvoir ?', 'Hitler, le nazisme, 1933'],
+    ['Les traits d’un régime totalitaire ?', 'Parti unique, culte du chef, propagande, terreur, jeunesse encadrée.'],
+    ['Dictature ou régime totalitaire ?', 'Le totalitaire veut l’adhésion de chacun, pas seulement l’obéissance.'],
+    ['Les lois de Nuremberg ?', '1935 : les Juifs sont exclus de la société allemande.'],
+    ['La Nuit de Cristal ?', '1938 : violences contre les Juifs en Allemagne.'],
+    ['Le Goulag ?', 'Les camps de travail forcé de l’URSS.'],
+    ['Comment Hitler arrive-t-il au pouvoir ?', 'Nommé chancelier légalement en 1933, il supprime les libertés en quelques mois.'],
+  ]);
+  C('h-39-45', [
+    ['1er septembre 1939 ?', 'L’Allemagne envahit la Pologne.'],
+    ['Juin 1940 ?', 'Défaite de la France ; appel du général de Gaulle.'],
+    ['Juin 1941 ?', 'L’Allemagne attaque l’URSS.'],
+    ['Décembre 1941 ?', 'Pearl Harbor : les États-Unis entrent en guerre.'],
+    ['Février 1943 ?', 'Défaite allemande à Stalingrad.'],
+    ['6 juin 1944 ?', 'Le débarquement en Normandie.'],
+    ['8 mai 1945 ?', 'La capitulation de l’Allemagne.'],
+    ['L’Axe ? Les Alliés ?', 'Allemagne, Italie, Japon ; Royaume-Uni, URSS, États-Unis.'],
+    ['Collaborer ou résister ?', 'Collaborer : travailler avec l’occupant. Résister : lutter contre lui, en secret.'],
+    ['La Suisse : le général et le réduit ?', 'Henri Guisan ; l’armée se replie sur les Alpes (réduit national).'],
+    ['Le plan Wahlen ?', 'Étendre les cultures pour nourrir la Suisse.'],
+    ['L’ONU ?', 'Créée en 1945.'],
+  ]);
+  C('h-crimes', [
+    ['Un génocide ?', 'La destruction voulue et organisée d’un peuple ou d’un groupe pour ce qu’il est.'],
+    ['Un crime contre l’humanité ?', 'Des violences massives et organisées contre des civils.', 'Imprescriptible : jugé sans limite de temps.'],
+    ['1915 ?', 'le génocide des Arméniens dans l’Empire ottoman'],
+    ['La Shoah ?', 'Le génocide des Juifs d’Europe par les nazis : environ six millions de morts.'],
+    ['1994 ?', 'le génocide des Tutsi au Rwanda'],
+    ['Le procès de Nuremberg ?', '1945-1946 : les dirigeants nazis sont jugés.'],
+    ['La Cour pénale internationale ?', 'Depuis 2002, à La Haye.'],
+    ['Le devoir de mémoire ?', 'Se souvenir des victimes et comprendre, pour que cela ne recommence pas.'],
+  ]);
+  C('h-decolonisation', [
+    ['La décolonisation, quand ?', 'Surtout entre 1945 et 1975.'],
+    ['Pourquoi après 1945 ?', 'Métropoles ruinées, ONU pour le droit des peuples, États-Unis et URSS hostiles, mouvements nationalistes.'],
+    ['1947 ?', 'L’Inde indépendante ; partition avec le Pakistan.'],
+    ['1954 ?', 'Diên Biên Phu : défaite française en Indochine.'],
+    ['1954-1962 ?', 'la guerre d’Algérie'],
+    ['1960 ?', 'L’« année de l’Afrique » : dix-sept indépendances.'],
+    ['Bandung (1955) ?', 'Des pays d’Asie et d’Afrique refusent de s’aligner : le non-alignement.'],
+    ['Indépendance négociée ou arrachée ?', 'Négociée : Inde, Ghana. Arrachée par la guerre : Indochine, Algérie.'],
+  ]);
+  C('h-guerre-froide', [
+    ['Les deux blocs ?', 'L’Ouest (États-Unis) et l’Est (URSS).'],
+    ['L’OTAN ? le pacte de Varsovie ?', '1949, l’alliance de l’Ouest ; 1955, l’alliance de l’Est.'],
+    ['Pourquoi une guerre « froide » ?', 'Les deux Grands ne s’affrontent jamais directement : la bombe atomique les dissuade.'],
+    ['1947 ?', 'Doctrine Truman et plan Marshall.'],
+    ['1949 ?', 'L’Allemagne est divisée : RFA et RDA.'],
+    ['1961 ?', 'La construction du mur de Berlin.'],
+    ['1962 ?', 'La crise des missiles de Cuba.'],
+    ['1989 ?', 'La chute du mur de Berlin.'],
+    ['1991 ?', 'La fin de l’URSS.'],
+    ['Comment s’affrontent les deux blocs ?', 'Guerres locales (Corée, Vietnam), course aux armements et à l’espace, propagande.'],
+  ]);
+  C('h-moyen-orient', [
+    ['Pourquoi le Moyen-Orient est-il stratégique ?', 'Carrefour de trois continents, pétrole, passages comme le canal de Suez.'],
+    ['Après 1918, qui contrôle la région ?', 'La France et le Royaume-Uni, sous forme de mandats.'],
+    ['1917 ?', 'la déclaration Balfour'],
+    ['1947 ?', 'le plan de partage de l’ONU'],
+    ['1948 ?', 'Proclamation d’Israël ; première guerre israélo-arabe ; exode palestinien.'],
+    ['1967 ?', 'la guerre des Six Jours'],
+    ['1973 ?', 'Guerre du Kippour ; premier choc pétrolier.'],
+    ['1993 ?', 'les accords d’Oslo'],
+    ['L’OPEP ?', 'Fondée en 1960, elle pèse sur les prix du pétrole.'],
+    ['1979 ?', 'La révolution iranienne ; paix entre l’Égypte et Israël.'],
+  ]);
+  C('h-europe', [
+    ['Le but de départ de la construction européenne ?', 'Rendre la guerre impossible en liant les économies.'],
+    ['1950 ?', 'la déclaration Schuman'],
+    ['1951 ?', 'La CECA : charbon et acier mis en commun par six pays.'],
+    ['1957 ?', 'Le traité de Rome : la Communauté économique européenne.'],
+    ['1992 ?', 'Le traité de Maastricht : l’Union européenne.'],
+    ['2002 ?', 'les pièces et billets en euros'],
+    ['2020 ?', 'Le Royaume-Uni quitte l’Union : vingt-sept membres.'],
+    ['La Suisse et l’Europe en 1992 ?', 'Refus de l’Espace économique européen.'],
+    ['La Suisse et Schengen ?', 'Elle y entre en 2008.'],
+    ['Conseil de l’Europe et Union européenne ?', 'Deux organisations différentes : la Suisse est membre de la première, pas de la seconde.'],
+  ]);
+  C('h-art', [
+    ['Artiste témoin ou engagé ?', 'Le témoin montre ce qu’il a vécu ; l’engagé prend position pour agir sur l’opinion.'],
+    ['Dada (1916) ?', 'Des artistes réfugiés à Zurich : le dégoût d’une société qui a mené à la guerre.'],
+    ['« La Guerre » d’Otto Dix ?', 'L’horreur des tranchées.'],
+    ['« Les Temps modernes » (1936) ?', 'Chaplin et le travail à la chaîne.'],
+    ['« Guernica » (1937) ?', 'Picasso et le bombardement de civils.'],
+    ['« Le Dictateur » (1940) ?', 'Chaplin tourne Hitler en ridicule.'],
+    ['Le pop art ?', 'Andy Warhol, années 1960 : la société de consommation.'],
+    ['L’« art dégénéré » ?', 'L’art moderne condamné par les nazis.'],
+    ['Analyser une œuvre ?', 'Identifier (auteur, date, nature, contexte), décrire, expliquer le message.'],
+  ]);
+  C('h-outils', [
+    ['La propagande ?', 'Une action pour orienter l’opinion.'],
+    ['Une idéologie ?', 'Un ensemble d’idées qui guide un groupe.'],
+    ['Un mandat (SDN) ?', 'Un territoire confié par la SDN, à préparer à l’indépendance.'],
+    ['Un réfugié ?', 'Une personne qui fuit une persécution.'],
+    ['Présenter un document ?', 'Nature, auteur, date, destinataire, intention.'],
+    ['Source primaire ou secondaire ?', 'Primaire : du moment des faits. Secondaire : écrite plus tard, à partir des sources.'],
+    ['Pourquoi croiser les sources ?', 'Pour vérifier une information.'],
+  ]);
 })();
 </script>
 <script>/* liens.js */
@@ -9209,7 +10566,9 @@ html.pres .balise::after{display:none}
     'e-u7': [['e-u6', 'le present perfect avec just, yet, already'], ['e-u3', 'le first conditional avant le second']],
     'e-u8': [['e-u6', 'le present perfect avec for et since'], ['e-u5', 'le past simple, pour comparer avec used to']],
     /* sciences */
-    's-forces': [['s-electricite', 'puissance et énergie']],
+    's-pression': [['s-forces', 'la force et le poids']],
+    's-energie': [['s-forces', "l'énergie, vue en 10e"]],
+    's-electricite': [['s-energie', "la puissance et les transferts d'énergie"]],
     /* géographie */
     'g-eau-ressource': [['g-eau-intro', "la Suisse, château d'eau de l'Europe"]],
     'g-eau-usages': [['g-eau-ressource', "l'eau douce disponible"]],
@@ -9611,12 +10970,13 @@ CL.enClasse = [
      rep : ses réponses écrites aux exercices des manuels, par ligne « Dans tes manuels » (chapitre|où) ;
      surp : ses réponses tapées directement sur les pages, dans la visionneuse : surp[page] = [[x, y, texte], …] (millièmes de la largeur) ;
      ex : exercice par exercice, ex[chapitre|où][unité] = 1 (fait) ou 2 (corrigé), exj[chapitre|où] = dernier jour touché ;
-     lus : les fiches de l'enseignant qu'elle a ouvertes ; qbr : le brouillon de sa question, dans l'onglet Questions */
-  const vide = () => ({ v: 1, sav: {}, jours: {}, point: {}, theme: 'auto', cree: jour(), xp: 0, troph: {}, obj: 12, rec: 0, c: {}, man: {}, repos: {}, classe: {}, notes: [], sauv: null, rep: {}, surp: {}, ex: {}, exj: {}, lus: {}, qbr: null });
+     lus : les fiches de l'enseignant qu'elle a ouvertes ; qbr : le brouillon de sa question, dans l'onglet Questions ;
+     fc : ses cartes, fc[id] = [boîte, jour où la carte revient] ; mc : les cartes qu'elle a écrites (cartes.js) */
+  const vide = () => ({ v: 1, sav: {}, jours: {}, point: {}, theme: 'auto', cree: jour(), xp: 0, troph: {}, obj: 12, rec: 0, c: {}, man: {}, repos: {}, classe: {}, notes: [], sauv: null, rep: {}, surp: {}, ex: {}, exj: {}, lus: {}, qbr: null, fc: {}, mc: [] });
   const valide = (o) => !!(o && o.v === 1 && o.sav && o.jours);
   /* les questions faites, et tout ce qu'il y aurait à perdre (questions, notes, réponses, pages cochées, points faits) */
   const questions = (o) => Object.values((o && o.sav) || {}).reduce((a, f) => a + ((f && f.n) || 0), 0);
-  const poids = (o) => questions(o) + ['notes', 'rep', 'surp', 'man', 'point', 'ex'].reduce((a, k) => a + Object.keys((o && o[k]) || {}).length, 0);
+  const poids = (o) => questions(o) + ['notes', 'rep', 'surp', 'man', 'point', 'ex', 'fc', 'mc'].reduce((a, k) => a + Object.keys((o && o[k]) || {}).length, 0);
   function charger() {
     let brut;
     try {
@@ -10341,7 +11701,7 @@ CL.enClasse = [
 /* Produit par outils/pages.py : ne pas modifier à la main.
    Pour chaque ligne « Dans tes manuels » (« chapitre|où ») : [extrait, nombre de pages, corrigé, nombre de pages].
    Les extraits sont des PDF chiffrés dans p/ ; p/cle.json donne leur mot de passe à qui a le code. */
-CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-relatifs|Livre p. 28–31":["d339bcca825e",4,"3aafe968af29",5],"m-relatifs|Fichier p. 5–7":["55f4cb23c7e3",3,"316d9b704c46",4],"m-relatifs|Fichier p. 8":["bb59f599ad29",1,"ed4082d3ef5d",1],"m-fractions|Fichier p. 9":["93cf46817458",1,"97fb9a4e6327",1],"m-fractions|Livre p. 32–39":["5907f8ceeeb4",8,"85440f7336e5",13],"m-fractions|Fichier p. 10–17":["ad2c7fb7a925",8,"8491b717c262",9],"m-fractions|Fichier p. 18":["c625f75d9fe6",1,"ed4082d3ef5d",1],"m-fractions|Fichier p. 19–20":["b305663bb165",2,"342552308419",3],"m-puissances|Fichier p. 21":["1d00afaada07",1,"14bca21b4594",2],"m-puissances|Livre p. 40–41":["68d3fc942c3b",2,"e7cf1ea0d701",3],"m-puissances|Fichier p. 22":["c973656ab216",1,"14bca21b4594",2],"m-puissances|Fichier p. 24":["13d9338795d3",1,"ed4082d3ef5d",1],"m-notation|Livre p. 41–43":["a405c1d67efb",3,"e198f35fd90a",3],"m-notation|Fichier p. 22–23":["f16733559989",2,"3d7eba7b5ea7",4],"m-notation|Fichier p. 24":["13d9338795d3",1,"ed4082d3ef5d",1],"m-racines|Livre p. 44–47":["02766b29fb2d",4,"f138f30b286c",4],"m-racines|Fichier p. 23":["4f7ad5193952",1,"16aa69baacae",2],"m-racines|Fichier p. 24":["13d9338795d3",1,"ed4082d3ef5d",1],"m-proportion|Fichier p. 57":["d9a823e13ef4",1,"82dd60fbb5c0",2],"m-proportion|Livre p. 98–106":["9904725f5526",9,"58ba464923a5",10],"m-proportion|Fichier p. 58–62":["b69623da3ee8",5,"350b022eae83",6],"m-proportion|Fichier p. 66":["d1c40cc3fac4",1,"c9fc3007b98c",1],"m-litteral|Fichier p. 70":["1ea35fdc8e9d",1,"d39300d34db0",1],"m-litteral|Livre p. 124–130":["4d19aee98f1b",7,"5c3a3de7c0a5",12],"m-litteral|Fichier p. 71–75":["27e78b70f815",5,"7e7d077b3ae2",6],"m-litteral|Fichier p. 76":["8df49fbfc1f1",1,"c9fc3007b98c",1],"m-litteral|Fichier p. 79":["de5f07a96591",1,"85322510cebd",1],"m-litteral|Fichier p. 80–84":["4c190d5a15ff",5,"84142fea33ba",5],"m-equations|Fichier p. 100":["d4b3684f4b00",1,"45e945d1e187",1],"m-equations|Livre p. 142–159":["b2e771f92d17",18,"4b102cae78b4",18],"m-equations|Fichier p. 101–105":["7b2fdb392b9a",5,"075af5269af8",6],"m-equations|Fichier p. 106–107":["70f4b38da44b",2,"c9fc3007b98c",1],"m-equations|Fichier p. 108":["fd003429f7c1",1,"023be3560df5",2],"m-equations|Fichier p. 109–112":["d89f3da50d92",4,"91f83f25605e",6],"m-pythagore|Fichier p. 175":["add43828976f",1,"5496df124cd1",1],"m-pythagore|Livre p. 238–245":["3ac313260015",8,"4c8fc5d68a04",8],"m-pythagore|Fichier p. 176":["63ef40df3fed",1,"",0],"m-pythagore|Fichier p. 177":["af882b2f365a",1,"189ec1838f3d",2],"m-pythagore|Fichier p. 178":["97486e3fffae",1,"",0],"m-identites|Livre p. 131–134":["4f79bbc03a3d",4,"8f3e329df794",8],"m-identites|Fichier p. 85–87":["7d9b04587645",3,"6fa6928ab002",2],"m-identites|Fichier p. 88":["0e3f58155843",1,"c9fc3007b98c",1],"m-factorisation|Livre p. 135–139":["bcd23344f825",5,"e7fa1a0a1b49",8],"m-factorisation|Fichier p. 89–93":["7c3588462911",5,"d175bb0a1149",4],"m-factorisation|Fichier p. 94":["217a1d7490ee",1,"c9fc3007b98c",1],"m-factorisation|Fichier p. 95–99":["36a8c9a9a09f",5,"2517c2d45261",5],"m-equations2|Livre p. 166–175":["f652d6c2fcbc",10,"3ac45e1a989d",9],"m-equations2|Fichier p. 114":["97256e504c83",1,"dd19d7edaf33",2],"m-equations2|Fichier p. 115–117":["d195fa59f72e",3,"ed4f9bc03bb3",1],"m-systemes|Livre p. 160–166":["c9adb81f8e6b",7,"2993e7867ff3",5],"m-systemes|Fichier p. 113":["2f00546ae525",1,"3dda8d487f0a",2],"m-systemes|Fichier p. 114":["97256e504c83",1,"dd19d7edaf33",2],"m-fonctions|Fichier p. 33":["5e408f715058",1,"d0f158df18f2",2],"m-fonctions|Livre p. 74–86":["4f4d273aafa4",13,"08e1b4e65715",26],"m-fonctions|Fichier p. 34–40":["d139588a0d6d",7,"be929a15e90c",7],"m-fonctions|Fichier p. 41":["f325d3168027",1,"ed4082d3ef5d",1],"m-fonctions|Fichier p. 44":["469417a0b637",1,"200f5eb97d5e",2],"m-fonctions|Livre p. 87–97":["ae871d3e21ea",11,"c7f582e95103",14],"m-fonctions|Fichier p. 45–53":["7ce477438ab1",9,"13d578828c5d",11],"m-fonctions|Fichier p. 54":["a31e30046586",1,"8dbc6f0edb43",2],"m-thales|Fichier p. 179":["dfe2e7b4c8af",1,"2f69214a5877",2],"m-thales|Livre p. 202–205":["6bf32ca00127",4,"1a9cc9d5b02c",4],"m-thales|Livre p. 246–251":["30a57ad4e24a",6,"6869c6aab59d",11],"m-thales|Fichier p. 180–188":["94f24de65089",9,"e697f7525ddb",8],"m-thales|Fichier p. 189":["469f4688d772",1,"8d6c2903822f",1],"m-thales|Fichier p. 190–192":["bf303021ba28",3,"4b7dba4e1cc8",3],"m-proba|Fichier p. 25":["642ead4d7806",1,"a80014298528",1],"m-proba|Livre p. 50–57":["bd5fdc17ab3c",8,"529740e4a352",6],"m-proba|Fichier p. 26":["30ce2d12390b",1,"2e9d89b655f1",2],"m-proba|Fichier p. 27":["1ca2c14c4a84",1,"ed4082d3ef5d",1],"m-proba|Fichier p. 28":["4678804f98e2",1,"",0],"m-diagrammes|Livre p. 115–121":["cfd31b49f4a6",7,"129c94f2810d",6],"m-diagrammes|Fichier p. 68–69":["907b4a518d28",2,"0763135b178c",2],"m-angles|Fichier p. 119":["b763e7ee2574",1,"e194c4e410c4",2],"m-angles|Livre p. 190–194":["4364a51c9cbd",5,"6fd88a00895c",7],"m-angles|Livre p. 195–201":["bd8942a50a7e",7,"d58f00dd9aa6",11],"m-angles|Fichier p. 120–128":["0925c1894d2e",9,"a4bda0bd37f7",12],"m-angles|Fichier p. 129":["f1d4a9814964",1,"87688e6bddf8",1],"m-angles|Fichier p. 130–131":["9eb888ab50d9",2,"",0],"m-transfo|Fichier p. 141":["a5632a358baa",1,"a64ebc3a0f61",2],"m-transfo|Livre p. 220–224":["907900435d12",5,"fb8302247b7a",17],"m-transfo|Fichier p. 142–159":["8f45d69acfae",18,"ba51155ad0f6",19],"m-transfo|Fichier p. 160":["2e3df2eae030",1,"87688e6bddf8",1],"m-transfo|Fichier p. 161":["12e7190f453b",1,"",0],"m-aires|Fichier p. 171":["0d601e8451d0",1,"",0],"m-aires|Livre p. 234–237":["af99606542ed",4,"8001648fdce9",5],"m-aires|Fichier p. 172–174":["c944ccafc4af",3,"9dfb5c814cac",3],"m-solides|Fichier p. 132":["2548e3afa6ef",1,"b232a57cf9d0",1],"m-solides|Livre p. 208–217":["a50414f83489",10,"39493a2980d1",18],"m-solides|Fichier p. 133–138":["a9726ae473d7",6,"31787a739f45",4],"m-solides|Fichier p. 139":["290ab6f21465",1,"87688e6bddf8",1],"m-solides|Fichier p. 193":["af847b86276d",1,"fb66861528f5",2],"m-solides|Livre p. 254–274":["7fece6ba5363",21,"6442110d9dcf",17],"m-solides|Fichier p. 194–195":["a104aa0687cc",2,"cb31e203157d",3],"m-solides|Fichier p. 196":["09514c4e7fc0",1,"8d6c2903822f",1],"m-solides|Fichier p. 197–198":["80f77a1805d3",2,"6d66c92dbd02",3],"m-solides|Fichier p. 199":["326977556eef",1,"8d6c2903822f",1],"m-grandeurs|Livre p. 107–114":["056eda6b9f43",8,"04ea01ba19c1",8],"m-grandeurs|Fichier p. 63–65":["224b2cfd17f3",3,"bbba3d67ac7c",3],"m-grandeurs|Fichier p. 201":["22148ba9ee03",1,"044fc59d8b6d",2],"m-grandeurs|Livre p. 276–284":["9c69b753b7c3",9,"9d22fcdeb563",7],"m-grandeurs|Fichier p. 202–203":["f6501260ce93",2,"3b341d5ca3a8",4],"m-grandeurs|Fichier p. 204":["e50a6ecfe3cc",1,"8d6c2903822f",1],"f-classes|Atelier p. 12–13":["5049029b419a",2,"743be90e899a",3],"f-classes|Atelier p. 90–95":["caae1a2b1ba7",6,"86a40ea18c08",4],"f-classes|Atelier p. 96–101":["6cfb21621d00",6,"4e7a4443ef9e",4],"f-classes|Livre unique p. 266–283":["aafaff547eb1",18,"7ddb7b01f2ca",8],"f-fonctions|Atelier p. 14–15":["9a1548da0092",2,"d237e1ee073a",2],"f-fonctions|Atelier p. 120–125":["e99a2e9db41f",6,"6044f549a5ac",4],"f-fonctions|Atelier p. 126–131":["680874d4ce1d",6,"029a121f9d87",5],"f-fonctions|Atelier p. 132–137":["12127cb96d29",6,"5df5ecbbeaad",4],"f-fonctions|Livre unique p. 292–297":["d8e5364360da",6,"dc278012a4b7",4],"f-complements|Atelier p. 140–145":["0a65c97cc7a2",6,"63d08df6c4ce",5],"f-complements|Atelier p. 146–151":["9e74d0360088",6,"9c1088445264",5],"f-complements|Atelier p. 152–155":["e16c2d913c8f",4,"bb4122ad51ee",4],"f-complements|Atelier p. 156–159":["323b16f77514",4,"97fe4e884711",3],"f-complements|Atelier p. 160–163":["b94ff83ae015",4,"194550529302",4],"f-complements|Livre unique p. 300–309":["189b2abeda4d",10,"275e8653dac0",6],"f-subordonnees|Atelier p. 112–117":["873bf3f2a8e5",6,"fa996c5f5e68",5],"f-subordonnees|Atelier p. 182–187":["8abd9b51cd26",6,"96cb75a37861",5],"f-subordonnees|Livre unique p. 284–291":["b69faa4b8a09",8,"6a6dd3ec97bf",5],"f-subordonnees|Livre unique p. 298–299":["43e5ca509c12",2,"ab434c9606eb",2],"f-phrases|Atelier p. 106–111":["b3f6926b11b8",6,"b03beb8d7ad5",4],"f-phrases|Livre unique p. 316–321":["a62a577a7021",6,"5ddda043bc39",5],"f-accords|Atelier p. 236–239":["fa8bfcdc9389",4,"815a86af3d86",4],"f-accords|Atelier p. 240–243":["e9c5419c5f8f",4,"a90ce3eb2eaa",4],"f-accords|Livre unique p. 344–353":["3dc930eb8708",10,"af8b9a3725a2",4],"f-participe|Atelier p. 244–247":["f4e89b6c732c",4,"ab7991210501",5],"f-participe|Atelier p. 248–251":["07976339088f",4,"98a2025806a9",6],"f-homophones|Atelier p. 224–227":["d856b5c8fdd0",4,"12661c5a5c86",4],"f-homophones|Atelier p. 228–231":["14f0843a70cf",4,"ce2eb5669bed",5],"f-homophones|Atelier p. 232–235":["314161b675a7",4,"a4cb21159fb4",5],"f-confusions|Atelier p. 252–255":["ad06c855555d",4,"f29223981867",3],"f-confusions|Atelier p. 256–259":["57e34b9bfec7",4,"e85c3f2891a0",5],"f-recit|Atelier p. 30–35":["90f9fc71875c",6,"3294b02fd704",4],"f-recit|Atelier p. 264–267":["e597640b67a5",4,"edfd0dbff50d",5],"f-recit|Atelier p. 268–271":["cf94eb87cad2",4,"1abfe35dca0a",4],"f-recit|Livre unique p. 330–333":["66196aff7263",4,"a9afd54720c2",2],"f-temps-composes|Atelier p. 272–275":["b3ad0d6fb047",4,"61c9b55d5128",5],"f-temps-composes|Atelier p. 280–283":["07640a931d1a",4,"496a6fee598a",4],"f-temps-composes|Livre unique p. 324–327":["8c60123c05ae",4,"ab3c5146017b",4],"f-temps-composes|Atelier p. 290–295":["4e0071d1a032",6,"",0],"f-modes|Atelier p. 276–279":["9fdd7a726c08",4,"c269d1bb2f1b",4],"f-modes|Livre unique p. 334–335":["7129ada4371b",2,"0891d407de2a",2],"f-enonciation|Atelier p. 24–29":["fe6a8cda02c5",6,"75d9982acc8e",5],"f-enonciation|Atelier p. 42–47":["8be7cac24043",6,"2d0090dd7be2",6],"f-enonciation|Livre unique p. 310–315":["b4d06f4236c4",6,"c6461be1b954",5],"f-enonciation|Livre unique p. 336–337":["a113c4b68254",2,"a7ce3fe3f74e",3],"f-argumenter|Atelier p. 64–69":["8aa430a6cab6",6,"25e662679ccf",5],"f-argumenter|Atelier p. 70–75":["6ba3ac44f2cd",6,"0bdfbb24d831",4],"f-argumenter|Atelier p. 76–81":["7fe4e14d33e2",6,"b9ef894581cf",5],"f-argumenter|Livre unique p. 160–185":["b57f53549e98",26,"50167bb680c6",15],"f-argumenter|Livre unique p. 186–207":["a40bd9843b81",22,"6967cf100c79",13],"f-argumenter|Livre unique p. 340–341":["21de5be19b5d",2,"59a88096d409",1],"f-mots|Atelier p. 192–195":["4b4df8a9bbfb",4,"5e1746808bcd",4],"f-mots|Atelier p. 220–223":["fab0f808108b",4,"35d4e536beb7",5],"f-mots|Livre unique p. 354–357":["93c91565214d",4,"1f8126da5964",4],"f-figures|Atelier p. 196–199":["9fd539f5bef1",4,"ddf8db02179b",3],"f-figures|Livre unique p. 364–367":["303e88897869",4,"a87fd5f73e70",3],"f-recits|Livre unique p. 16–41":["cdf229683e8e",26,"89c240256342",11],"f-recits|Livre unique p. 42–73":["062f1315e753",32,"5db9b0a8d7cc",22],"f-recits|Livre unique p. 94–123":["ae8ca95e671b",30,"002ac986f204",19],"f-recits|Livre unique p. 124–159":["879256dd6e24",36,"544c60b97c9f",15],"f-recits|Livre unique p. 362–363":["7dfe3e82f9e6",2,"a32eb8ca4689",2],"f-recits|Atelier p. 50–55":["7c327e668024",6,"16be31e8a65b",4],"f-poesie|Livre unique p. 74–93":["4d5303e1a566",20,"2afb47d31439",12],"f-poesie|Livre unique p. 368–371":["002669f9064e",4,"79bebb1ed731",3],"f-theatre|Livre unique p. 208–241":["3a7c4f4df157",34,"9b30a8f2bfaf",20],"f-theatre|Livre unique p. 360–361":["5b4a429a124f",2,"26b292dca146",2],"f-theatre|Atelier p. 102–105":["d4bc6039b130",4,"da96876f8aff",4],"f-presse|Livre unique p. 242–265":["ca4afdf90fb5",24,"8d1147e4f2b5",11],"d-verbes|Arbeitsbuch p. 86–87":["3024e554668e",2,"",0],"d-satzbau|Kursbuch p. 83–84":["0a0b1bad14b6",2,"",0],"d-kasus|Kursbuch p. 84 · Kursbuch p. 87":["29adbb36b1e8",2,"",0],"d-perfekt|Arbeitsbuch p. 86–87":["3024e554668e",2,"",0],"d2-k1|Kursbuch p. 7–14":["39d397fa6bd2",8,"146bf8d5c743",8],"d2-k1|Arbeitsbuch p. 7–14":["2b3f36fbab93",8,"3c7c82d0331e",1],"d2-k1|Wort-Schatz p. 4–11":["34619cb273aa",8,"ec9663de5673",1],"d2-k2|Kursbuch p. 15–22":["929bd2b3ad2e",8,"231b839a723a",8],"d2-k2|Arbeitsbuch p. 15–22":["bc67b15baae9",8,"185c82cd61ff",2],"d2-k2|Wort-Schatz p. 12–18":["711535bc0492",7,"ec9663de5673",1],"d2-k3|Kursbuch p. 23–30":["c1a7968814e9",8,"f9bfa5f71c3e",8],"d2-k3|Arbeitsbuch p. 23–30":["7b31ca58d9d8",8,"090c8f98749f",2],"d2-k3|Wort-Schatz p. 19–25":["05267f75a578",7,"ec9663de5673",1],"d2-k4|Kursbuch p. 31–38":["6fdbdf176563",8,"8037d12a1726",8],"d2-k4|Arbeitsbuch p. 31–38":["d7e09111df87",8,"a354f19991a4",1],"d2-k4|Wort-Schatz p. 26–32":["be5ea4f299af",7,"ec9663de5673",1],"d2-k4|Kursbuch p. 39–44":["4ceda5a5b4f3",6,"4b58754baadd",6],"d2-k4|Arbeitsbuch p. 39–44":["bbfe558fe76d",6,"e7980e8d3c27",1],"d2-k5|Kursbuch p. 45–52":["568ab65f68d9",8,"538c6b4b6515",8],"d2-k5|Arbeitsbuch p. 45–52":["fe0c8a27ad69",8,"0bd05c0e0987",1],"d2-k5|Wort-Schatz p. 33–38":["30e26b9dbebb",6,"ec9663de5673",1],"d2-k6|Kursbuch p. 53–60":["edadf7f83a91",8,"cafb0ae973fb",8],"d2-k6|Arbeitsbuch p. 53–60":["1574b3b1e5b2",8,"c3e49c88037f",2],"d2-k6|Wort-Schatz p. 39–44":["f2b5f7a2f8fa",6,"ec9663de5673",1],"d2-k7|Kursbuch p. 61–68":["619801de9a80",8,"ffb8e7f09463",8],"d2-k7|Arbeitsbuch p. 61–68":["4ea707d661f4",8,"f7ee5ddb1885",2],"d2-k7|Wort-Schatz p. 45–50":["4d1310a1a5b3",6,"ec9663de5673",1],"d2-k8|Kursbuch p. 69–76":["610ca4aae8a0",8,"e0c87a0c86f7",8],"d2-k8|Arbeitsbuch p. 69–76":["70c36a280031",8,"4a563db7f67d",1],"d2-k8|Wort-Schatz p. 51–55":["c7781ab90847",5,"ec9663de5673",1],"d2-k8|Kursbuch p. 77–82":["4608ceb8f6d9",6,"6fb64cd65054",6],"d2-k8|Arbeitsbuch p. 77–82":["19da20d2e495",6,"e7980e8d3c27",1],"e-verbes|Student's Book p. 98":["8576a696c626",1,"",0],"e-verbes|Language Builder p. 82–85":["4aef350e13f1",4,"",0],"e-u1|Student's Book p. 6–11":["53e4357caa4d",6,"163a43786329",17],"e-u1|Workbook p. 4–10":["b0f7013e9ff1",7,"9e1cde5bd23e",3],"e-u1|Language Builder p. 2–11":["b1a5733629e3",10,"8bbd59ba9dfc",2],"e-u2|Student's Book p. 12–17":["87f9475d4be4",6,"2654606432f8",15],"e-u2|Workbook p. 11–17":["811a47f3e52d",7,"c5a9244b1eb4",3],"e-u2|Language Builder p. 12–21":["d12497d2d779",10,"547edbc39578",2],"e-u2|Student's Book p. 18–19":["9932a24f070f",2,"bb7eec8af848",4],"e-u2|Workbook p. 18–21":["2c859b0081d9",4,"b12d009a78e6",3],"e-u3|Student's Book p. 20–25":["ad2d9dcfd1ea",6,"d835b1fdf27b",16],"e-u3|Workbook p. 22–28":["ae697af8b0a3",7,"d1b305f31269",3],"e-u3|Language Builder p. 22–31":["4dee7fe22abb",10,"ac1e6389e50f",2],"e-u4|Student's Book p. 26–31":["3d1a6b683719",6,"61aa36ce60ea",17],"e-u4|Workbook p. 29–35":["7bfceb0d7911",7,"c09a19ff330c",4],"e-u4|Language Builder p. 32–41":["f252debcbeb3",10,"4c2bd9d1e7ec",2],"e-u4|Student's Book p. 32–33":["65a10bca30dc",2,"ebea209a7a96",4],"e-u4|Workbook p. 36–39":["59aa32e13f44",4,"69c3f9f6dd20",3],"e-u5|Student's Book p. 34–39":["2aa94fc138f7",6,"bfa183a18d4b",18],"e-u5|Workbook p. 40–47":["a3437110ea8b",8,"d391ece76a49",4],"e-u5|Language Builder p. 42–51":["7731a94a8f47",10,"ac4926f3a432",2],"e-u6|Student's Book p. 40–45":["274ec8c49b5f",6,"0b93730f8935",12],"e-u6|Workbook p. 48–55":["562a6f5ed9eb",8,"fcb5455a752d",3],"e-u6|Language Builder p. 52–61":["f6b5d8290837",10,"dd22c06c67e6",2],"e-u6|Student's Book p. 46–47":["d2f8f4e70a2d",2,"7500ee53d424",4],"e-u6|Workbook p. 56–59":["f0659d8e044f",4,"3e4ad564a124",3],"e-u7|Student's Book p. 48–53":["c6376d4f344d",6,"69848b2311d4",17],"e-u7|Workbook p. 60–67":["f8531cad95c5",8,"a4e93b76f678",4],"e-u7|Language Builder p. 62–71":["3387d2b7fa42",10,"7d785572ea65",2],"e-u8|Student's Book p. 54–59":["4f6fed280ac0",6,"625da941e15b",13],"e-u8|Workbook p. 68–75":["cb1c95da6a19",8,"69f57fe9a6fb",3],"e-u8|Language Builder p. 72–81":["4f92e83c3220",10,"a8f757c68cb6",1],"e-u8|Student's Book p. 60–61":["869b37801193",2,"360daa716610",4],"e-u8|Workbook p. 76–79":["3861fd1c0e6d",4,"a8f357661811",2],"s-cardio|Fiche de synthèse S11-17":["5176ba454af2",1,"",0],"s-cardio|Fiche de synthèse S11-18":["e006c19013f9",1,"",0],"s-cardio|Fiches de synthèse S11-19–20":["b270ceceb3b7",2,"",0],"s-cardio|Fiches de synthèse S11-21–22":["080abfa61c17",2,"",0],"s-cardio|Fiche de synthèse S11-23":["d82b176f023d",1,"",0],"s-cardio|Cahier « Le sang » p. 7":["c0593351a45d",1,"",0],"s-cardio|Fiches de travail S11-3–4":["",0,"6d7c651accf9",3],"s-cardio|Fiches de travail S11-5–9":["",0,"0d441866550e",5],"s-cardio|Fiche de travail S11-10":["",0,"8968e0dc372a",2],"s-cardio|Fiches de travail S11-11–16":["",0,"1aab8788e6a0",6],"g-eau-intro|Diapos intro p. 1–13":["e3db9c94a7b2",13,"",0],"g-eau-intro|Livre p. 8–11":["c7ca1571d0e0",4,"",0],"g-eau-ressource|Diapos A p. 1–19":["44580b7da70a",19,"",0],"g-eau-ressource|Livre p. 12–19 · Fichier p. 1–4":["d10bf1188ba2",12,"",0],"g-eau-usages|Diapos B p. 1–10":["8e92840b8331",10,"",0],"g-eau-usages|Livre p. 20–25 · Fichier p. 5–8":["90125ed13cd6",10,"",0],"g-eau-cours|Diapos C p. 1–8":["ea44658d26c2",8,"",0],"g-eau-cours|Livre p. 26–31 · Fichier p. 9–10":["6511a12bb8d4",8,"",0],"g-eau-mers|Diapos D p. 1–12":["5fe67d543f91",12,"",0],"g-eau-mers|Livre p. 32–37 · Fichier p. 11–12":["b8189a6f346c",8,"",0],"g-eau-enjeux|Diapos E p. 1–12":["1ab8837cf2ee",12,"",0],"g-eau-enjeux|Livre p. 38–45 · Fichier p. 13–16":["7c17c0df8e83",12,"",0],"g-eau-fm|Diapos Franches-Montagnes p. 1–8":["06e277f55558",8,"",0],"g-eau-durable|Livre p. 46–51 · Fichier p. 17–20":["8b6e13459b70",10,"",0],"g-eau-durable|Livre p. 52–57 · Fichier p. 21–24":["5bf0acd077f4",10,"",0],"g-energie|Livre p. 58–61":["e36c8e1466b6",4,"",0],"g-energie|Livre p. 62–67 · Fichier p. 25–26":["7c1109f11bc0",8,"",0],"g-energie|Livre p. 68–73 · Fichier p. 27–28":["ee18acaee7f6",8,"",0],"g-energie|Livre p. 74–79 · Fichier p. 29–30":["0c3936ee2cbe",8,"",0],"g-energie|Livre p. 80–87 · Fichier p. 31–34":["1c3f59fe5a45",12,"",0],"g-energie|Livre p. 88–95 · Fichier p. 35–38":["f793cfe1e97c",12,"",0],"g-energie|Livre p. 96–101 · Fichier p. 39–42":["41f9160ac6a6",10,"",0],"g-energie|Livre p. 102–109 · Fichier p. 43–46":["7d292fb6ba59",12,"",0],"g-info|Livre p. 110–113":["854323c5c703",4,"",0],"g-info|Livre p. 114–117 · Fichier p. 47–48":["00ff6f0d93df",6,"",0],"g-info|Livre p. 118–121 · Fichier p. 49–50":["c9536f2c6acb",6,"",0],"g-info|Livre p. 122–129 · Fichier p. 51–54":["fae732240997",12,"",0],"g-info|Livre p. 130–137 · Fichier p. 55–58":["6a378837faba",12,"",0],"g-info|Livre p. 138–141 · Fichier p. 59–60":["9da319eb6548",6,"",0],"g-info|Livre p. 142–145 · Fichier p. 61–62":["eb8a2e002997",6,"",0],"g-info|Livre p. 146–151 · Fichier p. 63–66":["2b97f8e3c489",10,"",0],"g-info|Livre p. 152–157 · Fichier p. 67–72":["e3089fde8ab4",12,"",0],"g-outils|Outils p. 31":["801641767112",1,"",0],"g-outils|Outils p. 33":["a05deed9aa5f",1,"",0],"g-outils|Outils p. 46–51":["741e36e250b8",6,"",0],"g-outils|Outils p. 72":["bcf60476bd9a",1,"",0],"g-cartes|Diapos cartes p. 1–10":["5df745890fed",10,"",0],"g-mots|Livre p. 158–160":["9d586f6cba1a",3,"",0],"h-siecle|Livre p. 6–25":["63aa3cb0df24",20,"",0],"h-siecle|Fichier p. 1–8":["997787ef1821",8,"",0],"h-14-18|Livre p. 26–41":["a4f712b4216c",16,"",0],"h-14-18|Fichier p. 9–16":["1eae3b80269a",8,"",0],"h-dictatures|Livre p. 42–59":["2cabb4a1e36e",18,"",0],"h-dictatures|Fichier p. 17–24":["0d552b3ee079",8,"",0],"h-39-45|Livre p. 60–77":["c1cb34a9717d",18,"",0],"h-39-45|Fichier p. 25–32":["5e4a80c98a31",8,"",0],"h-crimes|Livre p. 78–91":["b154e54e518a",14,"",0],"h-crimes|Livre p. 92–93":["d51d2c497c76",2,"",0],"h-crimes|Fichier p. 33–38":["8056c30c7170",6,"",0],"h-crimes|Fichier p. 39–42":["67258dbd13a6",4,"",0],"h-decolonisation|Livre p. 94–109":["6652ef22db2c",16,"",0],"h-decolonisation|Fichier p. 43–48":["c3015614fcaa",6,"",0],"h-guerre-froide|Livre p. 110–125":["c7f1e78bca6a",16,"",0],"h-guerre-froide|Fichier p. 49–56":["04cd48889886",8,"",0],"h-moyen-orient|Livre p. 126–143":["9629d4d7dcdd",18,"",0],"h-moyen-orient|Fichier p. 57–64":["7fea5866d2c4",8,"",0],"h-europe|Livre p. 144–159":["593303e00127",16,"",0],"h-europe|Fichier p. 65–72":["985d010b2c66",8,"",0],"h-art|Livre p. 160–173":["17ba27fe6988",14,"",0],"h-art|Fichier p. 73–84":["e18222a8eff7",12,"",0],"h-outils|Livre p. 174–175":["d733e7fa52e2",2,"",0],"h-outils|Outils p. 18–21":["4327144226ae",4,"",0],"h-outils|Outils p. 22–29":["17f74cb8d240",8,"",0],"h-outils|Outils p. 44–45":["50e9f94e2764",2,"",0]};
+CL.pages = {"m-relatifs|Fichier p. 4":["f539f8f7bb42",1,"988ceb6e2b55",1],"m-relatifs|Livre p. 28–31":["d339bcca825e",4,"3aafe968af29",5],"m-relatifs|Fichier p. 5–7":["55f4cb23c7e3",3,"316d9b704c46",4],"m-relatifs|Fichier p. 8":["bb59f599ad29",1,"ed4082d3ef5d",1],"m-fractions|Fichier p. 9":["93cf46817458",1,"97fb9a4e6327",1],"m-fractions|Livre p. 32–39":["5907f8ceeeb4",8,"85440f7336e5",13],"m-fractions|Fichier p. 10–17":["ad2c7fb7a925",8,"8491b717c262",9],"m-fractions|Fichier p. 18":["c625f75d9fe6",1,"ed4082d3ef5d",1],"m-fractions|Fichier p. 19–20":["b305663bb165",2,"342552308419",3],"m-puissances|Fichier p. 21":["1d00afaada07",1,"14bca21b4594",2],"m-puissances|Livre p. 40–41":["68d3fc942c3b",2,"e7cf1ea0d701",3],"m-puissances|Fichier p. 22":["c973656ab216",1,"14bca21b4594",2],"m-puissances|Fichier p. 24":["13d9338795d3",1,"ed4082d3ef5d",1],"m-notation|Livre p. 41–43":["a405c1d67efb",3,"e198f35fd90a",3],"m-notation|Fichier p. 22–23":["f16733559989",2,"3d7eba7b5ea7",4],"m-notation|Fichier p. 24":["13d9338795d3",1,"ed4082d3ef5d",1],"m-racines|Livre p. 44–47":["02766b29fb2d",4,"f138f30b286c",4],"m-racines|Fichier p. 23":["4f7ad5193952",1,"16aa69baacae",2],"m-racines|Fichier p. 24":["13d9338795d3",1,"ed4082d3ef5d",1],"m-proportion|Fichier p. 57":["d9a823e13ef4",1,"82dd60fbb5c0",2],"m-proportion|Livre p. 98–106":["9904725f5526",9,"58ba464923a5",10],"m-proportion|Fichier p. 58–62":["b69623da3ee8",5,"350b022eae83",6],"m-proportion|Fichier p. 66":["d1c40cc3fac4",1,"c9fc3007b98c",1],"m-litteral|Fichier p. 70":["1ea35fdc8e9d",1,"d39300d34db0",1],"m-litteral|Livre p. 124–130":["4d19aee98f1b",7,"5c3a3de7c0a5",12],"m-litteral|Fichier p. 71–75":["27e78b70f815",5,"7e7d077b3ae2",6],"m-litteral|Fichier p. 76":["8df49fbfc1f1",1,"c9fc3007b98c",1],"m-litteral|Fichier p. 79":["de5f07a96591",1,"85322510cebd",1],"m-litteral|Fichier p. 80–84":["4c190d5a15ff",5,"84142fea33ba",5],"m-equations|Fichier p. 100":["d4b3684f4b00",1,"45e945d1e187",1],"m-equations|Livre p. 142–159":["b2e771f92d17",18,"4b102cae78b4",18],"m-equations|Fichier p. 101–105":["7b2fdb392b9a",5,"075af5269af8",6],"m-equations|Fichier p. 106–107":["70f4b38da44b",2,"c9fc3007b98c",1],"m-equations|Fichier p. 108":["fd003429f7c1",1,"023be3560df5",2],"m-equations|Fichier p. 109–112":["d89f3da50d92",4,"91f83f25605e",6],"m-pythagore|Fichier p. 175":["add43828976f",1,"5496df124cd1",1],"m-pythagore|Livre p. 238–245":["3ac313260015",8,"4c8fc5d68a04",8],"m-pythagore|Fichier p. 176":["63ef40df3fed",1,"",0],"m-pythagore|Fichier p. 177":["af882b2f365a",1,"189ec1838f3d",2],"m-pythagore|Fichier p. 178":["97486e3fffae",1,"",0],"m-identites|Livre p. 131–134":["4f79bbc03a3d",4,"8f3e329df794",8],"m-identites|Fichier p. 85–87":["7d9b04587645",3,"6fa6928ab002",2],"m-identites|Fichier p. 88":["0e3f58155843",1,"c9fc3007b98c",1],"m-factorisation|Livre p. 135–139":["bcd23344f825",5,"e7fa1a0a1b49",8],"m-factorisation|Fichier p. 89–93":["7c3588462911",5,"d175bb0a1149",4],"m-factorisation|Fichier p. 94":["217a1d7490ee",1,"c9fc3007b98c",1],"m-factorisation|Fichier p. 95–99":["36a8c9a9a09f",5,"2517c2d45261",5],"m-equations2|Livre p. 166–175":["f652d6c2fcbc",10,"3ac45e1a989d",9],"m-equations2|Fichier p. 114":["97256e504c83",1,"dd19d7edaf33",2],"m-equations2|Fichier p. 115–117":["d195fa59f72e",3,"ed4f9bc03bb3",1],"m-systemes|Livre p. 160–166":["c9adb81f8e6b",7,"2993e7867ff3",5],"m-systemes|Fichier p. 113":["2f00546ae525",1,"3dda8d487f0a",2],"m-systemes|Fichier p. 114":["97256e504c83",1,"dd19d7edaf33",2],"m-fonctions|Fichier p. 33":["5e408f715058",1,"d0f158df18f2",2],"m-fonctions|Livre p. 74–86":["4f4d273aafa4",13,"08e1b4e65715",26],"m-fonctions|Fichier p. 34–40":["d139588a0d6d",7,"be929a15e90c",7],"m-fonctions|Fichier p. 41":["f325d3168027",1,"ed4082d3ef5d",1],"m-fonctions|Fichier p. 44":["469417a0b637",1,"200f5eb97d5e",2],"m-fonctions|Livre p. 87–97":["ae871d3e21ea",11,"c7f582e95103",14],"m-fonctions|Fichier p. 45–53":["7ce477438ab1",9,"13d578828c5d",11],"m-fonctions|Fichier p. 54":["a31e30046586",1,"8dbc6f0edb43",2],"m-thales|Fichier p. 179":["dfe2e7b4c8af",1,"2f69214a5877",2],"m-thales|Livre p. 202–205":["6bf32ca00127",4,"1a9cc9d5b02c",4],"m-thales|Livre p. 246–251":["30a57ad4e24a",6,"6869c6aab59d",11],"m-thales|Fichier p. 180–188":["94f24de65089",9,"e697f7525ddb",8],"m-thales|Fichier p. 189":["469f4688d772",1,"8d6c2903822f",1],"m-thales|Fichier p. 190–192":["bf303021ba28",3,"4b7dba4e1cc8",3],"m-proba|Fichier p. 25":["642ead4d7806",1,"a80014298528",1],"m-proba|Livre p. 50–57":["bd5fdc17ab3c",8,"529740e4a352",6],"m-proba|Fichier p. 26":["30ce2d12390b",1,"2e9d89b655f1",2],"m-proba|Fichier p. 27":["1ca2c14c4a84",1,"ed4082d3ef5d",1],"m-proba|Fichier p. 28":["4678804f98e2",1,"",0],"m-diagrammes|Livre p. 115–121":["cfd31b49f4a6",7,"129c94f2810d",6],"m-diagrammes|Fichier p. 68–69":["907b4a518d28",2,"0763135b178c",2],"m-angles|Fichier p. 119":["b763e7ee2574",1,"e194c4e410c4",2],"m-angles|Livre p. 190–194":["4364a51c9cbd",5,"6fd88a00895c",7],"m-angles|Livre p. 195–201":["bd8942a50a7e",7,"d58f00dd9aa6",11],"m-angles|Fichier p. 120–128":["0925c1894d2e",9,"a4bda0bd37f7",12],"m-angles|Fichier p. 129":["f1d4a9814964",1,"87688e6bddf8",1],"m-angles|Fichier p. 130–131":["9eb888ab50d9",2,"",0],"m-transfo|Fichier p. 141":["a5632a358baa",1,"a64ebc3a0f61",2],"m-transfo|Livre p. 220–224":["907900435d12",5,"fb8302247b7a",17],"m-transfo|Fichier p. 142–159":["8f45d69acfae",18,"ba51155ad0f6",19],"m-transfo|Fichier p. 160":["2e3df2eae030",1,"87688e6bddf8",1],"m-transfo|Fichier p. 161":["12e7190f453b",1,"",0],"m-aires|Fichier p. 171":["0d601e8451d0",1,"",0],"m-aires|Livre p. 234–237":["af99606542ed",4,"8001648fdce9",5],"m-aires|Fichier p. 172–174":["c944ccafc4af",3,"9dfb5c814cac",3],"m-solides|Fichier p. 132":["2548e3afa6ef",1,"b232a57cf9d0",1],"m-solides|Livre p. 208–217":["a50414f83489",10,"39493a2980d1",18],"m-solides|Fichier p. 133–138":["a9726ae473d7",6,"31787a739f45",4],"m-solides|Fichier p. 139":["290ab6f21465",1,"87688e6bddf8",1],"m-solides|Fichier p. 193":["af847b86276d",1,"fb66861528f5",2],"m-solides|Livre p. 254–274":["7fece6ba5363",21,"6442110d9dcf",17],"m-solides|Fichier p. 194–195":["a104aa0687cc",2,"cb31e203157d",3],"m-solides|Fichier p. 196":["09514c4e7fc0",1,"8d6c2903822f",1],"m-solides|Fichier p. 197–198":["80f77a1805d3",2,"6d66c92dbd02",3],"m-solides|Fichier p. 199":["326977556eef",1,"8d6c2903822f",1],"m-grandeurs|Livre p. 107–114":["056eda6b9f43",8,"04ea01ba19c1",8],"m-grandeurs|Fichier p. 63–65":["224b2cfd17f3",3,"bbba3d67ac7c",3],"m-grandeurs|Fichier p. 201":["22148ba9ee03",1,"044fc59d8b6d",2],"m-grandeurs|Livre p. 276–284":["9c69b753b7c3",9,"9d22fcdeb563",7],"m-grandeurs|Fichier p. 202–203":["f6501260ce93",2,"3b341d5ca3a8",4],"m-grandeurs|Fichier p. 204":["e50a6ecfe3cc",1,"8d6c2903822f",1],"f-classes|Atelier p. 12–13":["5049029b419a",2,"743be90e899a",3],"f-classes|Atelier p. 90–95":["caae1a2b1ba7",6,"86a40ea18c08",4],"f-classes|Atelier p. 96–101":["6cfb21621d00",6,"4e7a4443ef9e",4],"f-classes|Livre unique p. 266–283":["aafaff547eb1",18,"7ddb7b01f2ca",8],"f-fonctions|Atelier p. 14–15":["9a1548da0092",2,"d237e1ee073a",2],"f-fonctions|Atelier p. 120–125":["e99a2e9db41f",6,"6044f549a5ac",4],"f-fonctions|Atelier p. 126–131":["680874d4ce1d",6,"029a121f9d87",5],"f-fonctions|Atelier p. 132–137":["12127cb96d29",6,"5df5ecbbeaad",4],"f-fonctions|Livre unique p. 292–297":["d8e5364360da",6,"dc278012a4b7",4],"f-complements|Atelier p. 140–145":["0a65c97cc7a2",6,"63d08df6c4ce",5],"f-complements|Atelier p. 146–151":["9e74d0360088",6,"9c1088445264",5],"f-complements|Atelier p. 152–155":["e16c2d913c8f",4,"bb4122ad51ee",4],"f-complements|Atelier p. 156–159":["323b16f77514",4,"97fe4e884711",3],"f-complements|Atelier p. 160–163":["b94ff83ae015",4,"194550529302",4],"f-complements|Livre unique p. 300–309":["189b2abeda4d",10,"275e8653dac0",6],"f-subordonnees|Atelier p. 112–117":["873bf3f2a8e5",6,"fa996c5f5e68",5],"f-subordonnees|Atelier p. 182–187":["8abd9b51cd26",6,"96cb75a37861",5],"f-subordonnees|Livre unique p. 284–291":["b69faa4b8a09",8,"6a6dd3ec97bf",5],"f-subordonnees|Livre unique p. 298–299":["43e5ca509c12",2,"ab434c9606eb",2],"f-phrases|Atelier p. 106–111":["b3f6926b11b8",6,"b03beb8d7ad5",4],"f-phrases|Livre unique p. 316–321":["a62a577a7021",6,"5ddda043bc39",5],"f-accords|Atelier p. 236–239":["fa8bfcdc9389",4,"815a86af3d86",4],"f-accords|Atelier p. 240–243":["e9c5419c5f8f",4,"a90ce3eb2eaa",4],"f-accords|Livre unique p. 344–353":["3dc930eb8708",10,"af8b9a3725a2",4],"f-participe|Atelier p. 244–247":["f4e89b6c732c",4,"ab7991210501",5],"f-participe|Atelier p. 248–251":["07976339088f",4,"98a2025806a9",6],"f-homophones|Atelier p. 224–227":["d856b5c8fdd0",4,"12661c5a5c86",4],"f-homophones|Atelier p. 228–231":["14f0843a70cf",4,"ce2eb5669bed",5],"f-homophones|Atelier p. 232–235":["314161b675a7",4,"a4cb21159fb4",5],"f-confusions|Atelier p. 252–255":["ad06c855555d",4,"f29223981867",3],"f-confusions|Atelier p. 256–259":["57e34b9bfec7",4,"e85c3f2891a0",5],"f-recit|Atelier p. 30–35":["90f9fc71875c",6,"3294b02fd704",4],"f-recit|Atelier p. 264–267":["e597640b67a5",4,"edfd0dbff50d",5],"f-recit|Atelier p. 268–271":["cf94eb87cad2",4,"1abfe35dca0a",4],"f-recit|Livre unique p. 330–333":["66196aff7263",4,"a9afd54720c2",2],"f-temps-composes|Atelier p. 272–275":["b3ad0d6fb047",4,"61c9b55d5128",5],"f-temps-composes|Atelier p. 280–283":["07640a931d1a",4,"496a6fee598a",4],"f-temps-composes|Livre unique p. 324–327":["8c60123c05ae",4,"ab3c5146017b",4],"f-temps-composes|Atelier p. 290–295":["4e0071d1a032",6,"",0],"f-modes|Atelier p. 276–279":["9fdd7a726c08",4,"c269d1bb2f1b",4],"f-modes|Livre unique p. 334–335":["7129ada4371b",2,"0891d407de2a",2],"f-enonciation|Atelier p. 24–29":["fe6a8cda02c5",6,"75d9982acc8e",5],"f-enonciation|Atelier p. 42–47":["8be7cac24043",6,"2d0090dd7be2",6],"f-enonciation|Livre unique p. 310–315":["b4d06f4236c4",6,"c6461be1b954",5],"f-enonciation|Livre unique p. 336–337":["a113c4b68254",2,"a7ce3fe3f74e",3],"f-argumenter|Atelier p. 64–69":["8aa430a6cab6",6,"25e662679ccf",5],"f-argumenter|Atelier p. 70–75":["6ba3ac44f2cd",6,"0bdfbb24d831",4],"f-argumenter|Atelier p. 76–81":["7fe4e14d33e2",6,"b9ef894581cf",5],"f-argumenter|Livre unique p. 160–185":["b57f53549e98",26,"50167bb680c6",15],"f-argumenter|Livre unique p. 186–207":["a40bd9843b81",22,"6967cf100c79",13],"f-argumenter|Livre unique p. 340–341":["21de5be19b5d",2,"59a88096d409",1],"f-mots|Atelier p. 192–195":["4b4df8a9bbfb",4,"5e1746808bcd",4],"f-mots|Atelier p. 220–223":["fab0f808108b",4,"35d4e536beb7",5],"f-mots|Livre unique p. 354–357":["93c91565214d",4,"1f8126da5964",4],"f-figures|Atelier p. 196–199":["9fd539f5bef1",4,"ddf8db02179b",3],"f-figures|Livre unique p. 364–367":["303e88897869",4,"a87fd5f73e70",3],"f-recits|Livre unique p. 16–41":["cdf229683e8e",26,"89c240256342",11],"f-recits|Livre unique p. 42–73":["062f1315e753",32,"5db9b0a8d7cc",22],"f-recits|Livre unique p. 94–123":["ae8ca95e671b",30,"002ac986f204",19],"f-recits|Livre unique p. 124–159":["879256dd6e24",36,"544c60b97c9f",15],"f-recits|Livre unique p. 362–363":["7dfe3e82f9e6",2,"a32eb8ca4689",2],"f-recits|Atelier p. 50–55":["7c327e668024",6,"16be31e8a65b",4],"f-poesie|Livre unique p. 74–93":["4d5303e1a566",20,"2afb47d31439",12],"f-poesie|Livre unique p. 368–371":["002669f9064e",4,"79bebb1ed731",3],"f-theatre|Livre unique p. 208–241":["3a7c4f4df157",34,"9b30a8f2bfaf",20],"f-theatre|Livre unique p. 360–361":["5b4a429a124f",2,"26b292dca146",2],"f-theatre|Atelier p. 102–105":["d4bc6039b130",4,"da96876f8aff",4],"f-presse|Livre unique p. 242–265":["ca4afdf90fb5",24,"8d1147e4f2b5",11],"d-verbes|Arbeitsbuch p. 86–87":["3024e554668e",2,"",0],"d-satzbau|Kursbuch p. 83–84":["0a0b1bad14b6",2,"",0],"d-kasus|Kursbuch p. 84 · Kursbuch p. 87":["29adbb36b1e8",2,"",0],"d-perfekt|Arbeitsbuch p. 86–87":["3024e554668e",2,"",0],"d2-k1|Kursbuch p. 7–14":["39d397fa6bd2",8,"146bf8d5c743",8],"d2-k1|Arbeitsbuch p. 7–14":["2b3f36fbab93",8,"3c7c82d0331e",1],"d2-k1|Wort-Schatz p. 4–11":["34619cb273aa",8,"ec9663de5673",1],"d2-k2|Kursbuch p. 15–22":["929bd2b3ad2e",8,"231b839a723a",8],"d2-k2|Arbeitsbuch p. 15–22":["bc67b15baae9",8,"185c82cd61ff",2],"d2-k2|Wort-Schatz p. 12–18":["711535bc0492",7,"ec9663de5673",1],"d2-k3|Kursbuch p. 23–30":["c1a7968814e9",8,"f9bfa5f71c3e",8],"d2-k3|Arbeitsbuch p. 23–30":["7b31ca58d9d8",8,"090c8f98749f",2],"d2-k3|Wort-Schatz p. 19–25":["05267f75a578",7,"ec9663de5673",1],"d2-k4|Kursbuch p. 31–38":["6fdbdf176563",8,"8037d12a1726",8],"d2-k4|Arbeitsbuch p. 31–38":["d7e09111df87",8,"a354f19991a4",1],"d2-k4|Wort-Schatz p. 26–32":["be5ea4f299af",7,"ec9663de5673",1],"d2-k4|Kursbuch p. 39–44":["4ceda5a5b4f3",6,"4b58754baadd",6],"d2-k4|Arbeitsbuch p. 39–44":["bbfe558fe76d",6,"e7980e8d3c27",1],"d2-k5|Kursbuch p. 45–52":["568ab65f68d9",8,"538c6b4b6515",8],"d2-k5|Arbeitsbuch p. 45–52":["fe0c8a27ad69",8,"0bd05c0e0987",1],"d2-k5|Wort-Schatz p. 33–38":["30e26b9dbebb",6,"ec9663de5673",1],"d2-k6|Kursbuch p. 53–60":["edadf7f83a91",8,"cafb0ae973fb",8],"d2-k6|Arbeitsbuch p. 53–60":["1574b3b1e5b2",8,"c3e49c88037f",2],"d2-k6|Wort-Schatz p. 39–44":["f2b5f7a2f8fa",6,"ec9663de5673",1],"d2-k7|Kursbuch p. 61–68":["619801de9a80",8,"ffb8e7f09463",8],"d2-k7|Arbeitsbuch p. 61–68":["4ea707d661f4",8,"f7ee5ddb1885",2],"d2-k7|Wort-Schatz p. 45–50":["4d1310a1a5b3",6,"ec9663de5673",1],"d2-k8|Kursbuch p. 69–76":["610ca4aae8a0",8,"e0c87a0c86f7",8],"d2-k8|Arbeitsbuch p. 69–76":["70c36a280031",8,"4a563db7f67d",1],"d2-k8|Wort-Schatz p. 51–55":["c7781ab90847",5,"ec9663de5673",1],"d2-k8|Kursbuch p. 77–82":["4608ceb8f6d9",6,"6fb64cd65054",6],"d2-k8|Arbeitsbuch p. 77–82":["19da20d2e495",6,"e7980e8d3c27",1],"e-verbes|Student's Book p. 98":["8576a696c626",1,"",0],"e-verbes|Language Builder p. 82–85":["4aef350e13f1",4,"",0],"e-u1|Student's Book p. 6–11":["53e4357caa4d",6,"163a43786329",17],"e-u1|Workbook p. 4–10":["b0f7013e9ff1",7,"9e1cde5bd23e",3],"e-u1|Language Builder p. 2–11":["b1a5733629e3",10,"8bbd59ba9dfc",2],"e-u2|Student's Book p. 12–17":["87f9475d4be4",6,"2654606432f8",15],"e-u2|Workbook p. 11–17":["811a47f3e52d",7,"c5a9244b1eb4",3],"e-u2|Language Builder p. 12–21":["d12497d2d779",10,"547edbc39578",2],"e-u2|Student's Book p. 18–19":["9932a24f070f",2,"bb7eec8af848",4],"e-u2|Workbook p. 18–21":["2c859b0081d9",4,"b12d009a78e6",3],"e-u3|Student's Book p. 20–25":["ad2d9dcfd1ea",6,"d835b1fdf27b",16],"e-u3|Workbook p. 22–28":["ae697af8b0a3",7,"d1b305f31269",3],"e-u3|Language Builder p. 22–31":["4dee7fe22abb",10,"ac1e6389e50f",2],"e-u4|Student's Book p. 26–31":["3d1a6b683719",6,"61aa36ce60ea",17],"e-u4|Workbook p. 29–35":["7bfceb0d7911",7,"c09a19ff330c",4],"e-u4|Language Builder p. 32–41":["f252debcbeb3",10,"4c2bd9d1e7ec",2],"e-u4|Student's Book p. 32–33":["65a10bca30dc",2,"ebea209a7a96",4],"e-u4|Workbook p. 36–39":["59aa32e13f44",4,"69c3f9f6dd20",3],"e-u5|Student's Book p. 34–39":["2aa94fc138f7",6,"bfa183a18d4b",18],"e-u5|Workbook p. 40–47":["a3437110ea8b",8,"d391ece76a49",4],"e-u5|Language Builder p. 42–51":["7731a94a8f47",10,"ac4926f3a432",2],"e-u6|Student's Book p. 40–45":["274ec8c49b5f",6,"0b93730f8935",12],"e-u6|Workbook p. 48–55":["562a6f5ed9eb",8,"fcb5455a752d",3],"e-u6|Language Builder p. 52–61":["f6b5d8290837",10,"dd22c06c67e6",2],"e-u6|Student's Book p. 46–47":["d2f8f4e70a2d",2,"7500ee53d424",4],"e-u6|Workbook p. 56–59":["f0659d8e044f",4,"3e4ad564a124",3],"e-u7|Student's Book p. 48–53":["c6376d4f344d",6,"69848b2311d4",17],"e-u7|Workbook p. 60–67":["f8531cad95c5",8,"a4e93b76f678",4],"e-u7|Language Builder p. 62–71":["3387d2b7fa42",10,"7d785572ea65",2],"e-u8|Student's Book p. 54–59":["4f6fed280ac0",6,"625da941e15b",13],"e-u8|Workbook p. 68–75":["cb1c95da6a19",8,"69f57fe9a6fb",3],"e-u8|Language Builder p. 72–81":["4f92e83c3220",10,"a8f757c68cb6",1],"e-u8|Student's Book p. 60–61":["869b37801193",2,"360daa716610",4],"e-u8|Workbook p. 76–79":["3861fd1c0e6d",4,"a8f357661811",2],"s-cardio|Fiche de synthèse S11-17":["5176ba454af2",1,"",0],"s-cardio|Fiche de synthèse S11-18":["e006c19013f9",1,"",0],"s-cardio|Fiches de synthèse S11-19–20":["b270ceceb3b7",2,"",0],"s-cardio|Fiches de synthèse S11-21–22":["080abfa61c17",2,"",0],"s-cardio|Fiche de synthèse S11-23":["d82b176f023d",1,"",0],"s-cardio|Cahier « Le sang » p. 7":["c0593351a45d",1,"",0],"s-cardio|Fiches de travail S11-3–4":["",0,"6d7c651accf9",3],"s-cardio|Fiches de travail S11-5–9":["",0,"0d441866550e",5],"s-cardio|Fiche de travail S11-10":["",0,"8968e0dc372a",2],"s-cardio|Fiches de travail S11-11–16":["",0,"1aab8788e6a0",6],"s-energie|Fiches de synthèse S7-21–23":["14320ab50344",3,"",0],"s-energie|Fiches de synthèse S7-24–26":["21f0a1d332b3",3,"",0],"s-energie|Fiches de synthèse S7-27–33":["0ef7678c2d84",7,"",0],"s-energie|Fiches de synthèse S7-34–37":["9fd784adc4a0",4,"",0],"s-energie|Fiches de synthèse S7-38–39":["8dcb7c21cf04",2,"",0],"s-energie|Fiches de travail S7-3–6":["c078d36dbf67",4,"328e1ede8dc8",6],"s-energie|Fiches de travail S7-7–12":["2defaf8126fe",6,"bcde03cd40a3",10],"s-energie|Fiches de travail S7-13–16":["dfb1875d1884",4,"fe622ae41605",7],"s-energie|Fiches de travail S7-17–20":["0dca3205c791",4,"e9aaeac930b8",7],"s-electricite|Fiches de synthèse S8-25–28":["76c0e325b59c",4,"",0],"s-electricite|Fiches de synthèse S8-29–30":["abce7a218553",2,"",0],"s-electricite|Fiches de synthèse S8-31–35":["cc93909ffaae",5,"",0],"s-electricite|Fiches de synthèse S8-36–38":["1836dc501a05",3,"",0],"s-electricite|Fiches de synthèse S8-39–43":["77f8b8030e00",5,"",0],"s-electricite|Fiches de synthèse S8-44–45":["2273cbecd4dc",2,"",0],"s-electricite|Fiches de travail S8-3–8":["0ef5f69f55ec",6,"c7773aa62b98",7],"s-electricite|Fiches de travail S8-9–20":["1f64675368eb",12,"8da20d09d03e",15],"s-electricite|Fiches de travail S8-21–24":["49105d4bb3d7",4,"5b64127478b7",6],"g-eau-intro|Diapos intro p. 1–13":["e3db9c94a7b2",13,"",0],"g-eau-intro|Livre p. 8–11":["c7ca1571d0e0",4,"",0],"g-eau-ressource|Diapos A p. 1–19":["44580b7da70a",19,"",0],"g-eau-ressource|Livre p. 12–19 · Fichier p. 1–4":["d10bf1188ba2",12,"",0],"g-eau-usages|Diapos B p. 1–10":["8e92840b8331",10,"",0],"g-eau-usages|Livre p. 20–25 · Fichier p. 5–8":["90125ed13cd6",10,"",0],"g-eau-cours|Diapos C p. 1–8":["ea44658d26c2",8,"",0],"g-eau-cours|Livre p. 26–31 · Fichier p. 9–10":["6511a12bb8d4",8,"",0],"g-eau-mers|Diapos D p. 1–12":["5fe67d543f91",12,"",0],"g-eau-mers|Livre p. 32–37 · Fichier p. 11–12":["b8189a6f346c",8,"",0],"g-eau-enjeux|Diapos E p. 1–12":["1ab8837cf2ee",12,"",0],"g-eau-enjeux|Livre p. 38–45 · Fichier p. 13–16":["7c17c0df8e83",12,"",0],"g-eau-fm|Diapos Franches-Montagnes p. 1–8":["06e277f55558",8,"",0],"g-eau-durable|Livre p. 46–51 · Fichier p. 17–20":["8b6e13459b70",10,"",0],"g-eau-durable|Livre p. 52–57 · Fichier p. 21–24":["5bf0acd077f4",10,"",0],"g-energie|Livre p. 58–61":["e36c8e1466b6",4,"",0],"g-energie|Livre p. 62–67 · Fichier p. 25–26":["7c1109f11bc0",8,"",0],"g-energie|Livre p. 68–73 · Fichier p. 27–28":["ee18acaee7f6",8,"",0],"g-energie|Livre p. 74–79 · Fichier p. 29–30":["0c3936ee2cbe",8,"",0],"g-energie|Livre p. 80–87 · Fichier p. 31–34":["1c3f59fe5a45",12,"",0],"g-energie|Livre p. 88–95 · Fichier p. 35–38":["f793cfe1e97c",12,"",0],"g-energie|Livre p. 96–101 · Fichier p. 39–42":["41f9160ac6a6",10,"",0],"g-energie|Livre p. 102–109 · Fichier p. 43–46":["7d292fb6ba59",12,"",0],"g-info|Livre p. 110–113":["854323c5c703",4,"",0],"g-info|Livre p. 114–117 · Fichier p. 47–48":["00ff6f0d93df",6,"",0],"g-info|Livre p. 118–121 · Fichier p. 49–50":["c9536f2c6acb",6,"",0],"g-info|Livre p. 122–129 · Fichier p. 51–54":["fae732240997",12,"",0],"g-info|Livre p. 130–137 · Fichier p. 55–58":["6a378837faba",12,"",0],"g-info|Livre p. 138–141 · Fichier p. 59–60":["9da319eb6548",6,"",0],"g-info|Livre p. 142–145 · Fichier p. 61–62":["eb8a2e002997",6,"",0],"g-info|Livre p. 146–151 · Fichier p. 63–66":["2b97f8e3c489",10,"",0],"g-info|Livre p. 152–157 · Fichier p. 67–72":["e3089fde8ab4",12,"",0],"g-outils|Outils p. 31":["801641767112",1,"",0],"g-outils|Outils p. 33":["a05deed9aa5f",1,"",0],"g-outils|Outils p. 46–51":["741e36e250b8",6,"",0],"g-outils|Outils p. 72":["bcf60476bd9a",1,"",0],"g-cartes|Diapos cartes p. 1–10":["5df745890fed",10,"",0],"g-mots|Livre p. 158–160":["9d586f6cba1a",3,"",0],"h-siecle|Livre p. 6–25":["63aa3cb0df24",20,"",0],"h-siecle|Fichier p. 1–8":["997787ef1821",8,"",0],"h-14-18|Livre p. 26–41":["a4f712b4216c",16,"",0],"h-14-18|Fichier p. 9–16":["1eae3b80269a",8,"",0],"h-dictatures|Livre p. 42–59":["2cabb4a1e36e",18,"",0],"h-dictatures|Fichier p. 17–24":["0d552b3ee079",8,"",0],"h-39-45|Livre p. 60–77":["c1cb34a9717d",18,"",0],"h-39-45|Fichier p. 25–32":["5e4a80c98a31",8,"",0],"h-crimes|Livre p. 78–91":["b154e54e518a",14,"",0],"h-crimes|Livre p. 92–93":["d51d2c497c76",2,"",0],"h-crimes|Fichier p. 33–38":["8056c30c7170",6,"",0],"h-crimes|Fichier p. 39–42":["67258dbd13a6",4,"",0],"h-decolonisation|Livre p. 94–109":["6652ef22db2c",16,"",0],"h-decolonisation|Fichier p. 43–48":["c3015614fcaa",6,"",0],"h-guerre-froide|Livre p. 110–125":["c7f1e78bca6a",16,"",0],"h-guerre-froide|Fichier p. 49–56":["04cd48889886",8,"",0],"h-moyen-orient|Livre p. 126–143":["9629d4d7dcdd",18,"",0],"h-moyen-orient|Fichier p. 57–64":["7fea5866d2c4",8,"",0],"h-europe|Livre p. 144–159":["593303e00127",16,"",0],"h-europe|Fichier p. 65–72":["985d010b2c66",8,"",0],"h-art|Livre p. 160–173":["17ba27fe6988",14,"",0],"h-art|Fichier p. 73–84":["e18222a8eff7",12,"",0],"h-outils|Livre p. 174–175":["d733e7fa52e2",2,"",0],"h-outils|Outils p. 18–21":["4327144226ae",4,"",0],"h-outils|Outils p. 22–29":["17f74cb8d240",8,"",0],"h-outils|Outils p. 44–45":["50e9f94e2764",2,"",0]};
 </script>
 <script>/* medias.js */
 'use strict';
@@ -10966,6 +12326,383 @@ CL.medias = {"d2-k1":[{"l":"Kursbuch","n":"1.2","a":"Aufgabe 1b","t":"a","id":"e
   CL.tableau = { vue, redessiner: () => $('#tb-cv') && dessiner() };
 })();
 </script>
+<script>/* cartes.js */
+'use strict';
+/* Cap Lycée — les cartes (flashcards), onglet « Cartes ».
+   Chaque chapitre a ses cartes, écrites dans cartes-*.js : CL.CARTES[chapitre] = [[recto, verso, note ?], …] (maths entre $…$),
+   plus celles qu'elle écrit elle-même : E.mc = [{ i, c: chapitre, r: recto, v: verso, d: jour }].
+   Elle lit le recto, répond dans sa tête, retourne la carte et dit si elle savait. Une carte sue revient de plus en plus tard
+   (1, 3, 7, puis 14 jours) ; une carte pas encore sue revient dans la même séance, puis le jour même.
+   E.fc[id] = [boîte de 0 à 4, jour où elle revient] ; E.jours[jour].fc = cartes retournées ce jour-là. Tout part dans le code de sauvegarde.
+   En langues, « Dans l'autre sens » retourne le paquet (allemand → français) : ces cartes-là ont leur propre suivi (id + « ~ »). */
+(function () {
+  const P = CL.P,
+    { CHAP, BR } = P;
+  const DELAIS = [0, 1, 3, 7, 14],
+    MAX = 20,
+    MAX_NOUV = 10;
+  const LANGUES = { allemand: 'allemand', anglais: 'anglais' };
+  const h36 = (s) => {
+    let x = 5381;
+    for (let i = 0; i < s.length; i++) x = ((x * 33) ^ s.charCodeAt(i)) >>> 0;
+    return x.toString(36);
+  };
+  const melange = (a) => {
+    a = a.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
+
+  /* ---------- les paquets ---------- */
+  /* les cartes d'un chapitre : celles de l'appli, puis les siennes ; inverse = recto et verso échangés (langues) */
+  function cartesChap(cid, inverse) {
+    /* les siennes d'abord : une carte qu'elle vient d'écrire arrive dans sa prochaine séance */
+    const out = [];
+    for (const m of P.E.mc || []) if (m.c === cid) out.push({ id: 'm.' + m.i, r: m.r, v: m.v, n: '', c: cid, mien: true });
+    for (const k of (CL.CARTES && CL.CARTES[cid]) || []) out.push({ id: cid + '.' + h36(k[0]), r: k[0], v: k[1], n: k[2] || '', c: cid });
+    return inverse ? out.map((k) => Object.assign({}, k, { id: k.id + '~', r: k.v, v: k.r, n: k.n })) : out;
+  }
+  const chapitresBranche = (b) => b.parties.flatMap((p) => p.chapitres).filter((c) => cartesChap(c.id).length);
+  const cartesBranche = (b) => chapitresBranche(b).flatMap((c) => cartesChap(c.id));
+  const toutes = () => CL.branches.flatMap(cartesBranche);
+  const etat = (id) => (P.E.fc || {})[id];
+  const estDue = (k, auj) => {
+    const e = etat(k.id);
+    return !!e && e[1] <= auj;
+  };
+  function compte(liste) {
+    const auj = P.jour();
+    let du = 0,
+      sues = 0,
+      nouv = 0;
+    for (const k of liste) {
+      const e = etat(k.id);
+      if (!e) nouv++;
+      else {
+        if (e[1] <= auj) du++;
+        if (e[0] >= 1) sues++;
+      }
+    }
+    return { tot: liste.length, du, sues, nouv };
+  }
+  /* une séance : d'abord ce qui est à revoir (les boîtes basses en premier), puis des nouvelles dans l'ordre du chapitre */
+  function composer(liste, o) {
+    o = o || {};
+    const auj = P.jour();
+    const dus = liste.filter((k) => estDue(k, auj)).sort((a, b) => etat(a.id)[0] - etat(b.id)[0] || (etat(a.id)[1] < etat(b.id)[1] ? -1 : 1));
+    let f = dus.slice(0, MAX);
+    if (o.nouv !== false) f = f.concat(liste.filter((k) => !etat(k.id)).slice(0, Math.min(MAX_NOUV, MAX - f.length)));
+    if (!f.length && o.tout) f = melange(liste).slice(0, MAX);
+    return melange(f);
+  }
+  /* la réponse : sue (ok) ou pas encore ; dejaRatee = ratée plus tôt dans la même séance */
+  function noter(k, ok, dejaRatee) {
+    const E = P.E,
+      auj = P.jour();
+    if (!E.fc) E.fc = {};
+    const e = E.fc[k.id];
+    if (ok) {
+      const b = dejaRatee ? 1 : Math.min(4, (e ? e[0] : 0) + 1);
+      E.fc[k.id] = [b, P.plus(auj, DELAIS[b])];
+    } else E.fc[k.id] = [0, auj];
+    const j = E.jours[auj] || (E.jours[auj] = { q: 0, ok: 0, ms: 0 });
+    j.fc = (j.fc || 0) + 1;
+    P.sauver();
+  }
+  /* ses cartes à elle */
+  function ajouterMienne(cid, r, v) {
+    const E = P.E;
+    if (!E.mc) E.mc = [];
+    const i = Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+    E.mc.push({ i, c: cid, r: r.slice(0, 300), v: v.slice(0, 600), d: P.jour() });
+    P.sauver();
+    return i;
+  }
+  function retirerMienne(i) {
+    const E = P.E;
+    E.mc = (E.mc || []).filter((m) => m.i !== i);
+    if (E.fc) delete E.fc['m.' + i], delete E.fc['m.' + i + '~'];
+    P.sauver();
+  }
+  /* pour le bilan : cartes retournées sur les n derniers jours, cartes sues */
+  function bilan(n) {
+    const E = P.E;
+    let rev = 0;
+    for (let i = 0; i < (n || 14); i++) rev += ((E.jours[P.plus(P.jour(), -i)] || {}).fc || 0);
+    const sues = Object.entries(E.fc || {}).filter(([id, e]) => e[0] >= 1 && !id.endsWith('~')).length;
+    return { rev, sues };
+  }
+
+  CL.fc = { cartesChap, cartesBranche, toutes, compte, composer, noter, ajouterMienne, retirerMienne, bilan, h36, DELAIS };
+  if (typeof document === 'undefined') return;
+
+  /* ---------- écrans ---------- */
+  const $ = (s, r) => (r || document).querySelector(s);
+  const { t } = CL.o;
+  const pl = (n, s, p) => n + ' ' + (n > 1 ? p || s + 's' : s);
+  const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const rendu = (k, s) => (k.mien ? CL.ecr.rendu(s) : t(s));
+  const poser = (h) => ($('#vue').innerHTML = h);
+  const PREF_SENS = 'cap-lycee-fc-sens';
+  let sens = {};
+  try {
+    sens = JSON.parse(localStorage.getItem(PREF_SENS) || '{}') || {};
+  } catch (e) {}
+  let J = null,
+    aSuppr = null;
+
+  const resume = (c) => {
+    const parts = [pl(c.tot, 'carte')];
+    if (c.sues) parts.push(pl(c.sues, 'sue', 'sues'));
+    return parts.join(' · ');
+  };
+  const etiqDu = (n) => (n ? `<span class="etiq e-cons">${n} à revoir</span>` : '');
+
+  function vueAccueil() {
+    const tous = toutes(),
+      c = compte(tous),
+      auj = (P.E.jours[P.jour()] || {}).fc || 0;
+    let h = `<header><h1>Cartes</h1><p class="chapeau">Lis le recto et réponds dans ta tête, puis retourne la carte. Dis franchement si tu savais : une carte sue revient de plus en plus tard, une carte pas encore sue revient vite.</p></header>`;
+    if (c.du)
+      h += `<div class="point fc-dus"><b>${pl(c.du, 'carte')} à revoir aujourd'hui</b><p>Dans toutes les branches, en commençant par celles que tu sais le moins.</p><button class="btn" data-fc="go" data-q="dus">Réviser</button></div>`;
+    h += `<section><h2>Choisis une branche</h2><div class="tuiles">`;
+    const brs = CL.branches.filter((b) => chapitresBranche(b).length);
+    brs.forEach((b, i) => {
+      const k = compte(cartesBranche(b));
+      h += `<a class="tuile b-${b.id}${i === 0 && brs.length % 2 ? ' large' : ''}" href="#cartes-${b.id}"><span class="t-g" aria-hidden="true">${b.glyphe}</span>${k.du ? `<span class="etiq">${k.du} à revoir</span>` : ''}<b>${b.nom}</b><small>${resume(k)}</small><span class="jauge"><i style="width:${k.tot ? Math.round((100 * k.sues) / k.tot) : 0}%"></i></span></a>`;
+    });
+    h += `</div></section>`;
+    const enCl = CL.branches.flatMap((b) => chapitresBranche(b).filter((ch) => P.enClasse(ch.id)).map((ch) => [b, ch]));
+    if (enCl.length) {
+      h += `<section><h2>En classe en ce moment</h2><div class="liste">`;
+      for (const [b, ch] of enCl) {
+        const k = compte(cartesChap(ch.id));
+        h += `<a class="ligne" href="#cartes-${ch.id}"><span class="glyphe b-${b.id}${b.glyphe.length > 2 ? ' long' : ''}" aria-hidden="true">${b.glyphe}</span><span class="l-corps"><b>${ch.titre}</b><small>${b.nom} · ${resume(k)}</small></span>${etiqDu(k.du)}<span class="chev" aria-hidden="true">›</span></a>`;
+      }
+      h += `</div></section>`;
+    }
+    h += `<p class="petit">${auj ? `Aujourd'hui, tu as retourné ${pl(auj, 'carte')}.` : "Pas encore de carte aujourd'hui."} Dans chaque chapitre, tu peux aussi écrire tes propres cartes.</p>`;
+    poser(h);
+  }
+
+  function vueBranche(b) {
+    const k = compte(cartesBranche(b));
+    let h = `<a class="retour-lien" href="#cartes">‹ Cartes</a><header class="b-${b.id}"><p class="surtitre">Cartes</p><h1><span class="sur">${b.nom}</span></h1><p class="chapeau">${resume(k)}. Choisis un chapitre pour découvrir ses cartes.</p></header>`;
+    if (k.du) h += `<div class="actions"><button class="btn" data-fc="go" data-q="branche" data-b="${b.id}">Réviser ce qui est à revoir · ${k.du}</button></div>`;
+    for (const p of b.parties) {
+      const chs = p.chapitres.filter((c) => cartesChap(c.id).length);
+      if (!chs.length) continue;
+      h += `<section><h2>${p.titre}</h2><div class="liste">`;
+      for (const c of chs) {
+        const kc = compte(cartesChap(c.id));
+        h += `<a class="ligne" href="#cartes-${c.id}"><span class="l-corps"><b>${c.titre}</b><small>${resume(kc)}</small></span>${P.enClasse(c.id) ? '<span class="etiq e-classe">En classe</span>' : ''}${etiqDu(kc.du)}<span class="chev" aria-hidden="true">›</span></a>`;
+      }
+      h += `</div></section>`;
+    }
+    poser(h);
+  }
+
+  function vueChap({ c, b }) {
+    const lg = LANGUES[b.id],
+      inv = !!(lg && sens[c.id]),
+      liste = cartesChap(c.id, inv),
+      k = compte(liste),
+      f = composer(liste);
+    let h = `<a class="retour-lien" href="#cartes-${b.id}">‹ Cartes · ${b.nom}</a><header class="b-${b.id}"><p class="surtitre">Cartes · ${b.nom}</p><h1><span class="sur">${c.titre}</span></h1><p class="chapeau">${resume(k)}${k.du ? ` · ${k.du} à revoir aujourd'hui` : ''}${k.nouv ? ` · ${pl(k.nouv, 'nouvelle')}` : ''}.</p></header>`;
+    if (lg) h += `<label class="fc-sens"><input type="checkbox" data-fc="sens" data-c="${c.id}"${inv ? ' checked' : ''}> Dans l'autre sens : ${lg} → français</label>`;
+    if (f.length) h += `<div class="actions"><button class="btn" data-fc="go" data-q="chap" data-c="${c.id}">Réviser · ${pl(f.length, 'carte')}</button></div>`;
+    else if (liste.length) h += `<div class="bloc fc-fini"><p style="margin:0">Tout est revu pour aujourd'hui. Ces cartes reviendront d'elles-mêmes.</p><div class="actions"><button class="btn-2" data-fc="go" data-q="chap" data-c="${c.id}" data-tout="1">Revoir quand même</button></div></div>`;
+    if (liste.length)
+      h += `<section><h2>Toutes les cartes</h2><details class="fc-liste"><summary>Les lire d'un coup (${liste.length})</summary><dl>${liste
+        .map((x) => `<div><dt>${rendu(x, x.r)}</dt><dd>${rendu(x, x.v)}${x.n ? `<small>${t(x.n)}</small>` : ''}</dd></div>`)
+        .join('')}</dl></details></section>`;
+    h += `<section><h2>Mes cartes</h2>`;
+    const miennes = (P.E.mc || []).filter((m) => m.c === c.id);
+    if (miennes.length) {
+      h += `<div class="liste">`;
+      for (const m of miennes)
+        h += `<div class="ligne fc-mien"><span class="l-corps"><b class="ec">${CL.ecr.rendu(m.r)}</b><small class="ec">${CL.ecr.rendu(m.v)}</small></span>${
+          aSuppr === m.i
+            ? `<span class="fc-oui-non"><button class="btn-2" data-fc="suppr-oui" data-i="${m.i}">Supprimer</button><button class="btn-2" data-fc="suppr-non">Garder</button></span>`
+            : `<button class="lien-b" data-fc="suppr" data-i="${m.i}" aria-label="Supprimer cette carte">Supprimer</button>`
+        }</div>`;
+      h += `</div>`;
+    }
+    const symb = b.id === 'maths' || b.id === 'sciences';
+    h +=
+      `<div class="bloc fc-form"><b>Écrire une carte</b><p class="petit" style="margin:4px 0 12px">Une question au recto, la réponse au verso. Écrire ses cartes soi-même aide à retenir.</p>` +
+      `<label class="tb-lab" for="fc-r">Recto : la question</label>${symb ? CL.ecr.barre('fc-r') : ''}<textarea class="q-t" id="fc-r" rows="2" maxlength="300" spellcheck="true"></textarea>` +
+      `<label class="tb-lab" for="fc-v" style="margin-top:12px">Verso : la réponse</label>${symb ? CL.ecr.barre('fc-v') : ''}<textarea class="q-t" id="fc-v" rows="3" maxlength="600" spellcheck="true"></textarea>` +
+      `<div class="actions"><button class="btn-2" data-fc="ajouter" data-c="${c.id}">Ajouter à mes cartes</button></div><p class="petit" id="fc-msg" role="status" style="margin:8px 0 0"></p></div></section>`;
+    h += `<p class="petit"><a href="#${c.id}">Ouvrir le chapitre ›</a></p>`;
+    poser(h);
+  }
+
+  /* ---------- la séance ---------- */
+  function lancer(el) {
+    const q = el.dataset.q;
+    let liste,
+      titre,
+      b = null,
+      o = {};
+    if (q === 'dus') {
+      liste = toutes();
+      titre = 'À revoir aujourd’hui';
+      o.nouv = false;
+    } else if (q === 'branche') {
+      b = BR[el.dataset.b];
+      liste = cartesBranche(b);
+      titre = b.nom;
+      o.nouv = false;
+    } else {
+      const ch = CHAP[el.dataset.c];
+      b = ch.b;
+      liste = cartesChap(ch.c.id, !!(LANGUES[b.id] && sens[ch.c.id]));
+      titre = ch.c.titre;
+      o.tout = !!el.dataset.tout;
+    }
+    const file = composer(liste, o);
+    if (!file.length) return;
+    J = { titre, b: b ? b.id : '', file, i: 0, vu: false, rates: new Set(), passages: new Map(), premier: 0, faites: new Set(), retour: location.hash || '#cartes', src: el.dataset };
+    dessiner();
+    window.scrollTo(0, 0);
+  }
+  function dessiner() {
+    if (J.i >= J.file.length) return fin();
+    const k = J.file[J.i],
+      ch = CHAP[k.c],
+      total = J.file.length;
+    let h =
+      `<div class="fc-jeu">` +
+      `<div class="fc-haut"><button class="fc-arret" data-fc="arreter">‹ Arrêter</button><span class="fc-titre">${J.titre}</span><span class="fc-n">${J.i + 1} / ${total}</span></div>` +
+      `<div class="jauge fc-jauge"><i style="width:${Math.round((100 * J.i) / total)}%"></i></div>` +
+      `<div class="fc-carte b-${ch.b.id}${J.vu ? ' vu' : ''}" role="button" tabindex="0" data-fc="retourner" aria-label="${J.vu ? 'Carte retournée. Touche pour revoir la question.' : 'Touche pour retourner la carte'}">` +
+      `<span class="fc-ch">${ch.b.nom} · ${ch.c.titre}${k.mien ? ' · ta carte' : ''}</span>` +
+      `<div class="fc-recto${k.mien ? ' ec' : ''}">${rendu(k, k.r)}</div>` +
+      (J.vu ? `<div class="fc-verso${k.mien ? ' ec' : ''}">${rendu(k, k.v)}</div>${k.n ? `<p class="fc-note">${t(k.n)}</p>` : ''}` : `<span class="fc-aide">Réponds dans ta tête, puis touche la carte</span>`) +
+      `</div>`;
+    h += J.vu
+      ? `<div class="fc-choix"><button class="btn-2" data-fc="non">Pas encore</button><button class="btn" data-fc="oui">Je savais</button></div>`
+      : `<div class="fc-choix"><button class="btn" data-fc="retourner">Retourner la carte</button></div>`;
+    h += `</div>`;
+    poser(h);
+    const carte = $('.fc-carte');
+    if (carte && J.anim) carte.classList.add('tourne');
+    J.anim = false;
+  }
+  function repondre(ok) {
+    const k = J.file[J.i],
+      deja = J.rates.has(k.id);
+    noter(k, ok, deja);
+    if (!J.faites.has(k.id)) {
+      J.faites.add(k.id);
+      if (ok) J.premier++;
+    }
+    if (!ok) {
+      J.rates.add(k.id);
+      const n = (J.passages.get(k.id) || 0) + 1;
+      J.passages.set(k.id, n);
+      /* elle revient trois cartes plus loin (ou à la fin), au plus deux fois de plus */
+      if (n < 3) J.file.splice(Math.min(J.file.length, J.i + 4), 0, k);
+    }
+    J.i++;
+    J.vu = false;
+    dessiner();
+  }
+  function fin() {
+    const n = J.faites.size,
+      rates = [...J.rates].length;
+    let h = `<div class="fc-jeu"><div class="bloc fc-bilan"><h1>Séance terminée</h1><p>${pl(n, 'carte')} : ${J.premier} ${J.premier > 1 ? 'sues' : 'sue'} du premier coup${rates ? `, ${rates} à retravailler` : ''}.</p>`;
+    h += rates ? `<p class="petit">Les cartes ratées reviendront plus tôt, jusqu'à ce que tu les saches.</p>` : `<p class="petit">Elles reviendront dans quelques jours, pour les garder en mémoire.</p>`;
+    h += `<div class="actions"><button class="btn" data-fc="fin">Terminer</button></div></div></div>`;
+    poser(h);
+  }
+
+  /* ---------- gestes ---------- */
+  document.addEventListener('click', (ev) => {
+    const el = ev.target.closest('[data-fc]');
+    if (!el) return;
+    const a = el.dataset.fc;
+    if (a === 'go') lancer(el);
+    else if (a === 'retourner' && J) {
+      J.vu = !J.vu;
+      J.anim = true;
+      dessiner();
+      if (J.vu) {
+        const o = $('[data-fc="oui"]');
+        if (o && ev.detail === 0) o.focus();
+      }
+    } else if ((a === 'oui' || a === 'non') && J && J.vu) repondre(a === 'oui');
+    else if (a === 'arreter' || a === 'fin') {
+      const r = J ? J.retour : '#cartes';
+      J = null;
+      if (location.hash === r) vue(r.slice(1));
+      else location.hash = r;
+      window.scrollTo(0, 0);
+    } else if (a === 'ajouter') {
+      const r = $('#fc-r'),
+        v = $('#fc-v'),
+        msg = $('#fc-msg');
+      if (!r.value.trim() || !v.value.trim()) {
+        msg.textContent = 'Écris le recto et le verso.';
+        return;
+      }
+      ajouterMienne(el.dataset.c, r.value.trim(), v.value.trim());
+      vue(location.hash.slice(1));
+      const m = $('#fc-msg');
+      if (m) m.textContent = 'Ta carte est ajoutée. Elle arrivera dans ta prochaine séance de ce chapitre.';
+    } else if (a === 'suppr') {
+      aSuppr = el.dataset.i;
+      vue(location.hash.slice(1));
+    } else if (a === 'suppr-non') {
+      aSuppr = null;
+      vue(location.hash.slice(1));
+    } else if (a === 'suppr-oui') {
+      retirerMienne(el.dataset.i);
+      aSuppr = null;
+      vue(location.hash.slice(1));
+    }
+  });
+  document.addEventListener('change', (ev) => {
+    const el = ev.target.closest('[data-fc="sens"]');
+    if (!el) return;
+    if (el.checked) sens[el.dataset.c] = 1;
+    else delete sens[el.dataset.c];
+    try {
+      localStorage.setItem(PREF_SENS, JSON.stringify(sens));
+    } catch (e) {}
+    vue(location.hash.slice(1));
+  });
+  document.addEventListener('keydown', (ev) => {
+    if (!J || J.i >= J.file.length) return;
+    const el = ev.target.closest && ev.target.closest('.fc-carte');
+    if (el && (ev.key === 'Enter' || ev.key === ' ')) {
+      ev.preventDefault();
+      el.click();
+    }
+  });
+
+  /* l'écran à afficher pour #cartes, #cartes-<branche> ou #cartes-<chapitre> */
+  function vue(h) {
+    J = null;
+    const id = h.replace(/^cartes-?/, '');
+    if (!id) vueAccueil();
+    else if (BR[id]) vueBranche(BR[id]);
+    else if (CHAP[id]) vueChap(CHAP[id]);
+    else vueAccueil();
+  }
+  /* dans un chapitre : le lien vers ses cartes */
+  function lien(c) {
+    const k = compte(cartesChap(c.id));
+    if (!k.tot && P.presentation) return '';
+    return `<a class="ligne" href="#cartes-${c.id}"><span class="fc-ic" aria-hidden="true"></span><span class="l-corps"><b>Réviser avec les cartes</b><small>${k.tot ? resume(k) + (k.du ? ` · ${k.du} à revoir` : '') : 'Écris tes propres cartes pour ce chapitre'}</small></span><span class="chev" aria-hidden="true">›</span></a>`;
+  }
+  Object.assign(CL.fc, { vue, lien, stop: () => (J = null) });
+})();
+</script>
 <script>/* app.js */
 'use strict';
 /* Cap Lycée — l'appli : écrans, séries d'exercices, gestes. La progression elle-même est dans progres.js.
@@ -11512,6 +13249,7 @@ CL.medias = {"d2-k1":[{"l":"Kursbuch","n":"1.2","a":"Aufgabe 1b","t":"a","id":"e
     }
     h += `</div>`;
     if (c.savoirs.length > 1) h += `<div class="actions"><button class="btn" data-a="melange" data-c="${c.id}">Série mélangée (${N_MELANGE} questions)</button></div>`;
+    if (CL.fc) h += `<div class="liste fc-lien">${CL.fc.lien(c)}</div>`;
     h += `${P.presentation ? '' : `<p class="petit" style="margin-top:14px">Une série réussie (5 sur 6) remplit deux cases. La troisième se remplit quand tu la réussis de nouveau un autre jour. Ensuite, l'appli te la repropose de plus en plus rarement : après 3 jours, une semaine, deux semaines, un mois.</p>`}</section>`;
     if (c.faire && c.faire.length) h += sectionManuel(c);
     if (CL.ecoute) h += CL.ecoute.section(c.id);
@@ -11558,6 +13296,10 @@ CL.medias = {"d2-k1":[{"l":"Kursbuch","n":"1.2","a":"Aufgabe 1b","t":"a","id":"e
       actifs = J.filter((x) => x.j.q).length,
       sj = P.serieJours();
     const L = [`Cap Lycée, bilan du ${CL.maintenant().toLocaleDateString('fr-CH')}`, `14 derniers jours : ${pl(q, 'question')}, ${q ? Math.round((100 * ok) / q) : 0} % de réussite, environ ${Math.round(ms / 60000)} min, ${pl(actifs, 'jour travaillé', 'jours travaillés')}.`, `Série en cours : ${pl(sj.n, 'jour')} (record : ${E.rec || 0}). À revoir aujourd'hui : ${P.aRevoir().length}.`, ''];
+    if (CL.fc) {
+      const fb = CL.fc.bilan(14);
+      if (fb.rev || fb.sues) L.push(`Cartes : ${pl(fb.rev, 'carte retournée', 'cartes retournées')} en 14 jours, ${pl(fb.sues, 'carte sue', 'cartes sues')}${(P.E.mc || []).length ? `, dont ${pl(P.E.mc.length, 'carte écrite', 'cartes écrites')} par moi` : ''}.`);
+    }
     for (const b of CL.branches) {
       if (!b.savoirs.length) continue;
       const c = [0, 0, 0, 0];
@@ -11723,16 +13465,17 @@ CL.medias = {"d2-k1":[{"l":"Kursbuch","n":"1.2","a":"Aufgabe 1b","t":"a","id":"e
     bilan: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V11M12 19V5M19 19v-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
     questions: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 4.5h15a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-8.200L7 20v-3.500H4.500a1 1 0 0 1-1-1v-10a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.700 8.600a2.300 2.300 0 1 1 3.300 2.100c-.700.300-1 .800-1 1.500" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linecap="round"/><circle cx="12" cy="14.300" r="1" fill="currentColor"/></svg>',
     tableau: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12.5" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 20.5l2.2-4M16 20.5l-2.2-4M7 9.5c1.6-2 3-2 4 0s2.6 2 4.5-.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+    cartes: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7.200" y="3.200" width="11.500" height="15" rx="2" transform="rotate(12 13 10.700)" fill="none" stroke="currentColor" stroke-width="1.6" opacity=".55"/><rect x="4.500" y="5.500" width="11.500" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 11h4.500M8 14.500h3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>',
     sortir: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h4.500A1.500 1.500 0 0 1 20 5.500v13a1.500 1.500 0 0 1-1.500 1.500H14M10 8l-4 4 4 4M6 12h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   };
   function barre() {
     const lien = ([id, nom]) => `<a href="#${id}" data-n="${id}"><span class="n-g">${ICONES[id]}${id === 'questions' ? '<i class="pastille" aria-hidden="true" hidden></i>' : ''}</span><span>${nom}</span></a>`;
     $('#barre-in').innerHTML = P.presentation
       ? `<p class="b-etat">Mode présentation · rien n'est enregistré</p>` +
-        [['branches', 'Parcours'], ['tableau', 'Tableau'], ['questions', 'Questions']].map(lien).join('') +
+        [['branches', 'Parcours'], ['cartes', 'Cartes'], ['tableau', 'Tableau'], ['questions', 'Questions']].map(lien).join('') +
         `<div class="b-item b-taille" role="group" aria-label="Taille de l'affichage"><span class="n-g"><button data-a="pres-taille" data-d="-1" aria-label="Plus petit"${taillePres ? '' : ' disabled'}>A−</button><button data-a="pres-taille" data-d="1" aria-label="Plus grand"${taillePres < TAILLES.length - 1 ? '' : ' disabled'}>A+</button></span><span>Taille</span></div>` +
         `<button class="b-item b-sortir" data-a="pres-quitter"><span class="n-g">${ICONES.sortir}</span><span>Terminer</span></button>`
-      : [['accueil', 'Accueil'], ['branches', 'Parcours'], ['tableau', 'Tableau'], ['questions', 'Questions'], ['bilan', 'Progrès']].map(lien).join('');
+      : [['accueil', 'Accueil'], ['branches', 'Parcours'], ['cartes', 'Cartes'], ['tableau', 'Tableau'], ['questions', 'Questions'], ['bilan', 'Progrès']].map(lien).join('');
   }
   function route() {
     /* un mode présentation oublié, ou ouvert par erreur, s'éteint de lui-même au bout de quelques heures */
@@ -11758,6 +13501,9 @@ CL.medias = {"d2-k1":[{"l":"Kursbuch","n":"1.2","a":"Aufgabe 1b","t":"a","id":"e
     if (h === 'tableau') {
       CL.tableau.vue();
       onglet = 'tableau';
+    } else if (h === 'cartes' || h.startsWith('cartes-')) {
+      CL.fc.vue(h);
+      onglet = 'cartes';
     } else if (BR[h]) {
       vueBranche(BR[h]);
       onglet = 'branches';
@@ -11779,6 +13525,7 @@ CL.medias = {"d2-k1":[{"l":"Kursbuch","n":"1.2","a":"Aufgabe 1b","t":"a","id":"e
   }
   window.addEventListener('hashchange', () => {
     if (S) fermerSerie(true);
+    if (CL.fc) CL.fc.stop();
     reposOuvert = false;
     noteEnCours = null;
     codeLu = null;
@@ -12766,12 +14513,21 @@ CL.medias = {"d2-k1":[{"l":"Kursbuch","n":"1.2","a":"Aufgabe 1b","t":"a","id":"e
       [lib, data] = await Promise.all([
         chargerPdfjs(),
         fetch('p/' + id + '.pdf').then((r) => {
-          if (!r.ok) throw new Error('pdf');
+          if (!r.ok) throw new Error(r.status === 404 ? 'absent' : 'pdf');
           return r.arrayBuffer();
         }),
       ]);
     } catch (e) {
-      if (ouvert && ouvert.demande === demande) message(`<p>Les pages n'ont pas pu s'ouvrir. Vérifie ta connexion internet et réessaie.</p><div class="actions"><button class="btn-2" data-a="lc-reessayer">Réessayer</button></div>`);
+      if (!ouvert || ouvert.demande !== demande) return;
+      /* l'artefact claude.ai est plein : les pages ajoutées depuis (sciences, séquences 7 et 8) ne sont que sur la page GitHub */
+      let cadre = false;
+      try {
+        cadre = window.top !== window;
+      } catch (x) {
+        cadre = true;
+      }
+      if (e && e.message === 'absent' && cadre) message(`<p>Ces pages-là s'ouvrent dans Cap Lycée à l'adresse de ton téléphone (la page GitHub), pas ici.</p>`);
+      else message(`<p>Les pages n'ont pas pu s'ouvrir. Vérifie ta connexion internet et réessaie.</p><div class="actions"><button class="btn-2" data-a="lc-reessayer">Réessayer</button></div>`);
       return;
     }
     if (!ouvert || ouvert.demande !== demande) return;
